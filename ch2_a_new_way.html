@@ -1,0 +1,1103 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapter 2: Reasoning About Code - A New Way &#8212; Rigor and Reasoning in Research Software (R3Sw)</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ch2_a_new_way';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Chapter 3: Unit Testing - Turning Specs into Checks" href="ch3_unit_testing.html" />
+    <link rel="prev" title="Chapter 1: Code and Fix - The Usual Way" href="ch1_code_and_fix.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="ch0_welcome.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Rigor and Reasoning in Research Software (R3Sw)</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="ch0_welcome.html">
+                    Chapter 0: Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix - The Usual Way</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 2: Reasoning About Code - A New Way</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing - Turning Specs into Checks</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="ch4_property_based_testing.html">Chapter 4: Property-Based Testing - From Examples to Hypotheses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch5_symbolic_checking.html">Ch. 5: Symbolic Checking - Beyond Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch6_ladder_of_rigor.html">Chapter 6: Climbing the Ladder of Rigor</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/ch2_a_new_way.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Chapter 2: Reasoning About Code - A New Way</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">Key Concepts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-reason-about-code">Why Reason About Code?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#abstraction">Abstraction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specification-writing-down-intent">Specification: Writing Down Intent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#floyd-hoare-triples">Floyd-Hoare Triples</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-1">Exercise 2.1:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stepwise-refinement-from-abstract-to-concrete">Stepwise Refinement: From Abstract to Concrete</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#heat-equation-solver-revisited">Heat Equation Solver, Revisited</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-specification-the-what">Step 1 — Specification (the what)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#preconditions">Preconditions</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#postconditions">Postconditions</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-choose-the-abstractions">Step 2 – Choose the abstractions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-design-the-core-api">Step 3 – Design the Core API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-implement-incrementally-fill-in-implementations-step-by-step-maintaining-the-contracts">Step 4 – Implement Incrementally: Fill in implementations step by step, maintaining the contracts.</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4a-contracts">Step 4a: Contracts</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-2">Exercise 2.2:</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-3">Exercise 2.3:</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4b-concrete-code">Step 4b: Concrete Code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-ahead">Looking Ahead</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="chapter-2-reasoning-about-code-a-new-way">
+<h1>Chapter 2: Reasoning About Code - A New Way<a class="headerlink" href="#chapter-2-reasoning-about-code-a-new-way" title="Link to this heading">#</a></h1>
+<p>In Chapter 1, we implemented a working 1-D heat equation solver.
+It runs, but it’s fragile, opaque, and hard to test or extend.</p>
+<p>In this chapter, we ask: can we design and reason about our code systematically, before we even run it?</p>
+<p>We’ll introduce preconditions, postconditions, and invariants (concepts borrowed from formal logic)
+and use them to refactor step by step into something more modular, testable, and robust.</p>
+<hr class="docutils" />
+<section id="goals">
+<h2>Goals<a class="headerlink" href="#goals" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Identify preconditions, postconditions, and invariants for a scientific computing problem.</p></li>
+<li><p>Apply stepwise refinement to improve a messy, monolithic implementation.</p></li>
+<li><p>Separate concerns in your code: boundary conditions, flux computations, and updates.</p></li>
+<li><p>Produce a modular version of the heat equation solver that sets the stage for unit and property-based testing.</p></li>
+</ul>
+</section>
+<section id="key-concepts">
+<h2>Key Concepts<a class="headerlink" href="#key-concepts" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Abstraction: Viewing complex systems at a high-level, where irrelevant details are ignored.</p></li>
+<li><p>Hoare Logic: reasoning about code with <code class="docutils literal notranslate"><span class="pre">{P}</span> <span class="pre">code</span> <span class="pre">{Q}</span></code> triples.</p></li>
+<li><p>Stepwise refinement: incrementally developing code.</p></li>
+<li><p>Invariants: conditions that must always hold true during program execution.</p></li>
+<li><p>Separation of concerns: organizing code into clean, testable components.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="why-reason-about-code">
+<h2>Why Reason About Code?<a class="headerlink" href="#why-reason-about-code" title="Link to this heading">#</a></h2>
+<p>Scientific software is both:</p>
+<ul class="simple">
+<li><p>A <em>tool</em> that enables science,</p></li>
+<li><p>A <em>research product</em> in its own right.</p></li>
+</ul>
+<p>As such, it warrants a similar rigor and reasoning as the science it enables.</p>
+<p>Toward the goal of understanding and improving our code, we can even take inspiration from the scientific method:</p>
+<ul class="simple">
+<li><p>Form hypotheses -&gt; attempt refutation → refine toward confidence.</p></li>
+</ul>
+<p>Reasoning About Code:</p>
+<ul class="simple">
+<li><p>Specified properties and behaviors -&gt; Test / Check against specifications -&gt; Refine implementation.</p></li>
+</ul>
+<p>In practice, much scientific software evolves through a <em>code and fix</em> process:</p>
+<blockquote>
+<div><p>If the outputs look reasonable and it doesn’t crash, it must be correct.</p>
+</div></blockquote>
+<p>But trusting results without understanding the code is risky.</p>
+<blockquote>
+<div><p>“We can’t get systems right if we don’t understand them” - Leslie Lamport</p>
+</div></blockquote>
+<section id="abstraction">
+<h3>Abstraction<a class="headerlink" href="#abstraction" title="Link to this heading">#</a></h3>
+<p>Abstraction lets us reason about what a system should do without drowning in how it’s done.</p>
+<p>As scientists and engineers, we are already accustomed to this way of thinking: we model complex systems by removing unnecessary details and breaking problems into components.</p>
+<p><strong>Where do the low-level details go?</strong></p>
+<p><strong>A natural concern:</strong> Aren’t most bugs caused by subtle low-level issues?</p>
+<p>Yes, but many of those “low-level” bugs are really symptoms of unclear high-level intent.
+When top-level responsibilities are muddled or poorly defined, they trickle down into brittle,
+error-prone implementations.</p>
+<p>Abstraction then pays off in two ways:</p>
+<ul class="simple">
+<li><p>Reasoning: We can understand and predict behavior at a manageable scale.</p></li>
+<li><p>Design: We can isolate low-level details, reducing complexity and making the system easier to extend.</p></li>
+</ul>
+<blockquote>
+<div><p>The hard part of building software is the conceptual construct,
+not the labor of representing it.
+<em>-FP Brooks. “No Silver Bullet” (1987)</em></p>
+</div></blockquote>
+<blockquote>
+<div><p>What matters is the fundamental structure of the design. If you get
+it wrong, there is no amount of bug fixing and refactoring that will
+produce a reliable, maintainable, and usable system
+<em>- D. Jackson. The essence of software. (2021)</em></p>
+</div></blockquote>
+</section>
+<section id="specification-writing-down-intent">
+<h3>Specification: Writing Down Intent<a class="headerlink" href="#specification-writing-down-intent" title="Link to this heading">#</a></h3>
+<p>A <em>specification</em> is a precise statement of what software should do, independent of how it does it.</p>
+<p>Specifications can range from informal descriptions in plain English
+to fully formal mathematical models.  In this tutorial, we’ll use a
+<strong>lightweight, practical level</strong>: preconditions and postconditions
+expressed as simple <code class="docutils literal notranslate"><span class="pre">assert</span></code> statements directly in code.</p>
+<p>This lightweight approach:</p>
+<ul class="simple">
+<li><p>Guides implementation,</p></li>
+<li><p>Facilitates testing and validation.</p></li>
+</ul>
+</section>
+<section id="floyd-hoare-triples">
+<h3>Floyd-Hoare Triples<a class="headerlink" href="#floyd-hoare-triples" title="Link to this heading">#</a></h3>
+<p>A Hoare triple expresses the contract for a code fragment:</p>
+<p><code class="docutils literal notranslate">&#160; <span class="pre">{P}</span> <span class="pre">code</span> <span class="pre">{Q}</span></code></p>
+<p>where</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">P</span></code> (precondition): what must be true before running the <code class="docutils literal notranslate"><span class="pre">code</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">code</span></code> (implementation): the program fragment in question, e.g., a statement, block, function, etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Q</span></code> (postcondition): what must be true after running the <code class="docutils literal notranslate"><span class="pre">code</span></code>.</p></li>
+</ul>
+<section id="exercise-2-1">
+<h4>Exercise 2.1:<a class="headerlink" href="#exercise-2-1" title="Link to this heading">#</a></h4>
+<p>Can you find inputs where this function fails the postcondition even when the precondition is satisfied?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># P    (precondition)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code (implementation)</span>
+    <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># Q    (postcondition)</span>
+    <span class="k">return</span> <span class="n">res</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">div</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.0
+</pre></div>
+</div>
+</div>
+</div>
+<p><em>Observation:</em> Floating-point arithmetic introduces unavoidable rounding errors.
+These aren’t bugs, but natural computational artifacts.
+We can <strong>weaken the postcondition</strong> to account for this by using approximate equality.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>                   <span class="c1"># P    (precondition)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>                     <span class="c1"># code (implementation)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">res</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>   <span class="c1"># Q    (postcondition)</span>
+    <span class="k">return</span> <span class="n">res</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">div</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.28
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Takeaway</strong>: Postconditions should reflect computational realities (e.g., floating-point).</p>
+<p><strong>Preconditions deserve similar care.</strong></p>
+<p>A <strong>weakest precondition</strong> is the <em>most general condition</em> under which the code
+works correctly. It ensures your function is usable in the widest range of scenarios
+while still preventing incorrect behavior.</p>
+<p>Conversely, we want the <strong>strongest postcondition</strong> possible: the most precise guarantee
+about the outcome. This balance maximizes both the flexibility and reliability of our code.</p>
+</section>
+</section>
+</section>
+<section id="stepwise-refinement-from-abstract-to-concrete">
+<h2>Stepwise Refinement: From Abstract to Concrete<a class="headerlink" href="#stepwise-refinement-from-abstract-to-concrete" title="Link to this heading">#</a></h2>
+<p>Stepwise refinement is the process of progressively developing a solution, starting with high-level considerations and gradually refining it into an implementation.</p>
+<p>The process:</p>
+<ol class="arabic simple">
+<li><p><strong>Identify the What:</strong> Define the overall problem and desired outcome.</p></li>
+<li><p><strong>Choose the Abstractions:</strong> Select the conceptual building blocks.</p></li>
+<li><p><strong>Design the Core API:</strong> the main interfaces and interactions</p></li>
+<li><p><strong>Implement Incrementally:</strong> Fill in implementations step by step.</p></li>
+</ol>
+<p>Benefits:</p>
+<ul class="simple">
+<li><p>Clear separation of concerns,</p></li>
+<li><p>Local, testable invariants,</p></li>
+<li><p>Flexibility to change or replace components,</p></li>
+<li><p>Robustness that emerges naturally.</p></li>
+</ul>
+</section>
+<section id="heat-equation-solver-revisited">
+<h2>Heat Equation Solver, Revisited<a class="headerlink" href="#heat-equation-solver-revisited" title="Link to this heading">#</a></h2>
+<p>We now apply stepwise refinement to redesign our 1-D heat equation solver.</p>
+<section id="step-1-specification-the-what">
+<h3>Step 1 — Specification (the what)<a class="headerlink" href="#step-1-specification-the-what" title="Link to this heading">#</a></h3>
+<p>We want to advance a 1-D temperature field <span class="math notranslate nohighlight">\(u_i\)</span> on a uniform grid using a conservative finite volume method:</p>
+<p><span class="math notranslate nohighlight">\(
+\qquad
+u_i^{n+1} = u_i^{n} + \Delta t \, \frac{F_{i} - F_{i+1}}{\Delta x},
+\qquad
+F_i =
+\begin{cases}
+q_L &amp; i = 0, \\[6pt]
+-\kappa \dfrac{u_i - u_{i-1}}{\Delta x} &amp; 1 \leq i \leq N-1, \\[10pt]
+q_R &amp; i = N.
+\end{cases}
+\)</span></p>
+<section id="preconditions">
+<h4>Preconditions<a class="headerlink" href="#preconditions" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">len(u)</span> <span class="pre">==</span> <span class="pre">N</span> <span class="pre">&gt;=</span> <span class="pre">3</span></code>, <code class="docutils literal notranslate"><span class="pre">len(F)</span> <span class="pre">==</span> <span class="pre">N+1</span></code>, <code class="docutils literal notranslate"><span class="pre">len(dudt)</span> <span class="pre">==</span> <span class="pre">N</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dx</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">dt</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">nt</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">kappa</span> <span class="pre">&gt;</span> <span class="pre">0</span></code></p></li>
+<li><p>Stability condition for explicit Euler (FTCS):
+$<span class="math notranslate nohighlight">\(
+\frac{\kappa \Delta t}{\Delta x^2} \leq \frac{1}{2}
+\)</span>$</p></li>
+</ul>
+</section>
+<section id="postconditions">
+<h4>Postconditions<a class="headerlink" href="#postconditions" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Conservation (per step):
+$<span class="math notranslate nohighlight">\(
+\sum_{i=0}^{N-1} u_i^{n+1} \Delta x = \sum_{i=0}^{N-1} u_i^{n} \Delta x + \Delta t \left( q_L - q_R \right).
+\)</span>$</p></li>
+<li><p>Special Cases:</p>
+<ul>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">q_L</span></code> == <code class="docutils literal notranslate"><span class="pre">q_R</span></code> == 0, the mean stays constant.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">q_L</span></code> and <code class="docutils literal notranslate"><span class="pre">q_R</span></code> are constant, the temperature profile converges to a linear steady state.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="step-2-choose-the-abstractions">
+<h3>Step 2 – Choose the abstractions<a class="headerlink" href="#step-2-choose-the-abstractions" title="Link to this heading">#</a></h3>
+<p>If we look at the 1-D heat equation solver at an abstract level, we don’t begin with arrays,
+loops, or numerical schemes. We begin with the concepts: the fundamental entities in the
+world of this problem that the software must represent faithfully and consistently.</p>
+<p>Concepts we commit to, upfront, are then:</p>
+<ul class="simple">
+<li><p><em>Mesh</em>: domain geometry: <code class="docutils literal notranslate"><span class="pre">(dx,</span> <span class="pre">N)</span></code>.</p></li>
+<li><p><em>BC</em>: boundary heat fluxes: <code class="docutils literal notranslate"><span class="pre">(qL,</span> <span class="pre">qR)</span></code>.</p></li>
+<li><p><em>Cell Field</em>: cell-centered field <span class="math notranslate nohighlight">\(u\)</span>, length <span class="math notranslate nohighlight">\(N\)</span>.</p></li>
+<li><p><em>Face Field</em>: face-centered field <span class="math notranslate nohighlight">\(F\)</span>, length <span class="math notranslate nohighlight">\(N+1\)</span>.</p></li>
+<li><p>Operations:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">apply_bc(F,</span> <span class="pre">qL,</span> <span class="pre">qR)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flux(u,</span> <span class="pre">kappa,</span> <span class="pre">dx)</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">divergence(F,</span> <span class="pre">mesh)</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step(...)</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">solve(...)</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<p>This gives a small, coherent core that matches the math and isolates concerns.</p>
+</section>
+<section id="step-3-design-the-core-api">
+<h3>Step 3 – Design the Core API<a class="headerlink" href="#step-3-design-the-core-api" title="Link to this heading">#</a></h3>
+<p>Our task now is to design a small but complete core API: a minimal set of data structures
+and functions that capture the essential ideas of our solver. This isn’t about writing code yet:
+it’s about defining the conceptual architecture of the system.</p>
+<p>The goal is to capture the set of abstractions we have identified, i.e., the fundamental
+building blocks of the solver, and relationships among them. These abstractions form the
+“language” of the system: every part of the solver will communicate through them.</p>
+<p>Below is a core API that encodes the fundamental concepts of our solver.
+This API is small, expressive, and built around the essential entities of the problem:
+the mesh, the boundary conditions, and <em>state transitions</em> that move our system forward in time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="c1"># Data abstractions</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Mesh</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Uniform 1-D mesh.&quot;&quot;&quot;</span>
+    <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">N</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># number of cells</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cell_centered_arr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">face_centered_arr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BC</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Neumann flux boundary conditions on the diffusive flux.&quot;&quot;&quot;</span>
+    <span class="n">qL</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">qR</span><span class="p">:</span> <span class="nb">float</span>
+
+<span class="c1"># Behavior abstractions</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">qL</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qR</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply Neumann BCs to face fluxes F.&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">flux</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update interior face fluxes F based on cell field u.&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">dudt</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update cell tendencies dudt based on face fluxes F.&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dudt</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance cell field u by one time step using explicit Euler method.&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">u0</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Orchestrate nt steps over cell field u.&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-4-implement-incrementally-fill-in-implementations-step-by-step-maintaining-the-contracts">
+<h3>Step 4 – Implement Incrementally: Fill in implementations step by step, maintaining the contracts.<a class="headerlink" href="#step-4-implement-incrementally-fill-in-implementations-step-by-step-maintaining-the-contracts" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Step 4a — Contracts first: write the behavioral <em>facts</em> of functions (preconditions, postconditions, invariants) without code.</p></li>
+<li><p>Step 4b — Concrete code: implement to those contracts, with lightweight asserts that make the spec executable.</p></li>
+</ul>
+<p><strong>Why split these steps?</strong> This mirrors science itself: hypotheses come before
+experiments, just as specifications come before code. This also makes failures diagnostic:
+if a 4a assertion trips, your spec is wrong or incomplete. If 4b trips, your code violates
+a correct spec.</p>
+<section id="step-4a-contracts">
+<h4>Step 4a: Contracts<a class="headerlink" href="#step-4a-contracts" title="Link to this heading">#</a></h4>
+<p>Before diving into coding, it may be worth thinking about what pre- and/or postconditions
+we want to hold before, during, and after execution of our functions.</p>
+<p><strong>Preconditions</strong></p>
+<p>Let’s begin with a few simple preconditions on the input arguments of our functions. Subsequently, we will implement a precondition that checks the stability condition for the explicit Euler (FTCS) scheme.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">qL</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qR</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply Neumann BCs to face fluxes F.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">flux</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update face fluxes F based on cell field u.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">dudt</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update cell tendencies dudt based on face fluxes F.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dudt</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance cell field u by one time step using explicit Euler method.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">u0</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Orchestrate nt steps over cell field u.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">nt</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-2-2">
+<h4>Exercise 2.2:<a class="headerlink" href="#exercise-2-2" title="Link to this heading">#</a></h4>
+<p>One of the key preconditions for the Euler (FTCS) scheme is the stability condition
+as given below:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\kappa \Delta t}{\Delta x^2} &lt; \frac{1}{2}\]</div>
+<p>Implement a function to check the stability condition. Which function(s) would you modify to incorporate this check as an assertion?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">Euler_FTCS_stability</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check stability condition for explicit Euler (FTCS) scheme.&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Answer:</strong></p>
+<p>The function <code class="docutils literal notranslate"><span class="pre">Euler_FTCS_stability</span></code> can be used to check the stability condition
+as a precondition in the <code class="docutils literal notranslate"><span class="pre">solve</span></code> function. If the condition is not met, we can raise an error
+or adjust the time step accordingly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">Euler_FTCS_stability</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check stability condition for explicit Euler (FTCS) scheme.&quot;&quot;&quot;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="n">dx</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="mf">0.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Postconditions</strong></p>
+<p>Consider the update rule for cell-centered tendencies:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{dudt[i]} = \frac{F_{i-1} - F_i}{\Delta x}
+\]</div>
+<p>The finite volume telescoping property states that summing the tendencies (<code class="docutils literal notranslate"><span class="pre">dudt[i]</span></code>) over all cells and multiplying by <code class="docutils literal notranslate"><span class="pre">dx</span></code> must equal the net boundary flux (<code class="docutils literal notranslate"><span class="pre">F[0]</span> <span class="pre">-</span> <span class="pre">F[-1]</span></code>). Below is a function that checks if this property holds, which can be called as a postcondition after each
+time <code class="docutils literal notranslate"><span class="pre">divergence</span></code> is computed:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">divergence_telescoping</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the finite volume telescoping property.&quot;&quot;&quot;</span>
+    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">total_divergence</span><span class="p">,</span> <span class="n">boundary_flux</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Below is how this function could be utilized as a postcondition after each time <code class="docutils literal notranslate"><span class="pre">divergence</span></code> is computed:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">dudt</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update cell tendencies dudt based on face fluxes F.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">==</span> <span class="n">mesh</span><span class="o">.</span><span class="n">N</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">==</span> <span class="n">mesh</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span> <span class="c1"># P (precondition)</span>
+    <span class="o">...</span>                                                 <span class="c1"># code</span>
+    <span class="k">assert</span> <span class="n">divergence_telescoping</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">)</span>        <span class="c1"># Q (postcondition)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-2-3">
+<h4>Exercise 2.3:<a class="headerlink" href="#exercise-2-3" title="Link to this heading">#</a></h4>
+<p>Now, let’s check whether the heat is conserved, a condition that’s closely related to the <code class="docutils literal notranslate"><span class="pre">divergence_telescoping</span></code> check.
+Recall the condition for heat conservation:</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=0}^{N-1} u_i^{n+1} \Delta x = \sum_{i=0}^{N-1} u_i^{n} \Delta x + \Delta t \left( q_L - q_R \right).
+\]</div>
+<p>Similar to how we checked for divergence, implement a function to check the conservation of
+heat. The function arguments should give you a good hint about how to implement this.
+Which function(s) would you modify to incorporate this check?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_before</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_sum_after</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if heat is conserved.&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Answer</strong></p>
+<p>The following cell contains a possible implementation of the heat conservation check.
+As for which function(s) would need to be modified to incorporate this check, it may be
+added as a postcondition to the <code class="docutils literal notranslate"><span class="pre">step</span></code> function, or, alternatively, it may be added
+as a loop invariant in the timestepping loop within the <code class="docutils literal notranslate"><span class="pre">solve</span></code> function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_before</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_sum_after</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if heat is conserved.&quot;&quot;&quot;</span>
+    <span class="n">expected_change</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">bc</span><span class="o">.</span><span class="n">qL</span> <span class="o">-</span> <span class="n">bc</span><span class="o">.</span><span class="n">qR</span><span class="p">)</span>
+    <span class="n">actual_change</span> <span class="o">=</span> <span class="n">u_sum_after</span> <span class="o">-</span> <span class="n">u_sum_before</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">actual_change</span><span class="p">,</span> <span class="n">expected_change</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Loop invariants</strong></p>
+<p>A loop invariant is a condition (a boolean expression) that holds true before and after each iteration of a loop. It helps reason about the correctness of the loop by ensuring that certain properties hold:</p>
+<ul class="simple">
+<li><p>before the loop starts</p></li>
+<li><p>after each iteration of the loop</p></li>
+</ul>
+<p>which guarantees that once the loop has finished executing, the desired property holds for the final state.</p>
+<p>In the case of the heat equation solver, ensuring that heat is conserved after each time step guarantees that the total heat within the domain remains constant.</p>
+</section>
+<section id="step-4b-concrete-code">
+<h4>Step 4b: Concrete Code<a class="headerlink" href="#step-4b-concrete-code" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Data abstractions</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Mesh</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Uniform 1-D mesh.&quot;&quot;&quot;</span>
+    <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">N</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># number of cells</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cell_centered_arr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">face_centered_arr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BC</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Neumann flux boundary conditions on the diffusive flux.&quot;&quot;&quot;</span>
+    <span class="n">qL</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">qR</span><span class="p">:</span> <span class="nb">float</span>
+
+<span class="c1"># Behavior abstractions</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">qL</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qR</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply Neumann BCs to face fluxes F.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">qL</span><span class="p">,</span> <span class="n">qR</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">flux</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update face fluxes F based on cell field u.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)):</span>
+        <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">dudt</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update cell tendencies dudt based on face fluxes F.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dudt</span><span class="p">)):</span>
+        <span class="n">dudt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+    <span class="k">assert</span> <span class="n">divergence_telescoping</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dudt</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance cell field u by one time step using explicit Euler method.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+    <span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="o">.</span><span class="n">qL</span><span class="p">,</span> <span class="n">bc</span><span class="o">.</span><span class="n">qR</span><span class="p">)</span>
+    <span class="n">flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
+    <span class="n">divergence</span><span class="p">(</span><span class="n">dudt</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">dudt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">u0</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Orchestrate nt steps over cell field u.&quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="n">nt</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">Euler_FTCS_stability</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">kappa</span><span class="p">),</span> <span class="s2">&quot;Stability condition not met&quot;</span>
+
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">))</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face_centered_arr</span><span class="p">()</span>
+    <span class="n">dudt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_centered_arr</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
+        <span class="n">u_sum_before</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
+        <span class="n">step</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
+        <span class="n">u_sum_after</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
+        <span class="k">assert</span> <span class="n">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_before</span><span class="p">,</span> <span class="n">u_sum_after</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">bc</span><span class="p">,</span> <span class="n">mesh</span><span class="p">),</span> <span class="s2">&quot;Heat not conserved&quot;</span>
+
+    <span class="k">return</span> <span class="n">u</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solve</span><span class="p">(</span>
+    <span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="n">kappa</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">nt</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">bc</span> <span class="o">=</span> <span class="n">BC</span><span class="p">(</span><span class="n">qL</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">qR</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[33.333333333333314, 33.33333333333333, 33.333333333333314]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="what-we-just-did">
+<h2>What we just did<a class="headerlink" href="#what-we-just-did" title="Link to this heading">#</a></h2>
+<p>We now have a solver whose structure and reasoning are explicit. It’s modular: each function
+has a single purpose over well-defined data.</p>
+<p>We did write a lot more lines, because we added:</p>
+<ul class="simple">
+<li><p>Separation of concerns (apply_bc, flux, divergence, step, solve) instead of one monolith</p></li>
+<li><p>Executable contracts (pre/postconditions, invariants)</p></li>
+<li><p>Lightweight data types (Mesh, BC)</p></li>
+</ul>
+<p><strong>In real applications</strong>, this “ceremony” is a small fraction of total code: The heavy lifting
+lives in numerical computations, I/O, parallelization, physics, etc.. The scaffolding pays
+off by reducing change amplification and cognitive load:</p>
+<ul class="simple">
+<li><p>Safer changes (localized edits)</p></li>
+<li><p>Better testing (unit, property, etc.)</p></li>
+<li><p>Faster debugging (failures point to where)</p></li>
+<li><p>Reusability (shared abstractions)</p></li>
+</ul>
+<p><strong>Do assertions hurt performance?</strong> Potentially, if run every step. In practice you can disable
+them for production (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-O</span></code>) or sample them periodically during long runs.</p>
+</section>
+<section id="looking-ahead">
+<h2>Looking Ahead<a class="headerlink" href="#looking-ahead" title="Link to this heading">#</a></h2>
+<p>In <strong>Chapter 3</strong>, we’ll take the next step:<br />
+turning these specifications into unit tests that run automatically,
+giving us rapid feedback and confidence as our code evolves.</p>
+<hr class="docutils" />
+<p><em>This notebook is a part of the “Rigor and Reasoning in Research Software” (R3Sw) tutorial, led by Alper Altuntas and sponsored by the Better Scientific Software (BSSw) Fellowship Program. Copyright © 2025</em></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ch1_code_and_fix.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Chapter 1: Code and Fix - The Usual Way</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ch3_unit_testing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Chapter 3: Unit Testing - Turning Specs into Checks</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">Key Concepts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-reason-about-code">Why Reason About Code?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#abstraction">Abstraction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specification-writing-down-intent">Specification: Writing Down Intent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#floyd-hoare-triples">Floyd-Hoare Triples</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-1">Exercise 2.1:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stepwise-refinement-from-abstract-to-concrete">Stepwise Refinement: From Abstract to Concrete</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#heat-equation-solver-revisited">Heat Equation Solver, Revisited</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-specification-the-what">Step 1 — Specification (the what)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#preconditions">Preconditions</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#postconditions">Postconditions</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-choose-the-abstractions">Step 2 – Choose the abstractions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-design-the-core-api">Step 3 – Design the Core API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-implement-incrementally-fill-in-implementations-step-by-step-maintaining-the-contracts">Step 4 – Implement Incrementally: Fill in implementations step by step, maintaining the contracts.</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4a-contracts">Step 4a: Contracts</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-2">Exercise 2.2:</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-3">Exercise 2.3:</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4b-concrete-code">Step 4b: Concrete Code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-ahead">Looking Ahead</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Alper Altuntas, et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
