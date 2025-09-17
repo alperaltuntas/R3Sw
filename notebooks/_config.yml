@@ -5,6 +5,10 @@ copyright: 2025
 execute:
   execute_notebooks: force
 
+html:
+  analytics:
+    google_analytics_id: G-V7VKREZ5MB
+
 # Add a bibtex file so that we can create citations
 #bibtex_bibfiles:
 #  - references.bib
