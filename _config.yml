@@ -1,0 +1,14 @@
+# This file is used to configure the Jupyter Book project.
+title: Rigor and Reasoning in Research Software (R3Sw)
+author: Alper Altuntas
+#logo: foo.png
+execute:
+  execute_notebooks: force
+
+html:
+  analytics:
+    google_analytics_id: G-V7VKREZ5MB
+
+# Add references
+#bibtex_bibfiles:
+#  - references.bib

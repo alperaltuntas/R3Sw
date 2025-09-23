@@ -1,1 +1,7 @@
 .hypothesis
+notebooks/*md
+notebooks/*.py
+
+__pycache__
+
+_build
