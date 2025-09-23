@@ -177,7 +177,7 @@
         </ul>
         <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix - The Usual Way</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ch2_a_new_way.html">Chapter 2: Reasoning About Code - A New Way</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch2_reasoning.html">Chapter 2: Reasoning About Code - Abstraction and Specification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing - Turning Specs into Checks</a></li>
 
 <li class="toctree-l1"><a class="reference internal" href="ch4_property_based_testing.html">Chapter 4: Property-Based Testing - From Examples to Hypotheses</a></li>
@@ -342,214 +342,119 @@
                   
   <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">0</span>
-    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">while</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">y</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="n">z</span> <span class="o">==</span> <span class="n">k</span> <span class="o">*</span> <span class="n">x</span>
-        <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">z</span> <span class="o">+=</span> <span class="n">x</span>
-        <span class="k">assert</span> <span class="n">z</span> <span class="o">==</span> <span class="n">k</span> <span class="o">*</span> <span class="n">x</span>
-    <span class="k">return</span> <span class="n">z</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">intdiv</span><span class="p">(</span><span class="n">x</span> <span class="p">,</span><span class="n">y</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span>
-    <span class="k">while</span> <span class="n">r</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">:</span>
-        <span class="n">r</span> <span class="o">-=</span> <span class="n">y</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mult</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> check_div.py
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="c1">#print(f&quot;Dividing x={x} y={y}&quot;)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
+    <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="n">res</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Overwriting check_div.py
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fac</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fac</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>crosshair<span class="w"> </span>check<span class="w"> </span>--analysis_kind<span class="o">=</span>asserts<span class="w"> </span>check_div.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>crosshair<span class="w"> </span>cover<span class="w"> </span>check_div.py
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>div(0.0, 1.0)
+div(0.0, float(&quot;inf&quot;))
+div(0.0, 0.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
+    <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="n">res</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Solver</span><span class="p">,</span> <span class="n">sat</span>
+
+<span class="c1"># Declare symbolic variables</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Real</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">),</span> <span class="n">Real</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+
+<span class="c1"># Preconditions</span>
+<span class="n">preconditions</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Postcondition</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
+<span class="n">postcondition</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Ask Z3: can preconditions hold AND postcondition fail?</span>
+<span class="k">with</span> <span class="n">Solver</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+    
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">preconditions</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># Negation of postcondition</span>
+
+    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span> <span class="o">==</span> <span class="n">sat</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Counterexample:&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">1</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-<span class="n">fac</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No counterexamples (property holds).&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 32 μs, sys: 18 μs, total: 50 μs
-Wall time: 56 μs
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>57133839564458545904789328652610540031895535786011264182548375833179829124845398393126574488675311145377107878746854204162666250198684504466355949195922066574942592095735778929325357290444962472405416790722118445437122269675520000000000000000000000000000000000000
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No counterexamples (property holds).
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fac</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">while</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
-        <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">f</span> <span class="o">*=</span> <span class="n">k</span>
-    <span class="k">return</span> <span class="n">f</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-<span class="n">fac</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 18 μs, sys: 1 μs, total: 19 μs
-Wall time: 21.9 μs
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>57133839564458545904789328652610540031895535786011264182548375833179829124845398393126574488675311145377107878746854204162666250198684504466355949195922066574942592095735778929325357290444962472405416790722118445437122269675520000000000000000000000000000000000000
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a numpy array with random number between 0 and 1:</span>
-<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arr</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.74787139, 0.20189421, 0.13730778, 0.09000687, 0.6205136 ,
-       0.97698146, 0.01766366, 0.29384508, 0.62252211, 0.1944689 ,
-       0.37756602, 0.26447484, 0.34364855, 0.03937726, 0.66607655,
-       0.79093301, 0.86803009, 0.06496443, 0.01824942, 0.65259399,
-       0.83133815, 0.50300139, 0.88183732, 0.45801381, 0.22812062,
-       0.29047507, 0.71913372, 0.89206635, 0.10963702, 0.10151274,
-       0.35190487, 0.59248216, 0.59463197, 0.76772066, 0.93099594,
-       0.18691165, 0.25868058, 0.71035895, 0.46219093, 0.5362343 ,
-       0.26683352, 0.28260086, 0.38201986, 0.38930148, 0.60031427,
-       0.55895994, 0.42746479, 0.10166315, 0.11626423, 0.00479001,
-       0.99085773, 0.40054216, 0.215588  , 0.0700366 , 0.15217709,
-       0.13172806, 0.9297372 , 0.54914358, 0.01203704, 0.25690611,
-       0.89933987, 0.37472133, 0.25973698, 0.01283432, 0.09712659,
-       0.02539119, 0.9293634 , 0.68394846, 0.57256356, 0.6611473 ,
-       0.21931075, 0.40578195, 0.02254587, 0.58301515, 0.27123113,
-       0.65768168, 0.63143019, 0.56948579, 0.01205677, 0.80264143,
-       0.69330669, 0.40721641, 0.64861637, 0.10200178, 0.4872543 ,
-       0.89238706, 0.89705325, 0.64162983, 0.92796158, 0.47377991,
-       0.53024057, 0.32634029, 0.73044253, 0.9819181 , 0.99894603,
-       0.32965244, 0.77574193, 0.65085453, 0.02826893, 0.34004393])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute variance of a given numpy array arr:</span>
-<span class="n">arr</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.08783249853835674)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define a function that computes the variance of a given numpy array</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">compute_variance</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
-    <span class="n">N</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">size</span>
-    <span class="n">arr_mean</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">N</span>
-    
-    
-    <span class="k">return</span> <span class="n">squared_diffs</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">N</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compute_variance</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">compute_variance</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">FP</span><span class="p">,</span> <span class="n">Float32</span>  <span class="c1"># Need FP to create floating-point variables</span>
 
-<span class="nn">Cell In[12], line 7,</span> in <span class="ni">compute_variance</span><span class="nt">(arr)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">N</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">size</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">arr_mean</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">N</span>
-<span class="ne">----&gt; </span><span class="mi">7</span> <span class="k">return</span> <span class="n">squared_diffs</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">N</span>
+<span class="c1"># Use separate variable names to avoid overwriting existing Real variables x, y</span>
+<span class="n">x_fp</span> <span class="o">=</span> <span class="n">FP</span><span class="p">(</span><span class="s1">&#39;x_fp&#39;</span><span class="p">,</span> <span class="n">Float32</span><span class="p">())</span>
+<span class="n">y_fp</span> <span class="o">=</span> <span class="n">FP</span><span class="p">(</span><span class="s1">&#39;y_fp&#39;</span><span class="p">,</span> <span class="n">Float32</span><span class="p">())</span>
 
-<span class="ne">NameError</span>: name &#39;squared_diffs&#39; is not defined
+<span class="c1"># Preconditions for floating point version</span>
+<span class="n">preconditions_fp</span> <span class="o">=</span> <span class="p">[</span><span class="n">y_fp</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Postcondition (may fail due to rounding)</span>
+<span class="n">res_fp</span> <span class="o">=</span> <span class="n">x_fp</span> <span class="o">/</span> <span class="n">y_fp</span>
+<span class="n">postcondition_fp</span> <span class="o">=</span> <span class="p">(</span><span class="n">res_fp</span> <span class="o">*</span> <span class="n">y_fp</span> <span class="o">==</span> <span class="n">x_fp</span><span class="p">)</span>
+
+<span class="c1"># Ask Z3: can preconditions hold AND postcondition fail?</span>
+<span class="n">s_fp</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="n">s_fp</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">preconditions_fp</span><span class="p">)</span>
+<span class="n">s_fp</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res_fp</span> <span class="o">*</span> <span class="n">y_fp</span> <span class="o">!=</span> <span class="n">x_fp</span><span class="p">)</span>  <span class="c1"># Negation of postcondition</span>
+
+<span class="k">if</span> <span class="n">s_fp</span><span class="o">.</span><span class="n">check</span><span class="p">()</span> <span class="o">==</span> <span class="n">sat</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Counterexample (floating-point):&quot;</span><span class="p">,</span> <span class="n">s_fp</span><span class="o">.</span><span class="n">model</span><span class="p">())</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No counterexamples (floating-point property holds).&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">runavg</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">W</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute a running average of a given dataset.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    data: numpy.ndarray</span>
-<span class="sd">        The input array for which the running average is to be computed.</span>
-<span class="sd">    W: int</span>
-<span class="sd">        The window size for computing the running average.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    numpy.ndarray</span>
-<span class="sd">        An array containing the running averages.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="k">pass</span> <span class="c1"># todo</span>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Counterexample (floating-point): [y_fp = NaN, x_fp = -0.00026714801788330078125*(2**-126)]
 </pre></div>
 </div>
 </div>

@@ -77,7 +77,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Chapter 4: Property-Based Testing - From Examples to Hypotheses" href="ch4_property_based_testing.html" />
-    <link rel="prev" title="Chapter 2: Reasoning About Code - A New Way" href="ch2_a_new_way.html" />
+    <link rel="prev" title="Chapter 2: Reasoning About Code - Abstraction and Specification" href="ch2_reasoning.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -177,7 +177,7 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix - The Usual Way</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ch2_a_new_way.html">Chapter 2: Reasoning About Code - A New Way</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch2_reasoning.html">Chapter 2: Reasoning About Code - Abstraction and Specification</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 3: Unit Testing - Turning Specs into Checks</a></li>
 
 <li class="toctree-l1"><a class="reference internal" href="ch4_property_based_testing.html">Chapter 4: Property-Based Testing - From Examples to Hypotheses</a></li>
@@ -398,41 +398,39 @@ principles we discussed earlier, below are some key practices to follow:</p>
 </section>
 <section id="unit-testing-in-action">
 <h2>Unit Testing in Action<a class="headerlink" href="#unit-testing-in-action" title="Link to this heading">#</a></h2>
-<p>Take the <code class="docutils literal notranslate"><span class="pre">flux</span></code> function from the previous chapter as an example. (We have split
+<p>Take the <code class="docutils literal notranslate"><span class="pre">diffusive_flux</span></code> function from the previous chapter as an example. (We have split
 the assertion checks into separate lines for clarity.)</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">flux</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update face fluxes F based on cell field u.&quot;&quot;&quot;</span>
-
-    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Invalid grid spacing&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Inconsistent face flux array length&quot;</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)):</span>
-        <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">diffusive_flux</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a cell field (c), compute the diffusive flux (f).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
+    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>Unit testing this function is as simple as calling it with some test inputs and checking the outputs. Here’s how you might write a unit test for the <code class="docutils literal notranslate"><span class="pre">flux</span></code> function using <code class="docutils literal notranslate"><span class="pre">pytest</span></code>:</p>
+<p>Unit testing this function is as simple as calling it with some test inputs and checking the outputs. Here’s how you might write a unit test for the <code class="docutils literal notranslate"><span class="pre">diffusive_flux</span></code> function using <code class="docutils literal notranslate"><span class="pre">pytest</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">isclose</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">test_flux</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_diffusive_flux</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Constant field leads to zero flux&quot;&quot;&quot;</span>
     <span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">]</span>
     <span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
-    <span class="n">flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">isclose</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)),</span> <span class="sa">f</span><span class="s2">&quot;Expected all zeros, got </span><span class="si">{</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
 
-<span class="n">test_flux</span><span class="p">()</span>
+<span class="n">test_diffusive_flux</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>That’s it! We unit tested the <code class="docutils literal notranslate"><span class="pre">flux</span></code> function. And the test passed successfully.
+<p>That’s it! We unit tested the <code class="docutils literal notranslate"><span class="pre">diffusive_flux</span></code> function. And the test passed successfully.
 How do we know? The assertion did not raise an error.</p>
 <p>But we only did so for a specific case, where we confirmed that a constant field
 and zero boundary fluxes lead to zero flux. We’ll add more tests to cover different scenarios,
@@ -458,92 +456,95 @@ developed in Chapter 2:</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> heat1d.py
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">isclose</span>
+<span class="c1"># --- Data Structures ---</span>
 
-<span class="c1"># Data abstractions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="n">vec</span>  <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Mesh</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Uniform 1-D mesh.&quot;&quot;&quot;</span>
-    <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">N</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># number of cells</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cell_centered_arr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">face_centered_arr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># cell size</span>
+    <span class="n">N</span><span class="p">:</span> <span class="nb">int</span>     <span class="c1"># number of cells</span>
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">BC</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Neumann flux boundary conditions on the diffusive flux.&quot;&quot;&quot;</span>
-    <span class="n">qL</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">qR</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cell_field</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
 
-<span class="c1"># Behavior abstractions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">face_field</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">qL</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qR</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply Neumann BCs to face fluxes F.&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
-    <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">qL</span><span class="p">,</span> <span class="n">qR</span>
+<span class="c1"># --- Property Checks ---</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">flux</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update face fluxes F based on cell field u.&quot;&quot;&quot;</span>
-
-    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Invalid grid spacing&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Inconsistent face flux array length&quot;</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)):</span>
-        <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">divergence_telescoping</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the finite volume telescoping property.&quot;&quot;&quot;</span>
-    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
-    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">isclose</span><span class="p">(</span><span class="n">total_divergence</span><span class="p">,</span> <span class="n">boundary_flux</span><span class="p">)</span>
+    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">total_divergence</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">boundary_flux</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">dudt</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update cell tendencies dudt based on face fluxes F.&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dudt</span><span class="p">)):</span>
-        <span class="n">dudt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
-    <span class="k">assert</span> <span class="n">divergence_telescoping</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stability_condition</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the stability condition for the explicit Euler scheme.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">dt</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">dx</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dudt</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_old</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_sum_new</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if heat is conserved.&quot;&quot;&quot;</span>
+    <span class="n">expected_change</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">actual_change</span> <span class="o">=</span> <span class="n">u_sum_new</span> <span class="o">-</span> <span class="n">u_sum_old</span>
+    <span class="k">return</span> <span class="n">actual_change</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">expected_change</span><span class="p">)</span>
+
+<span class="c1"># --- Procedures ---</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply BCs by overriding first and last face quantities (f).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">diffusive_flux</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a cell field (c), compute the diffusive flux (f).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
+    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
+    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)):</span>
+        <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+    <span class="k">assert</span> <span class="n">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dudt</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance cell field u by one time step using explicit Euler method.&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dt&quot;</span>
+    <span class="k">assert</span> <span class="n">mesh</span><span class="o">.</span><span class="n">N</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
 
-    <span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="o">.</span><span class="n">qL</span><span class="p">,</span> <span class="n">bc</span><span class="o">.</span><span class="n">qR</span><span class="p">)</span>
-    <span class="n">flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
+    <span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
+    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
     <span class="n">divergence</span><span class="p">(</span><span class="n">dudt</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">N</span><span class="p">):</span>
         <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">dudt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">Euler_FTCS_stability</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check stability condition for explicit Euler (FTCS) scheme.&quot;&quot;&quot;</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="n">dx</span><span class="o">**</span><span class="mi">2</span>
-    <span class="k">return</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="mf">0.5</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_before</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_sum_after</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if heat is conserved.&quot;&quot;&quot;</span>
-    <span class="n">expected_change</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">bc</span><span class="o">.</span><span class="n">qL</span> <span class="o">-</span> <span class="n">bc</span><span class="o">.</span><span class="n">qR</span><span class="p">)</span>
-    <span class="n">actual_change</span> <span class="o">=</span> <span class="n">u_sum_after</span> <span class="o">-</span> <span class="n">u_sum_before</span>
-    <span class="k">return</span> <span class="n">isclose</span><span class="p">(</span><span class="n">actual_change</span><span class="p">,</span> <span class="n">expected_change</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">u0</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Orchestrate nt steps over cell field u.&quot;&quot;&quot;</span>
 
-    <span class="k">assert</span> <span class="n">nt</span> <span class="o">&gt;</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">Euler_FTCS_stability</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">kappa</span><span class="p">),</span> <span class="s2">&quot;Stability condition not met&quot;</span>
+    <span class="k">assert</span> <span class="n">nt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Number of time steps must be positive&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Boundary conditions must be a list of two values&quot;</span>
+    <span class="k">assert</span> <span class="n">stability_condition</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">kappa</span><span class="p">),</span> <span class="s2">&quot;Stability condition not met&quot;</span>
 
     <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">))</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">F</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face_centered_arr</span><span class="p">()</span>
-    <span class="n">dudt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_centered_arr</span><span class="p">()</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face_field</span><span class="p">()</span>
+    <span class="n">dudt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_field</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
-        <span class="n">u_sum_before</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
-        <span class="n">step</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
-        <span class="n">u_sum_after</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
-        <span class="k">assert</span> <span class="n">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_before</span><span class="p">,</span> <span class="n">u_sum_after</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">bc</span><span class="p">,</span> <span class="n">mesh</span><span class="p">),</span> <span class="s2">&quot;Heat not conserved&quot;</span>
+        <span class="n">u_sum_old</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
+        <span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
+        <span class="n">u_sum_new</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
+        <span class="k">assert</span> <span class="n">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_old</span><span class="p">,</span> <span class="n">u_sum_new</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">F</span><span class="p">),</span> <span class="s2">&quot;Heat not conserved&quot;</span>
 
     <span class="k">return</span> <span class="n">u</span>
 </pre></div>
@@ -615,19 +616,16 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
-test_div.py 
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Red">F                                                            [100%]</span>
+test_div.py <span class=" -Color -Color-Red">F                                                            [100%]</span>
 
 =================================== FAILURES ===================================
 <span class=" -Color -Color-Bold -Color-Bold-Red">________________________________ test_division _________________________________</span>
-
-    def test_division():
-&gt;       div(7, 25)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Red">test_div.py</span>:9: 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    def test_division():
+&gt;       div(7, 25)
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_div.py</span>:9: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 x = 7, y = 25
@@ -644,7 +642,7 @@ x = 7, y = 25
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Cyan">=========================== short test summary info ============================</span>
 <span class=" -Color -Color-Red">FAILED</span> test_div.py::<span class=" -Color -Color-Bold">test_division</span> - assert (0.28 * 25) == 7
-<span class=" -Color -Color-Red">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span><span class=" -Color -Color-Red"> in 0.36s ===============================</span>
+<span class=" -Color -Color-Red">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span><span class=" -Color -Color-Red"> in 0.22s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -689,13 +687,10 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
-test_div.py 
+test_div.py <span class=" -Color -Color-Yellow">x                                                            [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">x                                                            [100%]</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Yellow">1 xfailed</span><span class=" -Color -Color-Yellow"> in 0.24s ==============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Yellow">1 xfailed</span><span class=" -Color -Color-Yellow"> in 0.20s ==============================</span>
 </pre></div>
 </div>
 </div>
@@ -733,9 +728,7 @@ test_div.py
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">============================= test session starts ==============================</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
+platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
@@ -744,7 +737,7 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 test_div.py <span class=" -Color -Color-Green">.                                                            [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.24s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.17s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -782,17 +775,19 @@ test_div.py <span class=" -Color -Color-Green">.                                
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">============================= test session starts ==============================</span>
 platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>rootdir: /Users/altuntas/r3sw/notebooks
+rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
-
-test_div.py <span class=" -Color -Color-Green">.                                                            [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.22s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>test_div.py 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                            [100%]</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.30s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -804,14 +799,14 @@ definition as <code class="docutils literal notranslate"><span class="pre">test_
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> test_simple.py
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">flux</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">diffusive_flux</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_flux_simple</span><span class="p">():</span>
     <span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
     <span class="n">kappa</span> <span class="o">=</span> <span class="mf">0.1</span>
     <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.0</span>
     <span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -837,10 +832,13 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
-test_simple.py <span class=" -Color -Color-Green">.                                                         [100%]</span>
+test_simple.py 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.18s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                         [100%]</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.28s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -856,7 +854,7 @@ test_simple.py <span class=" -Color -Color-Green">.                             
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">flux</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">diffusive_flux</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
     <span class="s2">&quot;u,kappa,dx,expected&quot;</span><span class="p">,</span>
@@ -869,7 +867,7 @@ test_simple.py <span class=" -Color -Color-Green">.                             
 <span class="k">def</span><span class="w"> </span><span class="nf">test_flux_param</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Testing u=</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">, kappa=</span><span class="si">{</span><span class="n">kappa</span><span class="si">}</span><span class="s2">, dx=</span><span class="si">{</span><span class="n">dx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -896,12 +894,14 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 
 test_flux_via_params.py 
 Testing u=[100, 100, 100], kappa=0.1, dx=1.0
-<span class=" -Color -Color-Green">.</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.</span>
 Testing u=[0, 10, 20], kappa=0.5, dx=2.0
 <span class=" -Color -Color-Green">.</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.24s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.33s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -940,18 +940,18 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 <span class=" -Color -Color-Bold">collected 14 items                                                             </span>
 
-test_div.py <span class=" -Color -Color-Green">.                                                            [  7%]</span>
-test_divergence.py <span class=" -Color -Color-Green">.                                                     [ 14%]</span>
-test_flux.py <span class=" -Color -Color-Green">..                                                          [ 28%]</span>
-test_flux_via_params.py 
+test_div.py 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">..                                               [ 42%]</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                            [  7%]</span>
+test_divergence.py <span class=" -Color -Color-Green">.                                                     [ 14%]</span>
+test_flux.py <span class=" -Color -Color-Green">..                                                          [ 28%]</span>
+test_flux_via_params.py <span class=" -Color -Color-Green">..                                               [ 42%]</span>
 test_simple.py <span class=" -Color -Color-Green">.                                                         [ 50%]</span>
 test_step_solve.py <span class=" -Color -Color-Green">.......                                               [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">14 passed</span><span class=" -Color -Color-Green"> in 0.38s ==============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">14 passed</span><span class=" -Color -Color-Green"> in 0.43s ==============================</span>
 </pre></div>
 </div>
 </div>
@@ -979,7 +979,7 @@ and in a shared <code class="docutils literal notranslate"><span class="pre">con
 <span class="sd">objects we can reuse across tests without repeating setup code.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">BC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">dx</span><span class="p">():</span> <span class="k">return</span> <span class="mf">1.0</span>
@@ -994,16 +994,16 @@ and in a shared <code class="docutils literal notranslate"><span class="pre">con
 <span class="k">def</span><span class="w"> </span><span class="nf">mesh5</span><span class="p">(</span><span class="n">dx</span><span class="p">):</span> <span class="k">return</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">insulated</span><span class="p">():</span> <span class="k">return</span> <span class="n">BC</span><span class="p">(</span><span class="n">qL</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">qR</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">insulated</span><span class="p">():</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">linear_bc</span><span class="p">():</span> <span class="k">return</span> <span class="n">BC</span><span class="p">(</span><span class="n">qL</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">qR</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">linear_bc</span><span class="p">():</span> <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">F3</span><span class="p">(</span><span class="n">mesh3</span><span class="p">):</span> <span class="k">return</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">face_centered_arr</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">F3</span><span class="p">(</span><span class="n">mesh3</span><span class="p">):</span> <span class="k">return</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">face_field</span><span class="p">()</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">dudt3</span><span class="p">(</span><span class="n">mesh3</span><span class="p">):</span> <span class="k">return</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">cell_centered_arr</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dudt3</span><span class="p">(</span><span class="n">mesh3</span><span class="p">):</span> <span class="k">return</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">cell_field</span><span class="p">()</span>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">u_spike</span><span class="p">():</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
@@ -1037,13 +1037,13 @@ Using the <code class="docutils literal notranslate"><span class="pre">F3</span>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> test_flux.py
 <span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span><span class="p">,</span> <span class="n">raises</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">flux</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">diffusive_flux</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_flux_constant_field_yields_zero_interior</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a constant field, interior gradients are zero → interior fluxes are zero.&quot;&quot;&quot;</span>
     <span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">]</span>
     <span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="mf">9.9</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">8.8</span><span class="p">]</span>  <span class="c1"># sentinels at boundaries to show they&#39;re not changed</span>
-    <span class="n">flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">approx</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
     <span class="k">assert</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">9.9</span> <span class="ow">and</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mf">8.8</span>  <span class="c1"># boundary faces untouched by flux()</span>
 
@@ -1051,7 +1051,7 @@ Using the <code class="docutils literal notranslate"><span class="pre">F3</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A positive jump then negative jump should produce equal/opposite interior fluxes.&quot;&quot;&quot;</span>
     <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span>
     <span class="n">F</span> <span class="o">=</span> <span class="n">F3</span><span class="p">[:]</span>
-    <span class="n">flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u_spike</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u_spike</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">approx</span><span class="p">([</span><span class="o">-</span><span class="n">kappa</span><span class="o">*</span><span class="mf">100.0</span><span class="p">,</span> <span class="o">+</span><span class="n">kappa</span><span class="o">*</span><span class="mf">100.0</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -1073,16 +1073,18 @@ Using the <code class="docutils literal notranslate"><span class="pre">F3</span>
 platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
-<span class=" -Color -Color-Bold">collecting ... </span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 2 items                                                              </span>
 
-test_flux.py <span class=" -Color -Color-Green">..                                                          [100%]</span>
+test_flux.py 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.24s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">..                                                          [100%]</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.34s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -1094,11 +1096,11 @@ test_flux.py <span class=" -Color -Color-Green">..                              
 <p>Recall that we have the below function as a postcondition after each time <code class="docutils literal notranslate"><span class="pre">divergence</span></code> is computed:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">divergence_telescoping</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the finite volume telescoping property.&quot;&quot;&quot;</span>
-    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
-    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">total_divergence</span><span class="p">,</span> <span class="n">boundary_flux</span><span class="p">)</span>
+    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">total_divergence</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">boundary_flux</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1141,15 +1143,12 @@ platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
 test_divergence.py <span class=" -Color -Color-Green">.                                                     [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.26s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.20s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -1188,15 +1187,16 @@ test_divergence.py <span class=" -Color -Color-Green">.                         
 platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">collecting ... </span>
+<span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
-test_divergence.py <span class=" -Color -Color-Green">.                                                     [100%]</span>
+test_divergence.py 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.21s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                     [100%]</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.34s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -1213,48 +1213,48 @@ test_divergence.py <span class=" -Color -Color-Green">.                         
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> test_step_solve.py
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span><span class="p">,</span> <span class="n">raises</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">BC</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">solve</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">step_heat_eqn</span><span class="p">,</span> <span class="n">solve_heat_eqn</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_step_moves_spike_toward_neighbors</span><span class="p">(</span><span class="n">mesh3</span><span class="p">,</span> <span class="n">insulated</span><span class="p">,</span> <span class="n">u_spike</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Given insulated BCs and a stable dt, a single step should diffuse the spike:</span>
 <span class="sd">        - middle cell decreases, neighbors increase.&quot;&quot;&quot;</span>
-    <span class="n">F</span> <span class="o">=</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">face_centered_arr</span><span class="p">()</span>
-    <span class="n">dudt</span> <span class="o">=</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">cell_centered_arr</span><span class="p">()</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">face_field</span><span class="p">()</span>
+    <span class="n">dudt</span> <span class="o">=</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">cell_field</span><span class="p">()</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">u_spike</span><span class="p">[:]</span>
-    <span class="n">step</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh3</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">insulated</span><span class="p">)</span>
+    <span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh3</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">insulated</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">100.0</span> <span class="ow">and</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">test_conservation_insulated_solve</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;With qL=qR=0, total discrete heat (sum(u)*dx) is invariant across steps.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_conservation_insulated_solve</span><span class="p">(</span><span class="n">insulated</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;With qL=qR=0, total discrete heat (sum(u)*dx) is invariant across step_heat_eqn.&quot;&quot;&quot;</span>
     <span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
-    <span class="n">u</span>  <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">BC</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+    <span class="n">u</span>  <span class="o">=</span> <span class="n">solve_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">insulated</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">u0</span><span class="p">))</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_conservation_with_boundary_work</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;With qL!=qR, total heat changes by dt*(qL - qR) per step.&quot;&quot;&quot;</span>
     <span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">]</span>
     <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nt</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">4</span>
-    <span class="n">bc</span> <span class="o">=</span> <span class="n">BC</span><span class="p">(</span><span class="n">qL</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">qR</span><span class="o">=-</span><span class="mf">3.0</span><span class="p">)</span>  <span class="c1"># net in = 5</span>
-    <span class="n">u</span>  <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="n">nt</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">bc</span><span class="p">)</span>
-    <span class="n">expected</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span><span class="o">*</span><span class="n">dx</span> <span class="o">+</span> <span class="n">nt</span><span class="o">*</span><span class="n">dt</span><span class="o">*</span><span class="p">(</span><span class="n">bc</span><span class="o">.</span><span class="n">qL</span> <span class="o">-</span> <span class="n">bc</span><span class="o">.</span><span class="n">qR</span><span class="p">)</span>
+    <span class="n">bc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">]</span>  <span class="c1"># net in = 5</span>
+    <span class="n">u</span>  <span class="o">=</span> <span class="n">solve_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="n">nt</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">bc</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span><span class="o">*</span><span class="n">dx</span> <span class="o">+</span> <span class="n">nt</span><span class="o">*</span><span class="n">dt</span><span class="o">*</span><span class="p">(</span><span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">*</span><span class="n">dx</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
-    <span class="c1"># NOTE: bug above on purpose to show failing message; fix to bc.qR in next test.</span>
+    <span class="c1"># NOTE: bug above on purpose to show failing message; fix to bc[1] in next test.</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_symmetry_preserved_one_step</span><span class="p">(</span><span class="n">mesh3</span><span class="p">,</span> <span class="n">insulated</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A symmetric initial state (a,b,a) under insulated BCs remains symmetric after 1 step.&quot;&quot;&quot;</span>
     <span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
-    <span class="n">u</span>  <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">insulated</span><span class="p">)</span>
+    <span class="n">u</span>  <span class="o">=</span> <span class="n">solve_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">insulated</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">test_unstable_dt_raises</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_unstable_dt_raises</span><span class="p">(</span><span class="n">insulated</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Stability guard for dx=1, kappa=0.1. Pick dt=10 to force assert.&quot;&quot;&quot;</span>
     <span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
     <span class="k">with</span> <span class="n">raises</span><span class="p">(</span><span class="ne">AssertionError</span><span class="p">):</span>
-        <span class="n">solve</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">BC</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">solve_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">insulated</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_uniform_is_fixed_point</span><span class="p">(</span><span class="n">mesh5</span><span class="p">,</span> <span class="n">insulated</span><span class="p">,</span> <span class="n">u_uniform</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Uniform field is a fixed point (steady state) under insulated BCs for any stable dt/kappa.&quot;&quot;&quot;</span>
-    <span class="n">u</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">u_uniform</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">mesh5</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">insulated</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">solve_heat_eqn</span><span class="p">(</span><span class="n">u_uniform</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">mesh5</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">insulated</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">u</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">u_uniform</span><span class="p">)</span>
 
 
@@ -1263,7 +1263,7 @@ test_divergence.py <span class=" -Color -Color-Green">.                         
 <span class="sd">    gradient. This test checks that after many steps the cell differences approach a constant.&quot;&quot;&quot;</span>
     <span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
     <span class="c1"># stable dt: r = kappa*dt/dx^2; choose small dt to be safe</span>
-    <span class="n">u</span>  <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">mesh5</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">linear_bc</span><span class="p">)</span>
+    <span class="n">u</span>  <span class="o">=</span> <span class="n">solve_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">mesh5</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">linear_bc</span><span class="p">)</span>
     <span class="n">diffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">))]</span>
     <span class="c1"># Differences should be (approximately) equal across cells</span>
     <span class="n">avg</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">diffs</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">diffs</span><span class="p">)</span>
@@ -1285,18 +1285,22 @@ test_divergence.py <span class=" -Color -Color-Green">.                         
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">============================= test session starts ==============================</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
+platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 7 items                                                              </span>
 
-test_step_solve.py <span class=" -Color -Color-Green">.......                                               [100%]</span>
+test_step_solve.py 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">7 passed</span><span class=" -Color -Color-Green"> in 0.29s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">......                                               [100%]</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">7 passed</span><span class=" -Color -Color-Green"> in 0.33s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -1347,7 +1351,7 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
     &lt;Function test_equal_flux_bc_trends_toward_linear_profile&gt;
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">========================= 14 tests collected in 0.50s ==========================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">========================= 14 tests collected in 0.25s ==========================</span>
 </pre></div>
 </div>
 </div>
@@ -1399,12 +1403,12 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="ch2_a_new_way.html"
+       href="ch2_reasoning.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Chapter 2: Reasoning About Code - A New Way</p>
+        <p class="prev-next-title">Chapter 2: Reasoning About Code - Abstraction and Specification</p>
       </div>
     </a>
     <a class="right-next"
