@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; Rigor and Reasoning in Research Software (R3Sw)</title>
+    <title>Closing Remarks: Climbing the Ladder of Rigor &#8212; Rigor and Reasoning in Research Software (R3Sw)</title>
   
   
   
@@ -73,9 +73,10 @@
                 gtag('config', 'G-V7VKREZ5MB');
             </script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'scratch';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'closing_remarks';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Ch. 5: Symbolic Checking - Beyond Testing" href="ch5_symbolic_checking.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -127,8 +128,6 @@
       
       
       
-        
-      
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
@@ -175,14 +174,14 @@
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix - The Usual Way</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch2_reasoning.html">Chapter 2: Reasoning About Code - Abstraction and Specification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing - Turning Specs into Checks</a></li>
 
 <li class="toctree-l1"><a class="reference internal" href="ch4_property_based_testing.html">Chapter 4: Property-Based Testing - From Examples to Hypotheses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch5_symbolic_checking.html">Ch. 5: Symbolic Checking - Beyond Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="closing_remarks.html">Closing Remarks: Climbing the Ladder of Rigor</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Closing Remarks: Climbing the Ladder of Rigor</a></li>
 </ul>
 
     </div>
@@ -242,7 +241,7 @@
       
       
       
-      <li><a href="_sources/scratch.ipynb" target="_blank"
+      <li><a href="_sources/closing_remarks.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -318,7 +317,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1><no title></h1>
+    <h1>Closing Remarks: Climbing the Ladder of Rigor</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -327,9 +326,11 @@
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-tools-a-scientific-mindset-for-software">Beyond Tools: A Scientific Mindset for Software</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#moving-forward">Moving Forward</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources">Resources</a></li>
 </ul>
-
             </nav>
         </div>
     </div>
@@ -340,125 +341,56 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> check_div.py
-<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-    <span class="c1">#print(f&quot;Dividing x={x} y={y}&quot;)</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
-    <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>
-    <span class="k">return</span> <span class="n">res</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Overwriting check_div.py
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>crosshair<span class="w"> </span>check<span class="w"> </span>--analysis_kind<span class="o">=</span>asserts<span class="w"> </span>check_div.py
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>crosshair<span class="w"> </span>cover<span class="w"> </span>check_div.py
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>div(0.0, 1.0)
-div(0.0, float(&quot;inf&quot;))
-div(0.0, 0.0)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
-    <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>
-    <span class="k">return</span> <span class="n">res</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Solver</span><span class="p">,</span> <span class="n">sat</span>
-
-<span class="c1"># Declare symbolic variables</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Real</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">),</span> <span class="n">Real</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
-
-<span class="c1"># Preconditions</span>
-<span class="n">preconditions</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
-
-<span class="c1"># Postcondition</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
-<span class="n">postcondition</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span>
-
-<span class="c1"># Ask Z3: can preconditions hold AND postcondition fail?</span>
-<span class="k">with</span> <span class="n">Solver</span><span class="p">()</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
-    
-    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">preconditions</span><span class="p">)</span>
-    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># Negation of postcondition</span>
-
-    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span> <span class="o">==</span> <span class="n">sat</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Counterexample:&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="p">())</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No counterexamples (property holds).&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No counterexamples (property holds).
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">FP</span><span class="p">,</span> <span class="n">Float32</span>  <span class="c1"># Need FP to create floating-point variables</span>
-
-<span class="c1"># Use separate variable names to avoid overwriting existing Real variables x, y</span>
-<span class="n">x_fp</span> <span class="o">=</span> <span class="n">FP</span><span class="p">(</span><span class="s1">&#39;x_fp&#39;</span><span class="p">,</span> <span class="n">Float32</span><span class="p">())</span>
-<span class="n">y_fp</span> <span class="o">=</span> <span class="n">FP</span><span class="p">(</span><span class="s1">&#39;y_fp&#39;</span><span class="p">,</span> <span class="n">Float32</span><span class="p">())</span>
-
-<span class="c1"># Preconditions for floating point version</span>
-<span class="n">preconditions_fp</span> <span class="o">=</span> <span class="p">[</span><span class="n">y_fp</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
-
-<span class="c1"># Postcondition (may fail due to rounding)</span>
-<span class="n">res_fp</span> <span class="o">=</span> <span class="n">x_fp</span> <span class="o">/</span> <span class="n">y_fp</span>
-<span class="n">postcondition_fp</span> <span class="o">=</span> <span class="p">(</span><span class="n">res_fp</span> <span class="o">*</span> <span class="n">y_fp</span> <span class="o">==</span> <span class="n">x_fp</span><span class="p">)</span>
-
-<span class="c1"># Ask Z3: can preconditions hold AND postcondition fail?</span>
-<span class="n">s_fp</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
-<span class="n">s_fp</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">preconditions_fp</span><span class="p">)</span>
-<span class="n">s_fp</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res_fp</span> <span class="o">*</span> <span class="n">y_fp</span> <span class="o">!=</span> <span class="n">x_fp</span><span class="p">)</span>  <span class="c1"># Negation of postcondition</span>
-
-<span class="k">if</span> <span class="n">s_fp</span><span class="o">.</span><span class="n">check</span><span class="p">()</span> <span class="o">==</span> <span class="n">sat</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Counterexample (floating-point):&quot;</span><span class="p">,</span> <span class="n">s_fp</span><span class="o">.</span><span class="n">model</span><span class="p">())</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No counterexamples (floating-point property holds).&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Counterexample (floating-point): [y_fp = NaN, x_fp = -0.00026714801788330078125*(2**-126)]
-</pre></div>
-</div>
-</div>
-</div>
+  <section class="tex2jax_ignore mathjax_ignore" id="closing-remarks-climbing-the-ladder-of-rigor">
+<h1>Closing Remarks: Climbing the Ladder of Rigor<a class="headerlink" href="#closing-remarks-climbing-the-ladder-of-rigor" title="Link to this heading">#</a></h1>
+<p>In this tutorial, we stepped through a ladder of rigor in scientific software development, exploring how to bring greater clarity, reliability, and confidence to our code. Along the way, we emphasized not just tools and techniques, but a mindset: a way of thinking about scientific software that moves beyond the traditional “code-and-fix” mentality.</p>
+<p>We progressed through three major levels of rigor:</p>
+<ul class="simple">
+<li><p>Unit testing: almost always necessary and a foundational practice. Unit tests provide fast feedback and guard against regressions, but they can only check the specific cases you think to test.</p></li>
+<li><p>Property-based testing: often useful and highly effective. By automatically generating many diverse inputs, property-based testing greatly expands coverage and uncovers edge cases you might never have imagined.</p></li>
+<li><p>Symbolic checking: applicable in more specialized contexts. By reasoning about code with mathematical precision, symbolic tools can exhaustively verify properties or expose deep corner cases that tests might miss.</p></li>
+</ul>
+<p>Each step brought new capabilities and new tradeoffs.
+None of these techniques is a silver bullet, nor are we suggesting that every project should adopt all of them. Instead, think of them as tools in your scientific software toolbox.
+You can choose which to apply depending on the level of confidence you need versus the practicality and cost of adoption.</p>
+<section id="beyond-tools-a-scientific-mindset-for-software">
+<h2>Beyond Tools: A Scientific Mindset for Software<a class="headerlink" href="#beyond-tools-a-scientific-mindset-for-software" title="Link to this heading">#</a></h2>
+<p>While the techniques themselves are valuable, perhaps the most important takeaway is the mindset
+behind them. The introduction of these methods was built upon a perspective that is both deeper
+and more universal than any single tool or language:</p>
+<ul class="simple">
+<li><p>Start by thinking about the properties your code should hold: physical principles, mathematical invariants, or logical guarantees.</p></li>
+<li><p>Hypothesize about these properties through reasoning and specification, much like forming a scientific hypothesis.</p></li>
+<li><p>Attempt to refute your hypothesis through experiments: unit tests, property-based tests, symbolic checks, or even formal proofs.</p></li>
+<li><p>Refine your code and your understanding based on the results.</p></li>
+</ul>
+<p>This cycle mirrors the scientific method that underpins the very research your software enables. In this sense, rigorous software development is not separate from science: it is a form of scientific inquiry applied to code.</p>
+</section>
+<section id="moving-forward">
+<h2>Moving Forward<a class="headerlink" href="#moving-forward" title="Link to this heading">#</a></h2>
+<p>We hope that as you return to your own projects, you will view the techniques we’ve covered not just as optional add-ons, but as expressions of a broader philosophy: software as a vehicle for reliable, reproducible scientific discovery.</p>
+<p>Even if you adopt only unit testing for now, or only experiment with property-based testing in one small module, the underlying principles will remain:</p>
+<ul class="simple">
+<li><p>Clear specifications,</p></li>
+<li><p>Thoughtful design,</p></li>
+<li><p>Systematic reasoning,</p></li>
+<li><p>And a commitment to incremental refinement.</p></li>
+</ul>
+<p>As with any scientific endeavor, the real progress comes not from a single breakthrough, but from a sustained practice of curiosity, rigor, and iteration.
+We hope the lessons of this tutorial help you build better software and more trustworthy scientific applications.</p>
+</section>
+<section id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Link to this heading">#</a></h2>
+<p>Baugh, John. “CE-537 Course Materials - NCSU Civil Engineering”, 2024.</p>
+<p>Bradley, Aaron R., and Zohar Manna. “The calculus of computation: decision procedures with applications to verification.” Berlin, Heidelberg: Springer Berlin Heidelberg, 2007.</p>
+<p>Jackson, Daniel. “Software Abstractions: logic, language, and analysis.” MIT press, 2012.</p>
+<p>Jackson, Daniel. The essence of software: Why concepts matter for great design. Princeton University Press, 2021.</p>
+<p>Lamport, Leslie. “The TLA+ Video Course”, <a class="reference external" href="https://lamport.azurewebsites.net/video/videos.html">https://lamport.azurewebsites.net/video/videos.html</a>, accessed September 2025.</p>
+<p>Ousterhout, John. “A Philosophy of Software Design, 2nd Edition”, Yaknyam Press, 2021.</p>
+<hr class="docutils" />
+<p><em>This notebook is a part of the “Rigor and Reasoning in Research Software” (R3Sw) tutorial, led by Alper Altuntas and sponsored by the Better Scientific Software (BSSw) Fellowship Program. Copyright © 2025</em></p>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -490,6 +422,15 @@ div(0.0, 0.0)
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="ch5_symbolic_checking.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Ch. 5: Symbolic Checking - Beyond Testing</p>
+      </div>
+    </a>
 </div>
                 </footer>
               
@@ -506,9 +447,11 @@ div(0.0, 0.0)
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav class="bd-toc-nav page-toc">
-    <ul class="simple visible nav section-nav flex-column">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-tools-a-scientific-mindset-for-software">Beyond Tools: A Scientific Mindset for Software</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#moving-forward">Moving Forward</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources">Resources</a></li>
 </ul>
-
   </nav></div>
 
 </div></div>
