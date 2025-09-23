@@ -1,6 +1,6 @@
 title: Rigor and Reasoning in Research Software (R3Sw)
 author: Alper Altuntas, et al.
-copyright: 2025
+copyright: "2025"
 #logo: logo.png
 execute:
   execute_notebooks: force
