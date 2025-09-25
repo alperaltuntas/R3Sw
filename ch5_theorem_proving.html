@@ -1,0 +1,1138 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Ch. 5: Theorem Proving - Beyond Testing &#8212; Rigor and Reasoning in Research Software (R3Sw)</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-V7VKREZ5MB"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-V7VKREZ5MB');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-V7VKREZ5MB');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ch5_theorem_proving';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Closing Remarks: Climbing the Ladder of Rigor" href="closing_remarks.html" />
+    <link rel="prev" title="Chapter 4: Property-Based Testing - From Examples to Hypotheses" href="ch4_property_based_testing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="welcome.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Rigor and Reasoning in Research Software (R3Sw)</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="welcome.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix - The Usual Way</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch2_reasoning.html">Chapter 2: Reasoning About Code - Abstraction and Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing - Turning Specs into Checks</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="ch4_property_based_testing.html">Chapter 4: Property-Based Testing - From Examples to Hypotheses</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Ch. 5: Theorem Proving - Beyond Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="closing_remarks.html">Closing Remarks: Climbing the Ladder of Rigor</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/ch5_theorem_proving.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Ch. 5: Theorem Proving - Beyond Testing</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#small-scope-hypothesis">Small Scope Hypothesis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-z3-theorem-prover">The Z3 Theorem Prover</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#declaring-variables">Declaring Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#declarative-style">Declarative Style</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-z3-solver">The Z3 Solver</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sat-vs-unsat">sat vs. unsat</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logical-connectives">Logical Connectives</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#from-specs-to-proofs">From Specs to Proofs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-vs-floating-point">Real vs Floating-Point</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why this matters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#back-to-the-heat-equation-solver">Back to the Heat Equation Solver</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property">Telescoping Property</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-procedures-as-constraints">Core Procedures as Constraints</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proving-the-positivity-property">Proving the Positivity Property</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation-property">Conservation Property</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-properties">More Properties</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="ch-5-theorem-proving-beyond-testing">
+<h1>Ch. 5: Theorem Proving - Beyond Testing<a class="headerlink" href="#ch-5-theorem-proving-beyond-testing" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>Testing can be used to show the presence of bugs, but never to show their absence. - Edsger W. Dijkstra</p>
+</div></blockquote>
+<p>Unit tests (Ch.3) and property-based tests (Ch.4) give us confidence, but they still sample the input space. To climb the next rung on the ladder of rigor, we turn to <strong>theorem proving</strong>, a formal verification technique.</p>
+<p>In this chapter we will:</p>
+<ul class="simple">
+<li><p>Use a theorem prover to check whether properties hold for all possible inputs (within specified ranges).</p></li>
+<li><p>Encode the <em>what</em> of our computations, rather than the <em>how</em>, to make reasoning possible.</p></li>
+<li><p>Explore both the strengths and the limits of theorem proving, and see how it complements testing.</p></li>
+</ul>
+<p>Theorem proving provides guarantees that testing alone cannot match. But these guarantees come at a cost:</p>
+<ul class="simple">
+<li><p><strong>Encoding effort:</strong> you must write down precise specifications and constraints.</p></li>
+<li><p><strong>Computational expense:</strong> solvers can become slow or intractable as problem size grows.</p></li>
+</ul>
+<p>In practice, theorem proving shines on select <strong>critical</strong> routines (where correctness is paramount) and core algorithms (where tests may miss subtle edge cases).</p>
+<section id="small-scope-hypothesis">
+<h2>Small Scope Hypothesis<a class="headerlink" href="#small-scope-hypothesis" title="Link to this heading">#</a></h2>
+<p>Formal methods may not scale to arbitrarily large programs or input sizes. For example, we may only be able to prove properties of our heat equation solver for small meshes (e.g., 10-100 points). But this is still useful in practice, thanks to the <strong>small scope hypothesis</strong> (coined by Daniel Jackson):</p>
+<blockquote>
+<div><p>A high proportion of bugs can be found by checking a program for all inputs within some small scope.</p>
+</div></blockquote>
+<p>Even such small proofs can expose bugs or confirm that a property is mathematically guaranteed under the right conditions.</p>
+</section>
+<section id="the-z3-theorem-prover">
+<h2>The Z3 Theorem Prover<a class="headerlink" href="#the-z3-theorem-prover" title="Link to this heading">#</a></h2>
+<p>Z3 is a popular theorem prover developed by Microsoft Research. Workflow:</p>
+<ul class="simple">
+<li><p>Declare symbolic variables (like <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">res</span></code>).</p></li>
+<li><p>State constraints: preconditions <code class="docutils literal notranslate"><span class="pre">P</span></code> and the effects of the <code class="docutils literal notranslate"><span class="pre">code</span></code>.</p></li>
+<li><p>Assert the postconditions <code class="docutils literal notranslate"><span class="pre">Q</span></code> you want to hold.</p></li>
+<li><p>Ask Z3 to search for a counterexample to <code class="docutils literal notranslate"><span class="pre">P</span> <span class="pre">and</span> <span class="pre">code</span> <span class="pre">implies</span> <span class="pre">Q</span></code>.</p>
+<ul>
+<li><p>If it finds a counterexample, the property is not universally valid.</p></li>
+<li><p>If no counterexample exists, the property is proven (for the chose theory and input size).</p></li>
+</ul>
+</li>
+</ul>
+<p>Unlike testing, which explores a handful of examples, Z3 can reason over all inputs in one shot.</p>
+<p>We’ll use Z3’s Python API, z3py, which matches the style of previous chapters.</p>
+<section id="declaring-variables">
+<h3>Declaring Variables<a class="headerlink" href="#declaring-variables" title="Link to this heading">#</a></h3>
+<p>Z3 supports many symbolic types: integers, reals, booleans, bit-vectors, arrays, strings, and more. These are not ordinary variables but symbols that range over all possible values of their type, constrained only by what you add later.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Real</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Real</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Multiple variables can be declared at once:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bools</span><span class="p">,</span> <span class="n">Ints</span><span class="p">,</span> <span class="n">Reals</span>
+
+<span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q&#39;</span><span class="p">)</span>
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">Ints</span><span class="p">(</span><span class="s1">&#39;i j k&#39;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="n">Reals</span><span class="p">(</span><span class="s1">&#39;x y z res&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can also create arrays programmatically:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;F</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here:</p>
+<ul class="simple">
+<li><p>The strings on the RHS are names Z3 uses internally to identify the variables.</p></li>
+<li><p>The Python variables on the LHS are what you’ll use in your constraints and properties.</p></li>
+</ul>
+<p>They don’t have to match, but keeping them consistent avoids confusion.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">res</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(x, y, res)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">F</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(F0, F1, F2)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="declarative-style">
+<h3>Declarative Style<a class="headerlink" href="#declarative-style" title="Link to this heading">#</a></h3>
+<p>Z3 is declarative: you describe what must hold, not how to compute.
+That means:</p>
+<ul class="simple">
+<li><p>You don’t <em>assign</em> values to variables.</p></li>
+<li><p>Instead, you <em>constrain</em> variables with equations and (in)equalities.</p></li>
+</ul>
+<p>For example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span>        <span class="c1"># a Boolean formula (not an assignment)</span>
+<span class="n">y</span> <span class="o">&gt;=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>    <span class="c1"># another Boolean formula</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">y &ge; x + 1</div></div>
+</div>
+<p>On their own, these Boolean formulas don’t do anything, but once added to a solver, Z3 will try to find values of <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> that make them true.</p>
+</section>
+<section id="the-z3-solver">
+<h3>The Z3 Solver<a class="headerlink" href="#the-z3-solver" title="Link to this heading">#</a></h3>
+<p>A solver collects constraints and checks <em>satisfiability</em>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Solver</span>
+
+<span class="c1"># Instantiate a solver object</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+
+<span class="c1"># Add constraints to the solver</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If the constraints are contradictory, the solver will report <code class="docutils literal notranslate"><span class="pre">unsat</span></code> (unsatisfiable). If they can be satisfied, it will report <code class="docutils literal notranslate"><span class="pre">sat</span></code> (satisfiable).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><b>sat</b></div></div>
+</div>
+<section id="sat-vs-unsat">
+<h4>sat vs. unsat<a class="headerlink" href="#sat-vs-unsat" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>Satisfiable</strong> means there is at least one assignment of values to the variables that satisfies all the constraints.</p></li>
+<li><p><strong>Unsatisfiable</strong> means there is no assignment of values to the variables that satisfies all the constraints.</p></li>
+</ul>
+</section>
+</section>
+<section id="logical-connectives">
+<h3>Logical Connectives<a class="headerlink" href="#logical-connectives" title="Link to this heading">#</a></h3>
+<p>Z3 supports standard logical connectives:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">And</span><span class="p">,</span> <span class="n">Or</span><span class="p">,</span> <span class="n">Not</span><span class="p">,</span> <span class="n">Implies</span><span class="p">,</span> <span class="n">If</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">And(a,</span> <span class="pre">b,</span> <span class="pre">...)</span></code> - all must be true</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Or(a,</span> <span class="pre">b,</span> <span class="pre">...)</span></code> - at least one must be true</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Not(a)</span></code> - negation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Implies(a,</span> <span class="pre">b)</span></code> - if <code class="docutils literal notranslate"><span class="pre">a</span></code> is true, then <code class="docutils literal notranslate"><span class="pre">b</span></code> must be true</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">If(a,</span> <span class="pre">b,</span> <span class="pre">c)</span></code> - if <code class="docutils literal notranslate"><span class="pre">a</span></code> is true, then <code class="docutils literal notranslate"><span class="pre">b</span></code>, else <code class="docutils literal notranslate"><span class="pre">c</span></code></p></li>
+</ul>
+</section>
+<section id="from-specs-to-proofs">
+<h3>From Specs to Proofs<a class="headerlink" href="#from-specs-to-proofs" title="Link to this heading">#</a></h3>
+<p>Let’s revisit our simple <code class="docutils literal notranslate"><span class="pre">div</span></code> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># precondition</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code</span>
+    <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># postcondition</span>
+    <span class="k">return</span> <span class="n">res</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can’t feed this Python directly to Z3, but we can encode the same idea declaratively:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">And</span><span class="p">(</span>
+        <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span>          <span class="c1"># precondition</span>
+        <span class="n">res</span> <span class="o">==</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span><span class="p">,</span>    <span class="c1"># code</span>
+        <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># postcondition</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we can check:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a solver:</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+
+<span class="c1"># *call* div(res, x, y) with symbolic variables:</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">div</span><span class="p">(</span><span class="o">*</span><span class="n">Reals</span><span class="p">(</span><span class="s1">&#39;res x y&#39;</span><span class="p">)))</span>
+
+<span class="c1"># Check if the div constraints are satisfiable:</span>
+<span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><b>sat</b></div></div>
+</div>
+<p>This just tells us “there exists at least one input where it works.”</p>
+<p>To prove it works for all inputs, we flip the logic:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Not</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">And</span><span class="p">(</span>
+        <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">res</span> <span class="o">==</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">Not</span><span class="p">(</span><span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span>   <span class="c1"># negated postcondition</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a solver:</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+
+<span class="c1"># *call* div(res, x, y) with symbolic variables:</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">div</span><span class="p">(</span><span class="o">*</span><span class="n">Reals</span><span class="p">(</span><span class="s1">&#39;res x y&#39;</span><span class="p">)))</span>
+
+<span class="c1"># Check if the div constraints are satisfiable:</span>
+<span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><b>unsat</b></div></div>
+</div>
+<p>Now Z3 confirms: there are no inputs (with y != 0) that break the postcondition, so the property holds universally, at least in real arithmetic.</p>
+</section>
+<section id="real-vs-floating-point">
+<h3>Real vs Floating-Point<a class="headerlink" href="#real-vs-floating-point" title="Link to this heading">#</a></h3>
+<p>Note that we used Reals. Real arithmetic is exact; floating-point is not.
+That’s why Z3 didn’t <em>see</em> the earlier 7/25 counterexample.</p>
+<ul class="simple">
+<li><p>Reals are good for proving mathematical properties of algorithms.</p></li>
+<li><p>Floating-point (<code class="docutils literal notranslate"><span class="pre">FP</span></code> in Z3) lets you model IEEE-754 semantics, but is heavier and harder to reason about exhaustively.</p></li>
+</ul>
+<p>For our purposes, reasoning in reals is an advantage: it abstracts away round-off details and lets us focus on the algorithm’s conceptual correctness. Floating-point quirks can be handled later with testing or targeted FP analysis.</p>
+</section>
+<section id="why-this-matters">
+<h3>Why this matters<a class="headerlink" href="#why-this-matters" title="Link to this heading">#</a></h3>
+<p>Even with these limitations, Z3 gives you something testing cannot:</p>
+<ul class="simple">
+<li><p>It can prove absence of counterexamples within a theory.</p></li>
+<li><p>It can quickly expose missing or too-weak preconditions.</p></li>
+<li><p>It can find subtle edge cases that tests might miss.</p></li>
+</ul>
+<p>In short, testing may show the presence of bugs; theorem proving will show their absence within specified bounds.</p>
+</section>
+</section>
+<section id="back-to-the-heat-equation-solver">
+<h2>Back to the Heat Equation Solver<a class="headerlink" href="#back-to-the-heat-equation-solver" title="Link to this heading">#</a></h2>
+<p>We’ll now reason about our finite-volume 1-D diffusion solver.</p>
+<p>So far we’ve worked <em>imperatively</em>, writing code that <em>does</em> things step-by-step. To use Z3, we need to switch to a more <em>declarative</em> style, describing <em>what</em> the code should achieve rather than <em>how</em> it does so.</p>
+<section id="telescoping-property">
+<h3>Telescoping Property<a class="headerlink" href="#telescoping-property" title="Link to this heading">#</a></h3>
+<p>As a first step, let’s prove the <strong>telescoping property of divergence</strong>: The sum of the divergence over all cells equals the net flux through the boundaries.</p>
+<p><span class="math notranslate nohighlight">\(\qquad
+\sum_{i=0}^{N-1} (\nabla \cdot F)_i = F_0 - F_N
+\qquad\)</span></p>
+<p>To do so, we’ll re-express the divergence procedure as a constraint generator: a function that takes Z3 variables and returns Z3 constraints representing the original procedure’s behavior.</p>
+<p>Recall the divergence function and the telescoping property (assertions omitted for brevity):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c).&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)):</span>
+        <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the finite volume telescoping property.&quot;&quot;&quot;</span>
+    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">total_divergence</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">boundary_flux</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The Z3 versions of these functions:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c).&quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the finite volume telescoping property.&quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">total_divergence</span> <span class="o">==</span> <span class="n">boundary_flux</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice we no longer need the <code class="docutils literal notranslate"><span class="pre">approx</span></code> helper since Z3 handles real arithmetic exactly.</p>
+<p>To call these functions, we need to pass Z3 variables:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">3</span> <span class="c1"># number of cells</span>
+<span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">=</span> <span class="n">Reals</span><span class="p">(</span><span class="s1">&#39;dx dt kappa&#39;</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;f</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+<span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;c</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can set up a solver to check the telescoping property:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Preconditions:physical constraints</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>       <span class="c1"># code: divergence</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">)))</span> <span class="c1"># Postcondition: telescoping property</span>
+<span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><b>unsat</b></div></div>
+</div>
+<p>The Z3 solver confirms <code class="docutils literal notranslate"><span class="pre">unsat</span></code>: there are no inputs that violate the telescoping property, so it holds universally for all valid inputs where N=3. Let’s attempt to increase N and see how far we can go before Z3 struggles.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">check_telescoping</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">Real</span><span class="p">(</span><span class="s1">&#39;dx&#39;</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;f</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;c</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>                    <span class="c1"># Preconditions: physical constraints</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>      <span class="c1"># code: divergence</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">)))</span><span class="c1"># Postcondition: telescoping property</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">check_telescoping</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;i=</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">, result=</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s1">, time=</span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">elapsed_time</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># Stop if it takes too long</span>
+        <span class="k">break</span>
+    <span class="n">i</span> <span class="o">*=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=3, result=unsat, time=0.005059242248535156
+i=6, result=unsat, time=0.005758047103881836
+i=12, result=unsat, time=0.007089138031005859
+i=24, result=unsat, time=0.01405787467956543
+i=48, result=unsat, time=0.04088783264160156
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=96, result=unsat, time=0.138077974319458
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=192, result=unsat, time=0.6113569736480713
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=384, result=unsat, time=3.6150929927825928
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="core-procedures-as-constraints">
+<h3>Core Procedures as Constraints<a class="headerlink" href="#core-procedures-as-constraints" title="Link to this heading">#</a></h3>
+<p>Let’s re-express all of the core procedures of the heat equation solver
+as <strong>constraint generators</strong>: functions that take Z3 variables and return Z3 constraints representing
+the original procedures’ behavior.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">bc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply BCs by overriding first and last face quantities (f).&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">diffusive_flux</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a cell field (c), compute the diffusive flux (f).&quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c).&quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">step_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">u1</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance cell field u by one time step using explicit Euler method.&quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">u1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">u0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">dudt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Having specified these core computations declaratively, now let’s define the symbolic variables:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mesh size</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1"># Define the vectors</span>
+<span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;u0_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;u_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;d</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;F</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+
+<span class="c1"># Define the parameters</span>
+<span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">=</span> <span class="n">Reals</span><span class="p">(</span><span class="s2">&quot;dx dt kappa&quot;</span><span class="p">)</span>
+
+<span class="c1"># Boundary conditions</span>
+<span class="n">bc</span> <span class="o">=</span> <span class="n">Reals</span><span class="p">(</span><span class="s2">&quot;bc0 bc1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We are now ready to state and prove properties about our heat equation solver.</p>
+</section>
+<section id="proving-the-positivity-property">
+<h3>Proving the Positivity Property<a class="headerlink" href="#proving-the-positivity-property" title="Link to this heading">#</a></h3>
+<p>We expect that, given a non-negative initial temperature distribution and non-negative boundary conditions, the temperature remains non-negative after one time step. Below is an expression of this property in Z3:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">positive_property</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;All cell values are non-negative.&quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">And</span><span class="p">([</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+
+<span class="c1"># Positive parameters</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Non-negative initial condition</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">u0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span>
+
+<span class="c1"># Insulated boundaries (zero flux)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+
+<span class="c1"># Constraints representing the computations</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">dt</span><span class="p">))</span>
+
+<span class="c1"># Ask for a violation of positivity in the new state</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">positive_property</span><span class="p">(</span><span class="n">u</span><span class="p">)))</span>
+
+<span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><b>sat</b></div></div>
+</div>
+<p>The above check reports <code class="docutils literal notranslate"><span class="pre">sat</span></code>, meaning Z3 found a counterexample where the property does not hold. We can ask Z3 to show us the counterexample:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">[F3 = 0,
+ u_0 = 7/6,
+ d0 = 1,
+ u_2 = -1/6,
+ u_1 = 1/2,
+ u0_1 = 1/2,
+ dt = 1,
+ d1 = 0,
+ dx = 1,
+ F0 = 0,
+ kappa = 3,
+ u0_0 = 1/6,
+ F2 = -1,
+ u0_2 = 5/6,
+ d2 = -1,
+ F1 = -1,
+ /0 = [(-1, 1) &rarr; -1, (1, 1) &rarr; 1, else &rarr; 0]]</div></div>
+</div>
+<p>Looking closely, we noticed that the timestep <code class="docutils literal notranslate"><span class="pre">dt</span></code> seems too large (1 sec) relative to the spatial discretization <code class="docutils literal notranslate"><span class="pre">dx</span></code>(1 m) and the diffusivity <code class="docutils literal notranslate"><span class="pre">kappa</span></code> (3). To print out the individual values, we can inspect the model</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+<span class="n">m</span><span class="p">[</span><span class="n">dt</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="n">dx</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="n">kappa</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1, 1, 3)
+</pre></div>
+</div>
+</div>
+</div>
+<p>To ensure stability, we need to add a constraint on <code class="docutils literal notranslate"><span class="pre">dt</span></code> (the stability condition for the explicit scheme):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dt</span> <span class="o">&lt;=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><b>unsat</b></div></div>
+</div>
+<p>The solver now reports <code class="docutils literal notranslate"><span class="pre">unsat</span></code>: there are no inputs that violate the positivity property under the added stability condition.</p>
+</section>
+<section id="conservation-property">
+<h3>Conservation Property<a class="headerlink" href="#conservation-property" title="Link to this heading">#</a></h3>
+<p>Conservation follows from the telescoping property of divergence and explicit time stepping. We expect that the total heat (sum of temperatures) remains constant after one time step, given isolated boundary conditions (zero flux at boundaries).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">conservation</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">F</span><span class="p">):</span>
+    
+    <span class="n">lhs</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u0</span><span class="p">))</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">rhs</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">lhs</span> <span class="o">==</span> <span class="n">rhs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+
+<span class="c1"># Positive parameters</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Stability condition</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dt</span> <span class="o">&lt;=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">))</span>
+
+<span class="c1"># Non-negative initial condition</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">u0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span>
+
+<span class="c1"># Insulated BCs</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+
+<span class="c1"># Constraints representing the computations</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">dt</span><span class="p">))</span>
+
+<span class="c1"># Ask for a violation of positivity in the new state</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">conservation</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">F</span><span class="p">)))</span>
+
+<span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><b>unsat</b></div></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">unsat</span></code> result confirms that the conservation property holds.</p>
+</section>
+<section id="more-properties">
+<h3>More Properties<a class="headerlink" href="#more-properties" title="Link to this heading">#</a></h3>
+<p>[TODO: add more property checks …]</p>
+</section>
+</section>
+<section id="what-we-just-did">
+<h2>What we just did<a class="headerlink" href="#what-we-just-did" title="Link to this heading">#</a></h2>
+<p>We re-expressed the solver’s core procedures as constraint generators and used Z3 to:</p>
+<ul class="simple">
+<li><p>Prove universal identities (telescoping, conservation).</p></li>
+<li><p>Find counterexamples when preconditions are missing (positivity).</p></li>
+<li><p>Confirm fixes by adding the right guards (stability)</p></li>
+</ul>
+<p>This completes the ladder:</p>
+<ul class="simple">
+<li><p>Ch.1: working baseline (code &amp; fix)</p></li>
+<li><p>Ch.2: abstractions &amp; specs</p></li>
+<li><p>Ch.3: unit tests</p></li>
+<li><p>Ch.4: property-based tests</p></li>
+<li><p>Ch.5: theorem proving</p></li>
+</ul>
+<p>In practice, you’d mix these: run unit/property tests in CI, and apply theorem proving judiciously on small kernels where stronger guarantees pay off. Together, they move scientific software toward explicit reasoning and trustworthy results, without heavy ceremony.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ch4_property_based_testing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Chapter 4: Property-Based Testing - From Examples to Hypotheses</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="closing_remarks.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Closing Remarks: Climbing the Ladder of Rigor</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#small-scope-hypothesis">Small Scope Hypothesis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-z3-theorem-prover">The Z3 Theorem Prover</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#declaring-variables">Declaring Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#declarative-style">Declarative Style</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-z3-solver">The Z3 Solver</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sat-vs-unsat">sat vs. unsat</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logical-connectives">Logical Connectives</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#from-specs-to-proofs">From Specs to Proofs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-vs-floating-point">Real vs Floating-Point</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why this matters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#back-to-the-heat-equation-solver">Back to the Heat Equation Solver</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property">Telescoping Property</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-procedures-as-constraints">Core Procedures as Constraints</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proving-the-positivity-property">Proving the Positivity Property</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation-property">Conservation Property</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-properties">More Properties</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Alper Altuntas, et al.
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
