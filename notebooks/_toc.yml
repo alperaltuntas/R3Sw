@@ -5,5 +5,5 @@ chapters:
  - file: ch2_reasoning
  - file: ch3_unit_testing
  - file: ch4_property_based_testing
- - file: ch5_symbolic_checking
+ - file: ch5_theorem_proving
  - file: closing_remarks
