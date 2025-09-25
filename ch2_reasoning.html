@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Chapter 2: Reasoning About Code - Abstraction and Specification &#8212; Rigor and Reasoning in Research Software (R3Sw)</title>
+    <title>Chapter 2: Reasoning About Code &#8212; Rigor and Reasoning in Research Software (R3Sw)</title>
   
   
   
@@ -78,8 +78,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'ch2_reasoning';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Chapter 3: Unit Testing - Turning Specs into Checks" href="ch3_unit_testing.html" />
-    <link rel="prev" title="Chapter 1: Code and Fix - The Usual Way" href="ch1_code_and_fix.html" />
+    <link rel="next" title="Chapter 3: Unit Testing" href="ch3_unit_testing.html" />
+    <link rel="prev" title="Chapter 1: Code and Fix" href="ch1_code_and_fix.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -178,12 +178,12 @@
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix - The Usual Way</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 2: Reasoning About Code - Abstraction and Specification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing - Turning Specs into Checks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 2: Reasoning About Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="ch4_property_based_testing.html">Chapter 4: Property-Based Testing - From Examples to Hypotheses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ch5_symbolic_checking.html">Ch. 5: Symbolic Checking - Beyond Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch4_property_based_testing.html">Chapter 4: Property-Based Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch5_theorem_proving.html">Chapter 5: Theorem Proving</a></li>
 <li class="toctree-l1"><a class="reference internal" href="closing_remarks.html">Closing Remarks: Climbing the Ladder of Rigor</a></li>
 </ul>
 
@@ -320,7 +320,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Chapter 2: Reasoning About Code - Abstraction and Specification</h1>
+    <h1>Chapter 2: Reasoning About Code</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -365,8 +365,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="chapter-2-reasoning-about-code-abstraction-and-specification">
-<h1>Chapter 2: Reasoning About Code - Abstraction and Specification<a class="headerlink" href="#chapter-2-reasoning-about-code-abstraction-and-specification" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="chapter-2-reasoning-about-code">
+<h1>Chapter 2: Reasoning About Code<a class="headerlink" href="#chapter-2-reasoning-about-code" title="Link to this heading">#</a></h1>
 <p>In Chapter 1, we implemented a working 1-D heat equation solver.
 It runs, but it’s fragile, opaque, and hard to test or extend.</p>
 <p>This resembles a common situation in scientific computing:</p>
@@ -879,8 +879,9 @@ function(s) would you add this as a precondition to?</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c).&quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
     <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx&quot;</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)):</span>
-        <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+    <span class="n">c</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">dx</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">))]</span>
+    <span class="c1">#for i in range(len(c)):</span>
+    <span class="c1">#    c[i] = (f[i] - f[i+1]) / dx</span>
     <span class="k">assert</span> <span class="n">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dudt</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
@@ -1008,7 +1009,7 @@ giving us rapid feedback and confidence as our code evolves.</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Chapter 1: Code and Fix - The Usual Way</p>
+        <p class="prev-next-title">Chapter 1: Code and Fix</p>
       </div>
     </a>
     <a class="right-next"
@@ -1016,7 +1017,7 @@ giving us rapid feedback and confidence as our code evolves.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Chapter 3: Unit Testing - Turning Specs into Checks</p>
+        <p class="prev-next-title">Chapter 3: Unit Testing</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

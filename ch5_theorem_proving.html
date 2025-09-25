@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Ch. 5: Theorem Proving - Beyond Testing &#8212; Rigor and Reasoning in Research Software (R3Sw)</title>
+    <title>Chapter 5: Theorem Proving &#8212; Rigor and Reasoning in Research Software (R3Sw)</title>
   
   
   
@@ -79,7 +79,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Closing Remarks: Climbing the Ladder of Rigor" href="closing_remarks.html" />
-    <link rel="prev" title="Chapter 4: Property-Based Testing - From Examples to Hypotheses" href="ch4_property_based_testing.html" />
+    <link rel="prev" title="Chapter 4: Property-Based Testing" href="ch4_property_based_testing.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -178,12 +178,12 @@
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix - The Usual Way</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ch2_reasoning.html">Chapter 2: Reasoning About Code - Abstraction and Specification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing - Turning Specs into Checks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch2_reasoning.html">Chapter 2: Reasoning About Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="ch4_property_based_testing.html">Chapter 4: Property-Based Testing - From Examples to Hypotheses</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Ch. 5: Theorem Proving - Beyond Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch4_property_based_testing.html">Chapter 4: Property-Based Testing</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 5: Theorem Proving</a></li>
 <li class="toctree-l1"><a class="reference internal" href="closing_remarks.html">Closing Remarks: Climbing the Ladder of Rigor</a></li>
 </ul>
 
@@ -320,7 +320,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Ch. 5: Theorem Proving - Beyond Testing</h1>
+    <h1>Chapter 5: Theorem Proving</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -364,8 +364,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="ch-5-theorem-proving-beyond-testing">
-<h1>Ch. 5: Theorem Proving - Beyond Testing<a class="headerlink" href="#ch-5-theorem-proving-beyond-testing" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="chapter-5-theorem-proving">
+<h1>Chapter 5: Theorem Proving<a class="headerlink" href="#chapter-5-theorem-proving" title="Link to this heading">#</a></h1>
 <blockquote>
 <div><p>Testing can be used to show the presence of bugs, but never to show their absence. - Edsger W. Dijkstra</p>
 </div></blockquote>
@@ -750,20 +750,18 @@ That’s why Z3 didn’t <em>see</em> the earlier 7/25 counterexample.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=3, result=unsat, time=0.005059242248535156
-i=6, result=unsat, time=0.005758047103881836
-i=12, result=unsat, time=0.007089138031005859
-i=24, result=unsat, time=0.01405787467956543
-i=48, result=unsat, time=0.04088783264160156
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=3, result=unsat, time=0.0038270950317382812
+i=6, result=unsat, time=0.005184173583984375
+i=12, result=unsat, time=0.007250785827636719
+i=24, result=unsat, time=0.013423919677734375
+i=48, result=unsat, time=0.03557610511779785
+i=96, result=unsat, time=0.12855815887451172
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=96, result=unsat, time=0.138077974319458
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=192, result=unsat, time=0.6162221431732178
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=192, result=unsat, time=0.6113569736480713
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=384, result=unsat, time=3.6150929927825928
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=384, result=unsat, time=3.522012948989868
 </pre></div>
 </div>
 </div>
@@ -1029,7 +1027,7 @@ the original procedures’ behavior.</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Chapter 4: Property-Based Testing - From Examples to Hypotheses</p>
+        <p class="prev-next-title">Chapter 4: Property-Based Testing</p>
       </div>
     </a>
     <a class="right-next"
