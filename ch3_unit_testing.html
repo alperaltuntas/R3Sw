@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -613,24 +613,22 @@ often located in separate files. But for brevity, we’ll keep them together and
 platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
-<span class=" -Color -Color-Bold">collecting ... </span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
 test_div.py <span class=" -Color -Color-Red">F                                                            [100%]</span>
 
 =================================== FAILURES ===================================
 <span class=" -Color -Color-Bold -Color-Bold-Red">________________________________ test_division _________________________________</span>
-
-    def test_division():
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    def test_division():
 &gt;       div(7, 25)
 
 <span class=" -Color -Color-Bold -Color-Bold-Red">test_div.py</span>:9: 
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 x = 7, y = 25
 
@@ -646,9 +644,7 @@ x = 7, y = 25
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Cyan">=========================== short test summary info ============================</span>
 <span class=" -Color -Color-Red">FAILED</span> test_div.py::<span class=" -Color -Color-Bold">test_division</span> - assert (0.28 * 25) == 7
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Red">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span><span class=" -Color -Color-Red"> in 0.23s ===============================</span>
+<span class=" -Color -Color-Red">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span><span class=" -Color -Color-Red"> in 0.22s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -696,7 +692,7 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 test_div.py <span class=" -Color -Color-Yellow">x                                                            [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Yellow">1 xfailed</span><span class=" -Color -Color-Yellow"> in 0.20s ==============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Yellow">1 xfailed</span><span class=" -Color -Color-Yellow"> in 0.23s ==============================</span>
 </pre></div>
 </div>
 </div>
@@ -738,12 +734,15 @@ platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
 test_div.py <span class=" -Color -Color-Green">.                                                            [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.17s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.18s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -784,6 +783,9 @@ platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
 test_div.py 
@@ -792,7 +794,7 @@ test_div.py
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                            [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.28s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.36s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -835,6 +837,9 @@ platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
 test_simple.py 
@@ -843,7 +848,7 @@ test_simple.py
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                         [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.31s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.35s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -892,7 +897,9 @@ test_simple.py
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">============================= test session starts ==============================</span>
 platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
-rootdir: /Users/altuntas/r3sw/notebooks
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 2 items                                                              </span>
@@ -948,18 +955,18 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 test_div.py 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                            [  7%]</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">                                                            [  7%]</span>
 test_divergence.py <span class=" -Color -Color-Green">.                                                     [ 14%]</span>
 test_flux.py <span class=" -Color -Color-Green">..                                                          [ 28%]</span>
 test_flux_via_params.py <span class=" -Color -Color-Green">..                                               [ 42%]</span>
 test_simple.py <span class=" -Color -Color-Green">.                                                         [ 50%]</span>
-test_step_solve.py <span class=" -Color -Color-Green">.</span>
+test_step_solve.py <span class=" -Color -Color-Green">.......                                               [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">......                                               [100%]</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">14 passed</span><span class=" -Color -Color-Green"> in 0.47s ==============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">14 passed</span><span class=" -Color -Color-Green"> in 0.35s ==============================</span>
 </pre></div>
 </div>
 </div>
@@ -1083,15 +1090,14 @@ rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 2 items                                                              </span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>test_flux.py 
+
+test_flux.py 
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">..                                                          [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.31s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.35s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -1203,7 +1209,7 @@ test_divergence.py
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                     [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.26s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.36s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -1307,7 +1313,7 @@ test_step_solve.py
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.......                                               [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">7 passed</span><span class=" -Color -Color-Green"> in 0.32s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">7 passed</span><span class=" -Color -Color-Green"> in 0.36s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -1358,7 +1364,7 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
     &lt;Function test_equal_flux_bc_trends_toward_linear_profile&gt;
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">========================= 14 tests collected in 0.28s ==========================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">========================= 14 tests collected in 0.21s ==========================</span>
 </pre></div>
 </div>
 </div>
