@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -73,6 +73,8 @@
                 gtag('config', 'G-V7VKREZ5MB');
             </script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'ch4_property_based_testing';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -178,6 +180,7 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch2_reasoning.html">Chapter 2: Reasoning About Code</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing</a></li>
 
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 4: Property-Based Testing</a></li>
@@ -339,9 +342,10 @@
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#back-to-the-1-d-heat-equation-solver">Back to the 1-D Heat Equation Solver</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symmetry">Symmetry</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scaffolding">Scaffolding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property">Telescoping Property</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation">Conservation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-properties">More properties</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symmetry">Symmetry</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>
@@ -375,7 +379,7 @@ It’s a general rule, not just a single example.</p>
 <p>For our 1-D heat equation solver, some key properties might include:</p>
 <ul class="simple">
 <li><p><strong>Conservation under insulated BCs:</strong> total heat stays constant.</p></li>
-<li><p><strong>Boundary work balance:</strong> with fixed flux BCs, the heat change matches net boundary flux over Δt.</p></li>
+<li><p><strong>Telescoping property:</strong> The sum of the divergence over all cells equals the net flux through the boundaries.</p></li>
 <li><p><strong>Symmetry:</strong> symmetric initial states stay symmetric under symmetric BCs.</p></li>
 <li><p><strong>Max Principle:</strong> Diffusion shouldn’t create new temperature extremes.</p></li>
 <li><p><strong>Linearity:</strong> The discrete update should scale linearly with the initial temperature distribution.</p></li>
@@ -537,10 +541,10 @@ Here, the precondition is that <code class="docutils literal notranslate"><span 
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">AssertionError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
 <span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">test_div_property</span><span class="p">()</span>
 
-<span class="nn">Cell In[7], line 4,</span> in <span class="ni">test_div_property</span><span class="nt">()</span>
+<span class="nn">Cell In[4], line 4,</span> in <span class="ni">test_div_property</span><span class="nt">()</span>
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">assume</span><span class="p">,</span> <span class="n">given</span><span class="p">,</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span> <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">())</span>
 <span class="ne">----&gt; </span><span class="mi">4</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
@@ -549,13 +553,13 @@ Here, the precondition is that <code class="docutils literal notranslate"><span 
 
     <span class="p">[</span><span class="o">...</span> <span class="n">skipping</span> <span class="n">hidden</span> <span class="mi">1</span> <span class="n">frame</span><span class="p">]</span>
 
-<span class="nn">Cell In[7], line 6,</span> in <span class="ni">test_div_property</span><span class="nt">(x, y)</span>
+<span class="nn">Cell In[4], line 6,</span> in <span class="ni">test_div_property</span><span class="nt">(x, y)</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span> <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">())</span>
 <span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
 <span class="ne">----&gt; </span><span class="mi">6</span>     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="nn">Cell In[3], line 4,</span> in <span class="ni">div</span><span class="nt">(x, y)</span>
+<span class="nn">Cell In[1], line 4,</span> in <span class="ni">div</span><span class="nt">(x, y)</span>
 <span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># P    (precondition)</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code (implementation)</span>
 <span class="ne">----&gt; </span><span class="mi">4</span> <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># Q    (postcondition)</span>
@@ -563,8 +567,8 @@ Here, the precondition is that <code class="docutils literal notranslate"><span 
 
 <span class="ne">AssertionError</span>: 
 <span class="n">Falsifying</span> <span class="n">example</span><span class="p">:</span> <span class="n">test_div_property</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="mi">179</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="mi">117</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="mi">5183</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -604,10 +608,10 @@ example. This makes debugging much easier, since you don’t need to wade throug
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">AssertionError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
 <span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">test_div_property</span><span class="p">()</span>
 
-<span class="nn">Cell In[9], line 7,</span> in <span class="ni">test_div_property</span><span class="nt">()</span>
+<span class="nn">Cell In[6], line 7,</span> in <span class="ni">test_div_property</span><span class="nt">()</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="c1"># Combine integers and floats into a single strategy:</span>
 <span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">numbers</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">one_of</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 <span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="nd">@given</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span>
@@ -617,13 +621,13 @@ example. This makes debugging much easier, since you don’t need to wade throug
 
     <span class="p">[</span><span class="o">...</span> <span class="n">skipping</span> <span class="n">hidden</span> <span class="mi">1</span> <span class="n">frame</span><span class="p">]</span>
 
-<span class="nn">Cell In[9], line 9,</span> in <span class="ni">test_div_property</span><span class="nt">(x, y)</span>
+<span class="nn">Cell In[6], line 9,</span> in <span class="ni">test_div_property</span><span class="nt">(x, y)</span>
 <span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="nd">@given</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span>
 <span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
 <span class="ne">----&gt; </span><span class="mi">9</span>     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="nn">Cell In[3], line 4,</span> in <span class="ni">div</span><span class="nt">(x, y)</span>
+<span class="nn">Cell In[1], line 4,</span> in <span class="ni">div</span><span class="nt">(x, y)</span>
 <span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># P    (precondition)</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code (implementation)</span>
 <span class="ne">----&gt; </span><span class="mi">4</span> <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># Q    (postcondition)</span>
@@ -631,8 +635,8 @@ example. This makes debugging much easier, since you don’t need to wade throug
 
 <span class="ne">AssertionError</span>: 
 <span class="n">Falsifying</span> <span class="n">example</span><span class="p">:</span> <span class="n">test_div_property</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="mi">9_007_199_254_740_993</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="mi">161</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="mi">37</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -660,15 +664,15 @@ example. This makes debugging much easier, since you don’t need to wade throug
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test no. 1 with random input 0
-Test no. 2 with random input -8477684967185004649
-Test no. 3 with random input 6386
-Test no. 4 with random input -31712
-Test no. 5 with random input -17165
-Test no. 6 with random input 4
-Test no. 7 with random input 114
-Test no. 8 with random input -24931
-Test no. 9 with random input -1854951769
-Test no. 10 with random input -16623
+Test no. 2 with random input -31329
+Test no. 3 with random input 20370
+Test no. 4 with random input -10430
+Test no. 5 with random input -1665
+Test no. 6 with random input -14
+Test no. 7 with random input -94
+Test no. 8 with random input -9677
+Test no. 9 with random input -18097
+Test no. 10 with random input -16431764420473060
 </pre></div>
 </div>
 </div>
@@ -682,148 +686,151 @@ should consider increasing the <code class="docutils literal notranslate"><span 
 <p>Now let’s use Hypothesis to test our heat equation solver. Execute the below cell that contains the entire source code of our solver, so it becomes available for property-based testing.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">isclose</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
-<span class="c1"># Data abstractions</span>
+<span class="n">vec</span>  <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Mesh</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Uniform 1-D mesh.&quot;&quot;&quot;</span>
-    <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">N</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># number of cells</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cell_centered_arr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">face_centered_arr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># cell size</span>
+    <span class="n">N</span><span class="p">:</span> <span class="nb">int</span>     <span class="c1"># number of cells</span>
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">BC</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Neumann flux boundary conditions on the diffusive flux.&quot;&quot;&quot;</span>
-    <span class="n">qL</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">qR</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cell_field</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
 
-<span class="c1"># Behavior abstractions</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">face_field</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">qL</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qR</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply Neumann BCs to face fluxes F.&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
-    <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">qL</span><span class="p">,</span> <span class="n">qR</span>
+<span class="c1"># --- Property Checks ---</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">flux</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update face fluxes F based on cell field u.&quot;&quot;&quot;</span>
-
-    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Invalid grid spacing&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Inconsistent face flux array length&quot;</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)):</span>
-        <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">divergence_telescoping</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the finite volume telescoping property.&quot;&quot;&quot;</span>
-    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
-    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">isclose</span><span class="p">(</span><span class="n">total_divergence</span><span class="p">,</span> <span class="n">boundary_flux</span><span class="p">)</span>
+    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">total_divergence</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">boundary_flux</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">dudt</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update cell tendencies dudt based on face fluxes F.&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dudt</span><span class="p">)):</span>
-        <span class="n">dudt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
-    <span class="k">assert</span> <span class="n">divergence_telescoping</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stability_condition</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the stability condition for the explicit Euler scheme.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">dt</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">dx</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dudt</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_old</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_sum_new</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if heat is conserved.&quot;&quot;&quot;</span>
+    <span class="n">expected_change</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">actual_change</span> <span class="o">=</span> <span class="n">u_sum_new</span> <span class="o">-</span> <span class="n">u_sum_old</span>
+    <span class="k">return</span> <span class="n">actual_change</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">expected_change</span><span class="p">)</span>
+
+<span class="c1"># --- Procedures ---</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply BCs by overriding first and last face quantities (f).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">diffusive_flux</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a cell field (c), compute the diffusive flux (f).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
+    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
+    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)):</span>
+        <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+    <span class="c1">#assert telescoping(c, f, dx)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dudt</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance cell field u by one time step using explicit Euler method.&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dt&quot;</span>
+    <span class="k">assert</span> <span class="n">mesh</span><span class="o">.</span><span class="n">N</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
 
-    <span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="o">.</span><span class="n">qL</span><span class="p">,</span> <span class="n">bc</span><span class="o">.</span><span class="n">qR</span><span class="p">)</span>
-    <span class="n">flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
+    <span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
+    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
     <span class="n">divergence</span><span class="p">(</span><span class="n">dudt</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">N</span><span class="p">):</span>
         <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">dudt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">Euler_FTCS_stability</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check stability condition for explicit Euler (FTCS) scheme.&quot;&quot;&quot;</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="n">dx</span><span class="o">**</span><span class="mi">2</span>
-    <span class="k">return</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="mf">0.5</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_before</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_sum_after</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if heat is conserved.&quot;&quot;&quot;</span>
-    <span class="n">expected_change</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">bc</span><span class="o">.</span><span class="n">qL</span> <span class="o">-</span> <span class="n">bc</span><span class="o">.</span><span class="n">qR</span><span class="p">)</span>
-    <span class="n">actual_change</span> <span class="o">=</span> <span class="n">u_sum_after</span> <span class="o">-</span> <span class="n">u_sum_before</span>
-    <span class="k">return</span> <span class="n">isclose</span><span class="p">(</span><span class="n">actual_change</span><span class="p">,</span> <span class="n">expected_change</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">u0</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">BC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Orchestrate nt steps over cell field u.&quot;&quot;&quot;</span>
 
-    <span class="k">assert</span> <span class="n">nt</span> <span class="o">&gt;</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">Euler_FTCS_stability</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">kappa</span><span class="p">),</span> <span class="s2">&quot;Stability condition not met&quot;</span>
+    <span class="k">assert</span> <span class="n">nt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Number of time steps must be positive&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Boundary conditions must be a list of two values&quot;</span>
+    <span class="k">assert</span> <span class="n">stability_condition</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">kappa</span><span class="p">),</span> <span class="s2">&quot;Stability condition not met&quot;</span>
 
     <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">))</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">F</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face_centered_arr</span><span class="p">()</span>
-    <span class="n">dudt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_centered_arr</span><span class="p">()</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face_field</span><span class="p">()</span>
+    <span class="n">dudt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_field</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
-        <span class="n">u_sum_before</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
-        <span class="n">step</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
-        <span class="n">u_sum_after</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
-        <span class="k">assert</span> <span class="n">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_before</span><span class="p">,</span> <span class="n">u_sum_after</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">bc</span><span class="p">,</span> <span class="n">mesh</span><span class="p">),</span> <span class="s2">&quot;Heat not conserved&quot;</span>
+        <span class="n">u_sum_old</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
+        <span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
+        <span class="n">u_sum_new</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
+        <span class="k">assert</span> <span class="n">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_old</span><span class="p">,</span> <span class="n">u_sum_new</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">F</span><span class="p">),</span> <span class="s2">&quot;Heat not conserved&quot;</span>
 
     <span class="k">return</span> <span class="n">u</span>
 </pre></div>
 </div>
 </div>
 </div>
-<section id="symmetry">
-<h3>Symmetry<a class="headerlink" href="#symmetry" title="Link to this heading">#</a></h3>
-<p>We can test the symmetry property of the heat equation solver by checking if the solution remains symmetric when the initial conditions are mirrored and boundary conditions are applied symmetrically. Below is an example of how to implement this test using Hypothesis:</p>
+<section id="scaffolding">
+<h3>Scaffolding<a class="headerlink" href="#scaffolding" title="Link to this heading">#</a></h3>
+<p>Before encoding our properties, we need to set up some scaffolding to facilitate testing.</p>
+<p>First, let’s define some strategies for generating <em>sane</em> floating-point numbers for our tests:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Customized float strategies with min and max values for various solver parameters</span>
-<span class="n">floats_sane</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=-</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">dx_strat</span>     <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">kappa_strat</span>  <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">dt_strat</span>     <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">symmetric_field</span><span class="p">(</span><span class="n">min_n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_n</span><span class="o">=</span><span class="mi">31</span><span class="p">):</span>
-    <span class="c1"># Produce palindromic arrays (odd length preferred for strict central symmetry)</span>
-    <span class="c1"># Build half then mirror</span>
-    <span class="n">half</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">lists</span><span class="p">(</span><span class="n">floats_sane</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="p">(</span><span class="n">min_n</span><span class="o">//</span><span class="mi">2</span><span class="p">),</span> <span class="n">max_size</span><span class="o">=</span><span class="p">(</span><span class="n">max_n</span><span class="o">//</span><span class="mi">2</span><span class="p">))</span>
-    <span class="n">center</span> <span class="o">=</span> <span class="n">floats_sane</span>
-    <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">builds</span><span class="p">(</span><span class="k">lambda</span> <span class="n">h</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">h</span> <span class="o">+</span> <span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">h</span><span class="p">)),</span> <span class="n">half</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>
-
-<span class="nd">@given</span><span class="p">(</span><span class="n">symmetric_field</span><span class="p">(),</span> <span class="n">kappa_strat</span><span class="p">,</span> <span class="n">dx_strat</span><span class="p">,</span> <span class="n">dt_strat</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">test_symmetry_preserved_under_symmetric_BCs</span><span class="p">(</span><span class="n">u_sym</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Symmetric initial state stays symmetric for one step if qL==qR and r&lt;=1/2.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">assume</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u_sym</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">u_sym</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">kappa</span><span class="o">*</span><span class="n">dt</span><span class="o">/</span><span class="p">(</span><span class="n">dx</span><span class="o">*</span><span class="n">dx</span><span class="p">)</span>
-    <span class="n">assume</span><span class="p">(</span><span class="n">r</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span>
-
-    <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">u_sym</span><span class="p">))</span>
-    <span class="n">bc</span>   <span class="o">=</span> <span class="n">BC</span><span class="p">(</span><span class="n">qL</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">qR</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-
-    <span class="n">F</span>    <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face_centered_arr</span><span class="p">()</span>
-    <span class="n">dudt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_centered_arr</span><span class="p">()</span>
-    <span class="n">u</span>    <span class="o">=</span> <span class="n">u_sym</span><span class="p">[:]</span>
-
-    <span class="n">step</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">bc</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">u</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">u</span><span class="p">)))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">floats_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=-</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">kappa_st</span>  <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">dx_st</span>     <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">dt_st</span>     <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>Next, let’s define a mesh size strategy to generate reasonable and manageable mesh sizes,
+as well as a strategy for generating a tuple of boundary conditions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_symmetry_preserved_under_symmetric_BCs</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test completed&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mesh sizes</span>
+<span class="n">n_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+
+<span class="c1"># Boundary faces (qL, qR)</span>
+<span class="n">bc_st</span><span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tuples</span><span class="p">(</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test completed
+</div>
+</section>
+<section id="telescoping-property">
+<h3>Telescoping Property<a class="headerlink" href="#telescoping-property" title="Link to this heading">#</a></h3>
+<p>Before testing overall conservation, let’s start one level deeper with the local flux balance
+that makes conservation possible.</p>
+<p>In finite-volume discretizations, fluxes between neighboring cells telescope:
+the flux leaving one cell enters the next (except in the presence of sources,
+variable cell volumes or densities, or numerical errors.)</p>
+<p>Consequently, when we sum the discrete divergence over all cells, the interior
+fluxes cancel pairwise, leaving only the boundary contributions.
+in other words, the total divergence equals the net flux through the boundaries:</p>
+<p><span class="math notranslate nohighlight">\(\qquad
+\sum_{i=0}^{N-1} (\nabla \cdot F)_i = F_0 - F_N
+\qquad\)</span></p>
+<p>Recall the encoding of this property:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the finite volume telescoping property.&quot;&quot;&quot;</span>
+    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">total_divergence</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">boundary_flux</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -887,9 +894,61 @@ should consider increasing the <code class="docutils literal notranslate"><span 
 </div>
 </div>
 </section>
-<section id="more-properties">
-<h3>More properties<a class="headerlink" href="#more-properties" title="Link to this heading">#</a></h3>
-<p>[TODO: add more property checks…]</p>
+<section id="symmetry">
+<h3>Symmetry<a class="headerlink" href="#symmetry" title="Link to this heading">#</a></h3>
+<p>We can test the symmetry property of the heat equation solver by checking if the solution remains
+symmetric when the initial conditions are mirrored and boundary conditions are applied symmetrically.
+To check this property, let’s first define a helper function to generate symmetric initial conditions.</p>
+<p><strong>Feature Spotlight:</strong> The <code class="docutils literal notranslate"><span class="pre">st.builds()</span></code> method can be used to build complex data structures by
+combining simpler strategies. Below, we use it to create symmetric arrays.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">symmetric_field</span><span class="p">(</span><span class="n">min_n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_n</span><span class="o">=</span><span class="mi">31</span><span class="p">):</span>
+    <span class="c1"># Produce palindromic arrays (odd length preferred for strict central symmetry)</span>
+    <span class="c1"># Build half then mirror</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">lists</span><span class="p">(</span><span class="n">floats_st</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="p">(</span><span class="n">min_n</span><span class="o">//</span><span class="mi">2</span><span class="p">),</span> <span class="n">max_size</span><span class="o">=</span><span class="p">(</span><span class="n">max_n</span><span class="o">//</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">center</span> <span class="o">=</span> <span class="n">floats_st</span>
+    <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">builds</span><span class="p">(</span><span class="k">lambda</span> <span class="n">h</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">h</span> <span class="o">+</span> <span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">h</span><span class="p">)),</span> <span class="n">half</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We are now ready to implement the symmetry property test using Hypothesis:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@given</span><span class="p">(</span><span class="n">symmetric_field</span><span class="p">(),</span> <span class="n">dx_st</span><span class="p">,</span> <span class="n">kappa_st</span><span class="p">,</span> <span class="n">dt_st</span><span class="p">,</span> <span class="n">floats_st</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_symmetry_preservation</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="n">assume</span><span class="p">(</span><span class="n">stability_condition</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">kappa</span><span class="p">))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span>
+    <span class="n">assume</span><span class="p">(</span><span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># keep a clear center</span>
+
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">F</span>    <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face_field</span><span class="p">()</span>
+    <span class="n">dudt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_field</span><span class="p">()</span>
+
+    <span class="n">u</span> <span class="o">=</span> <span class="n">u0</span><span class="p">[:]</span>  <span class="c1"># copy to update</span>
+    <span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="p">[</span><span class="n">q</span><span class="p">,</span> <span class="o">-</span><span class="n">q</span><span class="p">])</span>
+
+    <span class="c1"># palindromic within FP tolerance</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_symmetry_preservation</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test completed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test completed
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="what-we-just-did">
@@ -985,9 +1044,10 @@ should consider increasing the <code class="docutils literal notranslate"><span 
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#back-to-the-1-d-heat-equation-solver">Back to the 1-D Heat Equation Solver</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symmetry">Symmetry</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scaffolding">Scaffolding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property">Telescoping Property</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation">Conservation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-properties">More properties</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symmetry">Symmetry</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>

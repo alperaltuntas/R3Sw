@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Welcome &#8212; Rigor and Reasoning in Research Software (R3Sw)</title>
+    <title>Appendix B — Reasoning vs. Test-Driven Development &#8212; Rigor and Reasoning in Research Software (R3Sw)</title>
   
   
   
@@ -73,12 +73,9 @@
                 gtag('config', 'G-V7VKREZ5MB');
             </script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'welcome';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'appendix-b';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Chapter 1: Code and Fix" href="ch1_code_and_fix.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -151,7 +148,7 @@
     
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="welcome.html">
   
   
   
@@ -172,8 +169,8 @@
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="welcome.html">
                     Welcome
                 </a>
             </li>
@@ -246,7 +243,7 @@
       
       
       
-      <li><a href="_sources/welcome.ipynb" target="_blank"
+      <li><a href="_sources/appendix-b.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -322,7 +319,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Welcome</h1>
+    <h1>Appendix B — Reasoning vs. Test-Driven Development</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -332,16 +329,17 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-well-do">What We’ll Do</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#target-audience">Target Audience</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ladder-of-rigor">The Ladder of Rigor</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-shared-goal">A Shared Goal</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorial-lead">Tutorial Lead</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#guest-lecturers-and-invited-speakers">Guest Lecturers and Invited Speakers</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#program-committee">Program Committee</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-core-idea-of-tdd">The Core Idea of TDD:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-core-idea-of-rfd">The Core Idea of RFD:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-the-two-approaches-differ-most">Where the two approaches differ most</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-timing">Design Timing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specification-of-behavior">Specification of Behavior</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interface-vs-implementation">Interface vs Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feedback-and-iteration">Feedback and Iteration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#psychological-focus">Psychological Focus</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-summary">In summary</a></li>
 </ul>
             </nav>
         </div>
@@ -353,106 +351,126 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="welcome">
-<h1>Welcome<a class="headerlink" href="#welcome" title="Link to this heading">#</a></h1>
-<p>Welcome to the Rigor and Reasoning in Research Software (R3Sw) Tutorial!</p>
-<p>Over the course of this tutorial, we’ll explore how to make our scientific software more reliable, understandable, and trustworthy. And we’ll aim to do so without losing the creativity and speed that make research exciting.</p>
-<section id="why-this-matters">
-<h2>Why This Matters<a class="headerlink" href="#why-this-matters" title="Link to this heading">#</a></h2>
-<p>Scientific software is at the heart of modern research.
-It powers everything from climate simulations to molecular modeling to AI-driven discoveries.</p>
-<p>But all too often, software is built in a hurry, using a “code-and-fix” style:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="appendix-b-reasoning-vs-test-driven-development">
+<h1>Appendix B — Reasoning vs. Test-Driven Development<a class="headerlink" href="#appendix-b-reasoning-vs-test-driven-development" title="Link to this heading">#</a></h1>
+<p>In modern software engineering, Test-Driven Development (TDD) is a popular methodology
+that emphasizes writing tests before writing the actual code, verifying behavior through
+fast feedback loops, and refactoring continuously.</p>
+<p>In this tutorial, we follow a different approach, which we’ll call Reasoning-First
+Development (RFD) in this appendix. Instead of starting with tests, we start with
+abstractions and specifications: Thinking through what the software means before we
+think about how it will be tested or implemented.</p>
+<p>There are similarities between RFD and TDD, such as their shared emphasis on programming
+to interfaces. That is, designing code around stable abstractions that promote modularity,
+maintainability, and testability. However, there are also important differences in
+philosophy and workflow, as we’ll explore below.</p>
+<section id="the-core-idea-of-tdd">
+<h2>The Core Idea of TDD:<a class="headerlink" href="#the-core-idea-of-tdd" title="Link to this heading">#</a></h2>
+<p>According to Kent Beck’s “Canon TDD” (2023):</p>
+<ol class="arabic simple">
+<li><p>Write a list of tests you want to cover.</p></li>
+<li><p>Turn one item from the list into an actual, concrete test.</p></li>
+<li><p>Write or change code to make the test (and all previous tests) pass.</p></li>
+<li><p>Refactor.</p></li>
+<li><p>Repeat until all tests are implemented.</p></li>
+</ol>
+<p>By following this cycle, you build up a suite of tests before or while writing
+the production code. This ensures that</p>
 <ul class="simple">
-<li><p>we write code quickly to get results, fix issues as they come up, and hope it holds together.</p></li>
-<li><p>The result? Code that works… most of the time, but is fragile, hard to test, and tricky to extend when the next research question comes along.</p></li>
+<li><p>everything that used to work continues to work,</p></li>
+<li><p>new features are verified as they are added, and</p></li>
+<li><p>future changes can be made with confidence and ease.</p></li>
 </ul>
-<p>This tutorial is about breaking that cycle.</p>
-<ul class="simple">
-<li><p>We’ll take inspiration from the scientific method itself. Just as good science relies on forming hypotheses, testing them, and refining ideas, good scientific software can be built using that same process.</p></li>
-<li><p>By applying rigor and reasoning to our code, we can create tools that are more robust, easier to work with, and better aligned with the science they support.</p></li>
-</ul>
+<p>At heart, TDD is a workflow for discovering and refining design through tests
+and sustaining confidence through continuous verification.</p>
 </section>
-<section id="what-well-do">
-<h2>What We’ll Do<a class="headerlink" href="#what-well-do" title="Link to this heading">#</a></h2>
-<p>We’ll work through a running example: a simple 1-D heat equation solver.</p>
-<p>We’ll start with an ad-hoc, monolithic prototype, just like the quick scripts many of us have written. And gradually transform it into modular, testable, and trustworthy software.</p>
-<p>Along the way, you’ll get hands-on experience with techniques like:</p>
-<ul class="simple">
-<li><p><strong>Designing for robustness:</strong> separation of concerns, specifications, preconditions, postconditions, and invariants</p></li>
-<li><p><strong>Unit testing with pytest:</strong> the essential foundation for building confidence in code</p></li>
-<li><p><strong>Property-based testing with Hypothesis:</strong> exploring edge cases automatically</p></li>
-<li><p><strong>Theorem proving with Z3:</strong> exhaustively reasoning about code behavior</p></li>
-</ul>
-<p>By the end, you’ll have a set of tools and habits you can bring back to your own projects.</p>
+<section id="the-core-idea-of-rfd">
+<h2>The Core Idea of RFD:<a class="headerlink" href="#the-core-idea-of-rfd" title="Link to this heading">#</a></h2>
+<p>Our approach follows a different order of discovery:</p>
+<p>Instead of starting with tests, we start with abstractions and contracts.</p>
+<ol class="arabic simple">
+<li><p>Abstraction - Identify essential concepts.</p></li>
+<li><p>Specification - Define properties and contracts (preconditions and postconditions).</p></li>
+<li><p>Implementation - Write code that satisfies the contracts.</p></li>
+<li><p>Verification - Use tests and proofs to confirm that the contracts hold.</p></li>
+</ol>
+<p>Here, tests are clients of reasoning artifacts, not the source of them or the drivers of design.</p>
+<p>The focus is on making design decisions through reasoning about abstractions and properties
+by making behavior explicitly explainable rather than merely observable.</p>
+<p>TDD evolves software behavior incrementally through examples and tests.
+RFD derives code from explicit reasoning built on abstractions and specifications.</p>
 </section>
-<section id="target-audience">
-<h2>Target Audience<a class="headerlink" href="#target-audience" title="Link to this heading">#</a></h2>
-<p>This tutorial is for scientists, engineers, and students working in scientific computing across any domain and at any career stage.</p>
-<ul class="simple">
-<li><p>You don’t need prior experience with testing or verification.</p></li>
-<li><p>Familiarity with Python is necessary, but that’s all you need.</p></li>
-</ul>
-<p>Whether you’re just getting started or have years of experience, we hope you’ll find ways to level up your skills and make your software more trustworthy.</p>
+<section id="where-the-two-approaches-differ-most">
+<h2>Where the two approaches differ most<a class="headerlink" href="#where-the-two-approaches-differ-most" title="Link to this heading">#</a></h2>
+<section id="design-timing">
+<h3>Design Timing<a class="headerlink" href="#design-timing" title="Link to this heading">#</a></h3>
+<p>TDD: Design emerges during testing. Developers are warned not to
+“think too hard” about architecture early on.</p>
+<p>RFD: Design is intentional and explicit from the start.
+Interfaces and abstractions form the scaffolding for later verification.</p>
+<p>Comment: In research software, where physics, numerics, and performance interact,
+design cannot be deferred. Intentional abstraction is essential.</p>
+<p>One important goal of TDD is to enable and ease refactoring.
+RFD isn’t against refactoring or evolving abstractions, but it emphasizes getting
+them roughly right, as best as we can, from the start to minimize costly redesign later.</p>
+<blockquote>
+<div><p>Code is a poor medium for exploring abstractions. -Daniel Jackson</p>
+</div></blockquote>
 </section>
-<section id="the-ladder-of-rigor">
-<h2>The Ladder of Rigor<a class="headerlink" href="#the-ladder-of-rigor" title="Link to this heading">#</a></h2>
-<p>Throughout the tutorial, we’ll climb what we call a <em>ladder of rigor.</em>
-Each step represents a different way to build confidence in your code:</p>
-<ul class="simple">
-<li><p><strong>Unit testing:</strong> the foundation: simple and practical, but limited in coverage.</p></li>
-<li><p><strong>Property-based testing:</strong> expands coverage and catches surprising edge cases.</p></li>
-<li><p><strong>Theorem proving:</strong> the most rigorous, offering deep guarantees in specialized cases.</p></li>
-</ul>
-<p>Each step adds new power and comes with its own tradeoffs.
-You’ll learn how to choose the right approach for your project’s needs.</p>
+<section id="specification-of-behavior">
+<h3>Specification of Behavior<a class="headerlink" href="#specification-of-behavior" title="Link to this heading">#</a></h3>
+<p>TDD: Behavior is defined through examples.</p>
+<p>RFD: Behavior is defined through properties (such as conservation, symmetry, and telescoping)
+and contracts (preconditions and postconditions).</p>
+<p>Comment: Scientific models cannot be exhaustively tested by enumeration.
+Expressing scientific and computational invariants can provide higher confidence
+and generality.</p>
 </section>
-<section id="a-shared-goal">
-<h2>A Shared Goal<a class="headerlink" href="#a-shared-goal" title="Link to this heading">#</a></h2>
-<p>More than just learning tools, this tutorial is about adopting a scientific mindset for software:</p>
-<ul class="simple">
-<li><p>Think about what properties your code should satisfy.</p></li>
-<li><p>Make those expectations explicit through specifications and reasoning.</p></li>
-<li><p>Test and challenge those expectations, just as you would test a scientific hypothesis.</p></li>
-<li><p>Refine and improve both your code and your understanding.</p></li>
-</ul>
-<p>By approaching software this way, you’re not just writing code: You’re conducting an ongoing experiment to make your science more reliable and reproducible.</p>
-<p>Let’s get started!</p>
-<section id="tutorial-lead">
-<h3>Tutorial Lead<a class="headerlink" href="#tutorial-lead" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p>Alper Altuntas (NSF NCAR)</p></li>
-</ul>
+<section id="interface-vs-implementation">
+<h3>Interface vs Implementation<a class="headerlink" href="#interface-vs-implementation" title="Link to this heading">#</a></h3>
+<p>Both approaches emhasize programming to interfaces, not implementations.
+But the path differs:</p>
+<p>TDD: Interfaces emerge from tests and examples.
+RFD: Interfaces are designed upfront based on abstractions and decomposition.</p>
 </section>
-<section id="guest-lecturers-and-invited-speakers">
-<h3>Guest Lecturers and Invited Speakers<a class="headerlink" href="#guest-lecturers-and-invited-speakers" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p>Soonho Kong (AWS)</p></li>
-<li><p>Philip Zucker (Draper)</p></li>
-<li><p>Adrianna Foster (NSF NCAR)</p></li>
-<li><p>Antonios Mamalakis (UVA)</p></li>
-<li><p>Deepak Cherian (Earthmover)</p></li>
-<li><p>Helen Kershaw (NSF NCAR)</p></li>
-<li><p>Manish Venumuddula (NSF NCAR)</p></li>
-</ul>
+<section id="feedback-and-iteration">
+<h3>Feedback and Iteration<a class="headerlink" href="#feedback-and-iteration" title="Link to this heading">#</a></h3>
+<p>TDD: Encourages rapid development cycles with immediate feedback from tests.
+This optimizes for developer momentum.</p>
+<p>RFD: Emphasizes upfront reasoning and design, with tests serving to verify
+that the reasoning holds in practice. This can lead to longer initial development times
+compared to TDD.</p>
+<p>Comment: For scientific software, the cost of a wrong abstraction is far higher
+than the cost of a slow iteration. Fast feedback is still valuable and encouraged,
+but not at the expense of conceptual clarity.</p>
+<blockquote>
+<div><p>“The problem with test-driven development is that it focuses attention on getting
+specific features working, rather than finding the best design… The units of
+development should be abstractions, not features.” - John Ousterhout,
+<em>A Philosophy of Software Design</em> (2022)</p>
+</div></blockquote>
 </section>
-<section id="program-committee">
-<h3>Program Committee<a class="headerlink" href="#program-committee" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p>John Baugh (NCSU)</p></li>
-<li><p>Ilene Carpenter (HPE)</p></li>
-<li><p>Brian Dobbins (NSF NCAR)</p></li>
-<li><p>Michael Duda (NSF NCAR)</p></li>
-<li><p>Karsten Peters-von Gehlen (DKRZ)</p></li>
-<li><p>Ganesh Gopalakrishnan (Utah)</p></li>
-<li><p>Dorit Hammerling (Mines)</p></li>
-<li><p>Balwinder Singh (PNNL)</p></li>
-</ul>
+<section id="psychological-focus">
+<h3>Psychological Focus<a class="headerlink" href="#psychological-focus" title="Link to this heading">#</a></h3>
+<p>TDD: Focuses on building confidence through passing tests.
+RFD: Focuses on curiosity-driven exploration to replace uncertainty with understanding.</p>
+<p>Both methodologies value feedback and learning, but they differ in where understanding originates.</p>
+</section>
+</section>
+<section id="in-summary">
+<h2>In summary<a class="headerlink" href="#in-summary" title="Link to this heading">#</a></h2>
+<p>TDD discovers understanding through behavior; RFD builds it through reasoning.
+In scientific software—where correctness and meaning must be explicit,
+RFD provides a more natural foundation.</p>
+<p>TDD brings discipline and fast feedback.</p>
+<p>RFD extends that discipline upward into the realm of abstraction and specification,
+turning code into something we can reason about as rigorously as the science it represents.</p>
+<p>It complements TDD’s empirical confidence with conceptual clarity, completing the ladder
+from testing to reasoning to verification.</p>
 <hr class="docutils" />
-<p><em>This notebook is a part of the “Rigor and Reasoning in Research Software” (R3Sw) tutorial, led by Alper Altuntas and sponsored by the Better Scientific Software (BSSw) Fellowship Program. Copyright © 2025</em></p>
+<p>“Rigor and Reasoning in Research Software”, Alper Altuntas et al.
+Better Scientific Software (BSSw) Fellowship Program. Copyright © 2025*</p>
 </section>
-</section>
-<div class="toctree-wrapper compound">
-</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -485,15 +503,6 @@ You’ll learn how to choose the right approach for your project’s needs.</p>
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="right-next"
-       href="ch1_code_and_fix.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Chapter 1: Code and Fix</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -511,16 +520,17 @@ You’ll learn how to choose the right approach for your project’s needs.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-well-do">What We’ll Do</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#target-audience">Target Audience</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ladder-of-rigor">The Ladder of Rigor</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-shared-goal">A Shared Goal</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorial-lead">Tutorial Lead</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#guest-lecturers-and-invited-speakers">Guest Lecturers and Invited Speakers</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#program-committee">Program Committee</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-core-idea-of-tdd">The Core Idea of TDD:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-core-idea-of-rfd">The Core Idea of RFD:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-the-two-approaches-differ-most">Where the two approaches differ most</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-timing">Design Timing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specification-of-behavior">Specification of Behavior</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interface-vs-implementation">Interface vs Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feedback-and-iteration">Feedback and Iteration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#psychological-focus">Psychological Focus</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-summary">In summary</a></li>
 </ul>
   </nav></div>
 

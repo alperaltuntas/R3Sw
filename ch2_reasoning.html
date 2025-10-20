@@ -180,6 +180,7 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 2: Reasoning About Code</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing</a></li>
 
 <li class="toctree-l1"><a class="reference internal" href="ch4_property_based_testing.html">Chapter 4: Property-Based Testing</a></li>
@@ -330,23 +331,28 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Chapter 2: Reasoning About Code</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#abstraction">1. Abstraction</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-abstraction-vs-procedural-abstraction">Data Abstraction vs. Procedural Abstraction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#procedural-data-and-functional-abstractions">Procedural, Data, and Functional Abstractions</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#decomposition">2. Decomposition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specification-writing-down-intent">3. Specification: Writing Down Intent</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-simple-example">A simple example:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-1">Exercise 2.1:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-writing-code-that-meets-specifications">4. Implementation: Writing Code that Meets Specifications</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#heat-equation-solver-revisited">Heat Equation Solver, Revisited</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-abstraction">Step 1 — Abstraction</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-decomposition">Step 2 – Decomposition</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#data-structures">Data Structures:</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#procedures">Procedures:</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-specification">Step 3 – Specification</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-specification">Step 3 – Specification</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#core-api-and-type-annotations">Core API and Type Annotations</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#preconditions-and-postconditions">Preconditions and Postconditions</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#semantic-assertions">Semantic Assertions</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-2">Exercise 2.2:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-3">Exercise 2.3:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-implementation">Step 4 – Implementation</a></li>
@@ -355,6 +361,13 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-ahead">Looking Ahead</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#foundations-and-influences">Foundations and Influences</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-test-driven-development">Connection to Test-Driven Development</a></li>
+</ul>
+</li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -369,33 +382,50 @@
 <h1>Chapter 2: Reasoning About Code<a class="headerlink" href="#chapter-2-reasoning-about-code" title="Link to this heading">#</a></h1>
 <p>In Chapter 1, we implemented a working 1-D heat equation solver.
 It runs, but it’s fragile, opaque, and hard to test or extend.</p>
-<p>This resembles a common situation in scientific computing:</p>
+<p>That’s a common situation in scientific computing:</p>
 <ul class="simple">
 <li><p>write some code, see if it runs, fix what breaks, repeat.</p></li>
-<li><p>It gets results quickly, but the codebase becomes harder to understand and maintain over time.</p></li>
+<li><p>It gets results fast, but the code becomes hard to understand, maintain, or extend.</p></li>
 </ul>
-<p>In this chapter, we ask: can we design our code systematically, in a way that allows us to reason about it before we even run it?</p>
-<p>To achieve this, we need to manage complexity by breaking the problem into smaller pieces.</p>
-<p>But how do we decide how to break a problem into pieces?</p>
+<p><strong>Step back: How can we do better?</strong></p>
+<p>The key is to <em>design intentionally</em>:</p>
 <ul class="simple">
-<li><p>We can use abstraction to identify the key concepts in our problem, and then use those abstractions to guide our decomposition.</p></li>
-<li><p>Once we have a decomposition, we can write specifications for each piece, i.e., precise and testable descriptions of what each piece should do.</p></li>
+<li><p>by thinking through the structure <em>before</em> diving into code.</p></li>
 </ul>
-<p>The process of designing software in this way can be summarized in four steps:</p>
+<p>An upfront design exercise is valuable:</p>
+<ul class="simple">
+<li><p>it clarifies purpose,</p></li>
+<li><p>reveals assumptions,</p></li>
+<li><p>identifies the main abstractions we’ll need.</p></li>
+</ul>
+<p>But this isn’t Big Design Up Front. We start with a lightweight design
+then refine through an iterative process.</p>
+<p><strong>Goal:</strong>  surface intent early, stay flexible as understanding grows.</p>
+<p><strong>Managing complexity via decomposition</strong></p>
+<p>Break the problem into smaller, meaningful pieces.</p>
+<p><strong>How?</strong></p>
+<ul class="simple">
+<li><p>Use <em>abstraction</em> to identify key concepts.</p></li>
+<li><p>Use those abstractions to guide decomposition.</p></li>
+<li><p>Write <em>specifications</em> for each piece: clear, testable descriptions of what each piece should do.</p></li>
+</ul>
+<p><strong>The four iterative steps:</strong></p>
 <ol class="arabic simple">
-<li><p><strong>Abstraction:</strong> determine the concepts that matter.</p></li>
-<li><p><strong>Decomposition:</strong> Based on our abstractions, break the problem into smaller pieces.</p></li>
+<li><p><strong>Abstraction:</strong> Identify the concepts that matter.</p></li>
+<li><p><strong>Decomposition:</strong> Organize the code around those abstractions.</p></li>
 <li><p><strong>Specification:</strong> For each piece, write down what it should do, in a way that’s precise and testable.</p></li>
-<li><p><strong>Implementation:</strong> Write code that meets the specifications.</p></li>
+<li><p><strong>Implementation:</strong> Write code that satisfies the specifications.</p></li>
 </ol>
-<p><em>Note: This kind of design process is common in traditional software engineering, but it’s not often followed in scientific computing. The pioneers and advocates of this and similar approaches include <a class="reference external" href="https://en.wikipedia.org/wiki/Barbara_Liskov">Barbara Liskov</a>,…</em></p>
+<p>It’s a cycle, and not a one-time process. As you learn:</p>
+<ul class="simple">
+<li><p>Refine your abstractions and decomposition.</p></li>
+<li><p>Update specifications as understanding deepens.</p></li>
+<li><p>Implement and test iteratively.</p></li>
+</ul>
 <section id="abstraction">
 <h2>1. Abstraction<a class="headerlink" href="#abstraction" title="Link to this heading">#</a></h2>
-<p>In software design, <strong>abstraction</strong> is the first and most important step. Here, we form a high-level architecture for our system:</p>
-<ul class="simple">
-<li><p>determine high-level concepts that matter.</p></li>
-<li><p>ignore irrelevant details.</p></li>
-</ul>
+<p>Abstraction is deciding what matters and what doesn’t. A good software design is based on the right
+set of abstractions. As such, we start our design and development process by exploring abstractions.</p>
 <p>This is a creative step, where we explore different ways to represent the system and its components.</p>
 <p>In scientific computing, this step isn’t given enough attention, but it is crucial:</p>
 <blockquote>
@@ -413,15 +443,17 @@ Abstraction pays off by:</p>
 <li><p>clarifying intent</p></li>
 <li><p>making low-level details easier to manage.</p></li>
 </ul>
-<section id="data-abstraction-vs-procedural-abstraction">
-<h3>Data Abstraction vs. Procedural Abstraction<a class="headerlink" href="#data-abstraction-vs-procedural-abstraction" title="Link to this heading">#</a></h3>
-<p>In software design, there are two main forms of abstraction:</p>
+<section id="procedural-data-and-functional-abstractions">
+<h3>Procedural, Data, and Functional Abstractions<a class="headerlink" href="#procedural-data-and-functional-abstractions" title="Link to this heading">#</a></h3>
+<p>In software design, there are several complementary ways to capture and manage complexity:</p>
 <ul class="simple">
-<li><p><strong>Data Abstraction</strong>: defining data structures that encapsulate state and behavior.</p></li>
-<li><p><strong>Procedural Abstraction</strong>: defining procedures (functions, methods) that encapsulate behavior.</p></li>
+<li><p>Procedural abstraction: defining procedures (functions or methods) that encapsulate behavior.</p></li>
+<li><p>Data abstraction: defining data structures that encapsulate state and behavior (think object-oriented design).</p></li>
+<li><p>Functional abstraction: using pure functions that operate on immutable data.</p></li>
 </ul>
-<p>For our running example, we will use procedural abstraction, since that’s simpler and more appropriate for a small solver like the 1-D heat equation.</p>
-<p>For larger and more sophisticated applications, data abstraction (e.g., object-oriented programming) may be more appropriate. However, the fundamental principles of reasoning apply equally well to both.</p>
+<p>These forms aren’t mutually exclusive. But in this tutorial, we’ll mostly rely on procedural abstraction,
+since it’s simpler and fits the style of a small solver like the 1-D heat equation.
+The reasoning principles apply equally well across all abstraction styles.</p>
 </section>
 </section>
 <section id="decomposition">
@@ -448,30 +480,51 @@ If it is difficult to think of a name, there may be a problem with the procedure
 </section>
 <section id="specification-writing-down-intent">
 <h2>3. Specification: Writing Down Intent<a class="headerlink" href="#specification-writing-down-intent" title="Link to this heading">#</a></h2>
-<p>Once we have pieces, we need to say what each one should do.</p>
+<p>Once we have modular pieces, we need to say what each one should do.</p>
 <p>A <em>specification</em> is a precise statement of what software should do, independent of how it does it.</p>
 <p>Specifications can range from informal descriptions in plain English
 to fully formal mathematical models.</p>
-<p>In this tutorial, we’ll use a <strong>lightweight, practical level</strong> of specification that combines:</p>
+<p>In this tutorial, we adopt a <strong>lightweight, practical style</strong> of specification that combines:</p>
 <ul class="simple">
-<li><p><strong>type annotations</strong> (for inputs and outputs),</p></li>
-<li><p><strong>assertions</strong> that serve as contracts, i.e., preconditions and postconditions.</p></li>
+<li><p><strong>type annotations:</strong> to capture data types and interfaces,</p></li>
+<li><p><strong>assertions:</strong> statements about what must hold before, during, or after execution.</p></li>
 </ul>
-<p>This lightweight approach:</p>
+<p>Assertions can take many forms:</p>
 <ul class="simple">
-<li><p>Guides implementation,</p></li>
-<li><p>Facilitates testing and validation.</p></li>
-<li><p>Embeds reasoning directly into the program.</p></li>
+<li><p>Function-level contracts (preconditions and postconditions),</p></li>
+<li><p>Semantic assertions that encode domain knowledge,</p></li>
+<li><p>Computational properties.</p></li>
+</ul>
+<p>Some of these belong inside the code (e.g., preconditions that guard against invalid inputs),
+while others live <em>adjacent</em> to the code, where they can be checked in test suites. Some
+are local to a function, while others can span multiple functions or modules.</p>
+<p><strong>Where to specify assertions?</strong></p>
+<p>Place each assertions where it’s easiest to maintain and run:</p>
+<ul class="simple">
+<li><p><strong>Inline</strong> for cheap, safety-critical checks (e.g., preconditions regarding input validity,
+invariants that must hold during execution, postconditions that check outputs).</p></li>
+<li><p><strong>Alongside</strong> the code (e.g., small boolean functions in the same module/class) for local
+semantic checks.</p></li>
+<li><p><strong>In dedicated spec modules</strong> for broader properties that span multiple components, or are
+common to many components.</p></li>
+</ul>
+<p>Regardless of where they live, specifications serve the same <strong>role</strong>:</p>
+<ul class="simple">
+<li><p>to make intent explicit and testable.</p></li>
+</ul>
+<p>This flexible approach balances practicality and rigor:</p>
+<ul class="simple">
+<li><p>It guides implementation by making expectations explicit.</p></li>
+<li><p>It supports reasoning and testing by expressing scientific
+or computational <em>facts</em> as executable checks, placed as close
+as practical to the code they relate to.</p></li>
+<li><p>It bridges levels of rigor, from quick runtime guards to
+property-based testing and formal verification.</p></li>
 </ul>
 </section>
-<section id="a-simple-example">
-<h2>A simple example:<a class="headerlink" href="#a-simple-example" title="Link to this heading">#</a></h2>
+<section id="example">
+<h2>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
 <p>Below simple function exemplifies our practical approach to specification:</p>
-<ul class="simple">
-<li><p>Type annotations specify that <code class="docutils literal notranslate"><span class="pre">div</span></code> takes two floats and returns a float.</p></li>
-<li><p>The first <code class="docutils literal notranslate"><span class="pre">assert</span></code> is a precondition (P): it specifies what must be true before the function is called.</p></li>
-<li><p>The second <code class="docutils literal notranslate"><span class="pre">assert</span></code> is a postcondition (Q): it specifies what must be true after the function is called.</p></li>
-</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span> <span class="c1"># Type annotations for inputs and output</span>
@@ -495,33 +548,27 @@ to fully formal mathematical models.</p>
 </div>
 </div>
 </div>
-<p><strong>Note:</strong> Historically, preconditions and postconditions are often denoted <code class="docutils literal notranslate"><span class="pre">P</span></code> and <code class="docutils literal notranslate"><span class="pre">Q</span></code>, respectively, as in <em>Hoare logic</em>:</p>
+<ul class="simple">
+<li><p>Type annotations specify that <code class="docutils literal notranslate"><span class="pre">div</span></code> takes two floats and returns a float.</p></li>
+<li><p>The assertions specify contracts, i.e., pre- and postconditions.</p></li>
+</ul>
+<p>Historically, preconditions and postconditions are often denoted <code class="docutils literal notranslate"><span class="pre">P</span></code> and <code class="docutils literal notranslate"><span class="pre">Q</span></code>, respectively, as in <em>Hoare logic</em>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{P} C {Q}
 </pre></div>
 </div>
 <p>where C is a command (procedure).</p>
-<p><strong>Note:</strong> Executable assertions as specifications is not universally loved.
-Some prefer to keep specifications as comments or separate documents.
-However, embedding specifications as executable assertions enables runtime checking and testing,
-something we’ll utilize in the remaining chapters. Assertions can be disabled in production code,
-e.g., via <code class="docutils literal notranslate"><span class="pre">-O</span></code> flag in Python, if performance is critical.</p>
 </section>
 <section id="exercise-2-1">
 <h2>Exercise 2.1:<a class="headerlink" href="#exercise-2-1" title="Link to this heading">#</a></h2>
-<p>Can you find inputs to <code class="docutils literal notranslate"><span class="pre">f</span></code> where this function fails the postcondition even when the precondition is satisfied?</p>
+<p>Can you find inputs to <code class="docutils literal notranslate"><span class="pre">div</span></code> where this function fails the postcondition even when the precondition is satisfied?</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">div</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.0
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># div(?, ?)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p><strong>Answer:</strong> One possible input is <code class="docutils literal notranslate"><span class="pre">f(7,</span> <span class="pre">25)</span></code>. The precondition <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">!=</span> <span class="pre">0</span></code> is satisfied, but the postcondition <code class="docutils literal notranslate"><span class="pre">res</span> <span class="pre">*</span> <span class="pre">y</span> <span class="pre">==</span> <span class="pre">x</span></code> fails because due to floating-point rounding error.</p>
+<p><strong>Answer:</strong> One possible input is <code class="docutils literal notranslate"><span class="pre">f(7,</span> <span class="pre">25)</span></code>. The precondition <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">!=</span> <span class="pre">0</span></code> is satisfied, but the postcondition <code class="docutils literal notranslate"><span class="pre">res</span> <span class="pre">*</span> <span class="pre">y</span> <span class="pre">==</span> <span class="pre">x</span></code> fails due to floating-point rounding error.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">div</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
@@ -545,9 +592,11 @@ e.g., via <code class="docutils literal notranslate"><span class="pre">-O</span>
 </div>
 </div>
 </div>
-<p><strong>Note:</strong> Floating-point arithmetic introduces unavoidable rounding errors.
-These aren’t bugs, but natural computational artifacts. We can <em>weaken</em> the postcondition
-to account for this by using approximate equality. We can do so using <code class="docutils literal notranslate"><span class="pre">pytest.approx</span></code> (or, similarly, <code class="docutils literal notranslate"><span class="pre">math.isclose</span></code>, <code class="docutils literal notranslate"><span class="pre">numpy.isclose</span></code>, etc.):</p>
+<p><strong>Accounting for reality:</strong></p>
+<ul class="simple">
+<li><p>Floating-point arithmetic isn’t exact.</p></li>
+<li><p>We can relax postconditions using approximate equality:</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span>
@@ -573,14 +622,7 @@ to account for this by using approximate equality. We can do so using <code clas
 </div>
 </div>
 </div>
-<p><strong>Takeaway</strong>: Postconditions should reflect computational realities (e.g., floating-point).</p>
-<p><strong>Preconditions deserve similar care.</strong></p>
-<p><strong>weakest precondition</strong> :
-the <em>most general condition</em> under which the code
-works correctly. It ensures your function is usable in the widest range of scenarios
-while still preventing incorrect behavior.</p>
-<p>Conversely, we want the <strong>strongest postcondition</strong> possible: the most precise guarantee
-about the outcome. This balance maximizes both the flexibility and reliability of our code.</p>
+<p><strong>Takeaway</strong>: Specifications should reflect computational realities (e.g., floating-point).</p>
 </section>
 <section id="implementation-writing-code-that-meets-specifications">
 <h2>4. Implementation: Writing Code that Meets Specifications<a class="headerlink" href="#implementation-writing-code-that-meets-specifications" title="Link to this heading">#</a></h2>
@@ -592,7 +634,7 @@ about the outcome. This balance maximizes both the flexibility and reliability o
 <h2>Heat Equation Solver, Revisited<a class="headerlink" href="#heat-equation-solver-revisited" title="Link to this heading">#</a></h2>
 <p>In Chapter 1, we wrote a quick, monolithic solver for the 1-D heat equation.
 It worked, but it mixed boundary conditions, flux calculations, and time-stepping into a single opaque function.</p>
-<p>Now we’ll redesign it systematically, using the four-step process:</p>
+<p>Now we’ll redesign it systematically, using the four-step, iterative process:</p>
 <p>Abstraction → Decomposition → Specification → Implementation.</p>
 <section id="step-1-abstraction">
 <h3>Step 1 — Abstraction<a class="headerlink" href="#step-1-abstraction" title="Link to this heading">#</a></h3>
@@ -613,27 +655,28 @@ q_L &amp; i = 0, \\[6pt]
 q_R &amp; i = N.
 \end{cases}
 \)</span></p>
-<p>The key concepts we need are:</p>
+<p>From this description, we can extract the essential concepts that our software must represent:</p>
 <ul class="simple">
-<li><p>Mesh: describes the geometry of the domain (dx, number of cells).</p></li>
-<li><p>Cell fields (u, dudt): quantities stored at cell centers.</p></li>
-<li><p>Face fields (F): quantities stored at cell faces.</p></li>
+<li><p>Mesh: describes the geometry of the domain (cell size <span class="math notranslate nohighlight">\(\Delta x\)</span>, number of cells <span class="math notranslate nohighlight">\(N\)</span>).</p></li>
+<li><p>Cell fields (<span class="math notranslate nohighlight">\(u_i\)</span>, <span class="math notranslate nohighlight">\(div(F_i)\)</span>): quantities stored at cell centers.</p></li>
+<li><p>Face fields (<span class="math notranslate nohighlight">\(F_i\)</span>): quantities stored at cell faces.</p></li>
 <li><p>Procedures to perform the time-stepping of the heat equation.</p></li>
 </ul>
-<p>These abstractions are all we need to model the system.</p>
+<p>These abstractions define what the system consists of, not how it will be computed.
+They form the conceptual backbone of the solver—independent of data structures,
+programming language, or numerical optimization choices.</p>
 </section>
 <section id="step-2-decomposition">
 <h3>Step 2 – Decomposition<a class="headerlink" href="#step-2-decomposition" title="Link to this heading">#</a></h3>
-<p>Based on our abstractions, we can break the solver into smaller pieces. Since we’ll use procedural abstraction, our focus is on defining functions that carry out the computations. But first, let’s determine the key data structures that we’ll need:</p>
-<section id="data-structures">
-<h4>Data Structures:<a class="headerlink" href="#data-structures" title="Link to this heading">#</a></h4>
+<p>With our abstractions identified, we now decide how to organize the work.
+We’ll use procedural abstraction: small, single-purpose functions operating on simple data containers.</p>
+<p>The main data structures representing these abstractions are:</p>
 <ul class="simple">
 <li><p><em>mesh</em>: discrete representation of the computational domain (grid spacing, number of cells).</p></li>
-<li><p><em>vector</em>: a simple 1-D array of floats.</p></li>
 <li><p><em>cell field</em>: a vector storing cell-centered values (e.g., temperature, tendencies).</p></li>
 <li><p><em>face field</em>: a vector storing face-centered values (e.g., diffusive fluxes).</p></li>
 </ul>
-<p>Let’s start simple and define a type alias for vectors:</p>
+<p>And for convenience, we’ll define a simple type alias for 1-D vectors:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vec</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
@@ -662,64 +705,94 @@ q_R &amp; i = N.
 </div>
 </div>
 </div>
-<p>Notice the helper methods <code class="docutils literal notranslate"><span class="pre">cell_field</span></code> and <code class="docutils literal notranslate"><span class="pre">face_field</span></code> that create zero-initialized fields of the appropriate size based on the mesh.</p>
-</section>
+<p>Notice the helper methods <code class="docutils literal notranslate"><span class="pre">cell_field</span></code> and <code class="docutils literal notranslate"><span class="pre">face_field</span></code> that create zero-initialized fields of the appropriate size based on the mesh. This makes correct sizing trivial and prevents off-by-one errors.</p>
 <section id="procedures">
 <h4>Procedures:<a class="headerlink" href="#procedures" title="Link to this heading">#</a></h4>
-<p>Recall the abstraction and decomposition principles we discussed for procedural abstraction, i.e.,</p>
+<p>Next, we define the procedures that implement our abstractions.
+Following the principles of abstraction and decomposition:</p>
 <ul class="simple">
-<li><p>Each procedure should have a single, well-defined purpose.</p></li>
-<li><p>Procedures should be general: avoid hard-coding specific values or assumptions.</p></li>
+<li><p>Each procedure should have a single, clear purpose.</p></li>
+<li><p>Procedures should be general: avoid narrowing to specific variables, values, or assumptions.</p></li>
 <li><p>Each procedure should be as simple as possible, but no simpler.</p></li>
 </ul>
 <p>Based on these principles, we can define the following <em>general</em> procedures:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">apply_bc(f,</span> <span class="pre">bc)</span></code>: apply boundary conditions to face fluxes.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">diffusive_flux(f,</span> <span class="pre">c,</span> <span class="pre">kappa,</span> <span class="pre">dx)</span></code>: compute interior fluxes.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">divergence(c,</span> <span class="pre">f,</span> <span class="pre">dx)</span></code>: compute tendencies from fluxes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">apply_bc(f_out,</span> <span class="pre">bc)</span></code>: apply boundary conditions to face fluxes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">diffusive_flux(f_out,</span> <span class="pre">c,</span> <span class="pre">kappa,</span> <span class="pre">dx)</span></code>: compute interior fluxes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">divergence(c_out,</span> <span class="pre">f,</span> <span class="pre">dx)</span></code>: compute divergence of face quantities.</p></li>
 </ul>
-<p>The argument names use conventions to clarify the placement of vectors on the mesh:</p>
+<p>** Naming Convention: **
+For generalizable procedures, we don’t want to hard-code specific variable names (e.g., <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">heat_flux</span></code>).
+Instead, we use:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">f</span></code> to denote face fields.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">c</span></code> to denote cell fields.</p></li>
 </ul>
-<p>This keeps the procedures general and reusable for different types of fields. If we were to compute the diffusive fluxes of a different quantity (e.g., concentration), we could reuse the same <code class="docutils literal notranslate"><span class="pre">diffusive_flux</span></code> procedure without modification. (This is called <em>abstraction by parameterization</em>.)</p>
+<p>Additionally, we use <code class="docutils literal notranslate"><span class="pre">_out</span></code> suffixes to indicate output arguments that will be modified in place, and <code class="docutils literal notranslate"><span class="pre">_inout</span></code> for arguments that are both input and output.</p>
+<p>This makes the procedures general and reusable. If we were to compute the diffusive fluxes of a different quantity (e.g., concentration), we could reuse the same <code class="docutils literal notranslate"><span class="pre">diffusive_flux</span></code> procedure without modification. (This is called <em>abstraction by parameterization</em>.)</p>
 <p>In addition to the above general procedures, we need two more, specific to the heat equation solver. For
 these, the argument names are more specific to clarify their purpose:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">step_heat_eqn(u,</span> <span class="pre">F,</span> <span class="pre">dudt,</span> <span class="pre">kappa,</span> <span class="pre">dt,</span> <span class="pre">mesh,</span> <span class="pre">bc)</span></code>: advance one time step.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step_heat_eqn(u_inout,</span> <span class="pre">kappa,</span> <span class="pre">dt,</span> <span class="pre">mesh,</span> <span class="pre">bc)</span></code>: advance one time step.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">solve_heat_eqn(u0,</span> <span class="pre">kappa,</span> <span class="pre">dt,</span> <span class="pre">nt,</span> <span class="pre">dx,</span> <span class="pre">bc)</span></code>: orchestrate multiple steps.</p></li>
+</ul>
+<p>Why this decomposition works:</p>
+<ul class="simple">
+<li><p>Clarity: Each function does one thing and does it well.</p></li>
+<li><p>Reusability: Generic flux and divergence routines can be reused for other physical fields.</p></li>
+<li><p>Testability: Small, side-effect-controlled procedures are easy to test and verify.</p></li>
+<li><p>Robustness: Internals can evolve (vectorization, GPU backends, higher-order schemes)
+without breaking code that depends only on their interfaces.</p></li>
 </ul>
 </section>
 </section>
 <section id="step-3-specification">
 <h3>Step 3 – Specification<a class="headerlink" href="#step-3-specification" title="Link to this heading">#</a></h3>
+<p>Having identified the pieces of our solver, the next step is to make their intent explicit.
+A specification is a precise statement of what a function or module should accomplish.
+Not how it does so, but what must hold true if it’s correct.</p>
 <p>Recall, our practical approach to specification combines:</p>
 <ul class="simple">
-<li><p>type annotations</p></li>
-<li><p>pre- and postconditions as assertions.</p></li>
+<li><p><strong>type annotations:</strong> to capture data types and interfaces,</p></li>
+<li><p><strong>assertions:</strong> statements about what must hold before, during, or after execution.</p></li>
 </ul>
-<p>First, let’s write a core API that capture our procedural abstractions. This will
-include only the function signatures, i.e., functions names, arguments, and brief descriptions.
-While doing so, we’ll include the first constituent of our specifications: type annotations.</p>
-<p>This isn’t about writing code yet: it’s about specifying the conceptual architecture of the system.</p>
+<p>Assertions can take many forms:</p>
+<ul class="simple">
+<li><p>Function-level contracts (preconditions and postconditions),</p></li>
+<li><p>Semantic assertions that encode mathematical or physical relationships,</p></li>
+<li><p>Computational properties.</p></li>
+</ul>
+<p>Some of these checks belong inside the code (for local or safety-critical guarantees),
+while others live adjacent to it, where they are (re)used in tests and analysis tools.</p>
+<section id="core-api-and-type-annotations">
+<h4>Core API and Type Annotations<a class="headerlink" href="#core-api-and-type-annotations" title="Link to this heading">#</a></h4>
+<p>Before writing any code, we begin by specifying a core API:
+the set of functions that define what the solver does.
+At this stage, we’re not implementing behavior, but defining interfaces that describe expectations.</p>
+<p>This follows the design principle:</p>
+<blockquote>
+<div><p>Program to an interface, not an implementation. - Gamma et al. Design Patterns (1994)</p>
+</div></blockquote>
+<p>Our functions expose clear, minimal interfaces:
+they declare what inputs and outputs exist, but hide how results are computed.
+This separation makes the codebase easier to reason about, relate, and structure.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Procedures:</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply BCs by overriding first and last face quantities (f).&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">f_out</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply BCs by overriding first and last face quantities (f_out).&quot;&quot;&quot;</span>
     <span class="o">...</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">diffusive_flux</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a cell field (c), compute the diffusive flux (f).&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">diffusive_flux</span><span class="p">(</span><span class="n">f_out</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a cell field (c), compute the diffusive flux (f_out).&quot;&quot;&quot;</span>
     <span class="o">...</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c).&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c_out</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c_out).&quot;&quot;&quot;</span>
     <span class="o">...</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dudt</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">step_heat_eqn</span><span class="p">(</span><span class="n">u_inout</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance cell field u by one time step using explicit Euler method.&quot;&quot;&quot;</span>
     <span class="o">...</span>
 
@@ -730,35 +803,42 @@ While doing so, we’ll include the first constituent of our specifications: typ
 </div>
 </div>
 </div>
-<p>Having defined the core API and type annotations, we can now add the next layer of specifications:</p>
-<ul class="simple">
-<li><p>preconditions and postconditions as executable assertions.</p></li>
-</ul>
-<p>Take the <code class="docutils literal notranslate"><span class="pre">divergence</span></code> function that computes the divergence of face fluxes:</p>
+<p>At this point, our type annotations and core API form the first layer of specification.</p>
+</section>
+<section id="preconditions-and-postconditions">
+<h4>Preconditions and Postconditions<a class="headerlink" href="#preconditions-and-postconditions" title="Link to this heading">#</a></h4>
+<p>Next, we enrich the interfaces with contracts: conditions that must hold before and after execution.</p>
+<p>Take  <code class="docutils literal notranslate"><span class="pre">divergence</span></code> function that computes the divergence of face fluxes:</p>
 <p><span class="math notranslate nohighlight">\(\qquad
 \nabla \cdot F = \frac{F_{i} - F_{i+1}}{\Delta x}
 \qquad\)</span></p>
-<p>Given the above formula, one can identify two key preconditions:</p>
+<p>Two essential preconditions emerge from this formulation:</p>
 <ul class="simple">
-<li><p>The vector <code class="docutils literal notranslate"><span class="pre">c</span></code> (output) and the vector <code class="docutils literal notranslate"><span class="pre">f</span></code> (input) must have compatible sizes: specifically, <code class="docutils literal notranslate"><span class="pre">len(c)</span> <span class="pre">==</span> <span class="pre">len(f)</span> <span class="pre">-</span> <span class="pre">1</span></code>.</p></li>
 <li><p>The mesh spacing <code class="docutils literal notranslate"><span class="pre">dx</span></code> must be positive.</p></li>
+<li><p>The vector <span class="math notranslate nohighlight">\(\nabla \cdot F\)</span> (passed as <code class="docutils literal notranslate"><span class="pre">c</span></code>) and the vector <code class="docutils literal notranslate"><span class="pre">F</span></code> (passed as <code class="docutils literal notranslate"><span class="pre">f</span></code>) must have compatible sizes: specifically, <code class="docutils literal notranslate"><span class="pre">len(c)</span> <span class="pre">==</span> <span class="pre">len(f)</span> <span class="pre">-</span> <span class="pre">1</span></code>.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c).&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c_out</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c_out).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c_out</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
     <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx&quot;</span>
     <span class="o">...</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>As for the postcondition, we can use a mathematical property of the divergence operator to define it precisely:</p>
-<p><strong>Telescoping Property of Divergence</strong>: The sum of the divergence over all cells equals the net flux through the boundaries.</p>
-<p><span class="math notranslate nohighlight">\(\qquad
+<p>These are simple, local guarantees that keep the interface trustworthy.</p>
+</section>
+<section id="semantic-assertions">
+<h4>Semantic Assertions<a class="headerlink" href="#semantic-assertions" title="Link to this heading">#</a></h4>
+<p>Beyond structural correctness, we can express scientific, mathematical, or computational facts
+that are expected to hold true.</p>
+<p>For example, the <strong>Telescoping Property of Divergence</strong>: Total divergence equals net flux through boundaries.</p>
+<div class="math notranslate nohighlight">
+\[
 \sum_{i=0}^{N-1} (\nabla \cdot F)_i = F_0 - F_N
-\qquad\)</span></p>
+\]</div>
 <p>We can encode this property as a function that returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the property holds, and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -774,16 +854,19 @@ While doing so, we’ll include the first constituent of our specifications: typ
 <p>We can then add this check as a postcondition in the <code class="docutils literal notranslate"><span class="pre">divergence</span></code> function:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c).&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c_out</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c_out).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c_out</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
     <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx&quot;</span>
     <span class="o">...</span>
-    <span class="k">assert</span> <span class="n">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>           <span class="c1"># {C} Postcondition</span>
+    <span class="k">assert</span> <span class="n">telescoping</span><span class="p">(</span><span class="n">c_out</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">),</span> <span class="s2">&quot;Telescoping property violated&quot;</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>Or, alternatively, rather than embedding this assertion directly inside the function,
+we can include it in a test function that’s part of our test suite.</p>
+</section>
 </section>
 <section id="exercise-2-2">
 <h3>Exercise 2.2:<a class="headerlink" href="#exercise-2-2" title="Link to this heading">#</a></h3>
@@ -817,19 +900,26 @@ function(s) would you add this as a precondition to?</p>
 </section>
 <section id="exercise-2-3">
 <h3>Exercise 2.3:<a class="headerlink" href="#exercise-2-3" title="Link to this heading">#</a></h3>
-<p>Now let’s check whether heat is conserved in our solver. The condition for conservation can be expressed as:</p>
+<p>Conservation of total heat can be expressed as:</p>
 <div class="math notranslate nohighlight">
 \[
 \sum_{i=0}^{N-1} u_i^{n+1} \Delta x = \sum_{i=0}^{N-1} u_i^{n} \Delta x + \Delta t \left( q_L - q_R \right).
 \]</div>
-<p>with special Cases:</p>
+<p>Special Cases:</p>
 <ul class="simple">
 <li><p>If <code class="docutils literal notranslate"><span class="pre">q_L</span></code> == <code class="docutils literal notranslate"><span class="pre">q_R</span></code> == 0, the mean stays constant.</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">q_L</span></code> and <code class="docutils literal notranslate"><span class="pre">q_R</span></code> are constant, the temperature profile converges to a linear steady state.</p></li>
 </ul>
+<p>Based on this formulation, implement a checker that verifies conservation between two successive states. Decide where to use it:</p>
+<ul class="simple">
+<li><p>as a postcondition after one time step,</p></li>
+<li><p>as a loop invariant inside the time-stepping loop, or</p></li>
+<li><p>adjacent to the code in the test suite (recommended), verifying conservation after each step.</p></li>
+</ul>
+<p>Hint: consider floating-point tolerance when comparing totals.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_old</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_sum_new</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_old</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">u_new</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if heat is conserved.&quot;&quot;&quot;</span>
     <span class="o">...</span>
 </pre></div>
@@ -837,91 +927,117 @@ function(s) would you add this as a precondition to?</p>
 </div>
 </div>
 <p><strong>Answer:</strong></p>
-<p>The he following cell contains a possible implementation of the heat conservation check. As for which function(s) would need to be modified to incorporate this check, it may be added as a postcondition to the step function, or, alternatively, it may be added as a loop invariant in the timestepping loop within the solve function.</p>
+<p>Below is one possible implementation of the heat conservation check.
+This condition can be incorporated in several ways: as a postcondition in the <code class="docutils literal notranslate"><span class="pre">step_heat_eqn</span></code> function,
+as a loop invariant within the time-stepping loop in <code class="docutils literal notranslate"><span class="pre">solve_heat_eqn</span></code>,
+or, preferably, as an adjacent specification in the test suite to verify conservation.</p>
+<p>Keep inexpensive, local guards inline, and place broader checks like this one nearby in tests,
+so they run regularly without cluttering the solver’s core logic or performance.
+This approach keeps the implementation lean and flexible while ensuring
+that the conservation property remains explicit, verifiable, and routinely checked.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_old</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_sum_new</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_old</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">u_new</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if heat is conserved.&quot;&quot;&quot;</span>
-    <span class="n">expected_change</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">actual_change</span> <span class="o">=</span> <span class="n">u_sum_new</span> <span class="o">-</span> <span class="n">u_sum_old</span>
-    <span class="k">return</span> <span class="n">actual_change</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">expected_change</span><span class="p">)</span>
+    <span class="n">lhs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u_new</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">rhs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u_old</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">lhs</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">rhs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p><strong>Loop invariants</strong></p>
-<p>A loop invariant is a condition (a boolean expression) that holds true before and after each iteration of a loop. It helps reason about the correctness of the loop by ensuring that certain properties hold:</p>
-<ul class="simple">
-<li><p>before the loop starts</p></li>
-<li><p>after each iteration of the loop</p></li>
-</ul>
-<p>which guarantees that once the loop has finished executing, the desired property holds for the final state.</p>
-<p>In the case of the heat equation solver, ensuring that heat is conserved after each time step guarantees that the total heat within the domain remains constant.</p>
 </section>
 <section id="step-4-implementation">
 <h3>Step 4 – Implementation<a class="headerlink" href="#step-4-implementation" title="Link to this heading">#</a></h3>
-<p>With abstractions identified, pieces decomposed, and specifications written, we can implement code that satisfies them.</p>
+<p>With our abstractions defined, the problem decomposed, and specifications in place, we can now write
+an implementation that satisfies them.</p>
+<p>In this step, we bring together all the functions from the decomposition stage into a single module, <code class="docutils literal notranslate"><span class="pre">heat1d.py</span></code>.
+Saving the code as a standalone file makes it easy to import and reuse in the following chapters.
+We also include the previously defined <code class="docutils literal notranslate"><span class="pre">vec</span></code> type alias and the <code class="docutils literal notranslate"><span class="pre">Mesh</span></code> data class for completeness.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply BCs by overriding first and last face quantities (f).&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
-    <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> heat1d.py
 
-<span class="k">def</span><span class="w"> </span><span class="nf">diffusive_flux</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a cell field (c), compute the diffusive flux (f).&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span>
+
+<span class="n">vec</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Mesh</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Uniform 1-D mesh.&quot;&quot;&quot;</span>
+    
+    <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># cell size</span>
+    <span class="n">N</span><span class="p">:</span> <span class="nb">int</span>     <span class="c1"># number of cells</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">cell_field</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">face_field</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">f_out</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply BCs by overriding first and last face quantities (f_out).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_out</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;face field size too small&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;bc must be of size 2&quot;</span>
+    <span class="n">f_out</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">f_out</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">diffusive_flux</span><span class="p">(</span><span class="n">f_out</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a cell field (c), compute the diffusive flux (f_out).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_out</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
+    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx or kappa&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_out</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">f_out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c_out</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c_out).&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c_out</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
     <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx&quot;</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c_out</span><span class="p">)):</span>
+        <span class="n">c_out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c).&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
-    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx&quot;</span>
-    <span class="n">c</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">dx</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">))]</span>
-    <span class="c1">#for i in range(len(c)):</span>
-    <span class="c1">#    c[i] = (f[i] - f[i+1]) / dx</span>
-    <span class="k">assert</span> <span class="n">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dudt</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">step_heat_eqn</span><span class="p">(</span><span class="n">u_inout</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance cell field u by one time step using explicit Euler method.&quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dt&quot;</span>
-    <span class="k">assert</span> <span class="n">mesh</span><span class="o">.</span><span class="n">N</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dudt</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
+    <span class="k">assert</span> <span class="n">mesh</span><span class="o">.</span><span class="n">N</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">u_inout</span><span class="p">),</span> <span class="s2">&quot;Size mismatch&quot;</span>
+
+    <span class="n">F</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face_field</span><span class="p">()</span>
+    <span class="n">divF</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_field</span><span class="p">()</span>
 
     <span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
-    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
-    <span class="n">divergence</span><span class="p">(</span><span class="n">dudt</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
+    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u_inout</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
+    <span class="n">divergence</span><span class="p">(</span><span class="n">divF</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">N</span><span class="p">):</span>
-        <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">dudt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">u_inout</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">divF</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">solve_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Orchestrate nt steps over cell field u.&quot;&quot;&quot;</span>
 
     <span class="k">assert</span> <span class="n">nt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Number of time steps must be positive&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Boundary conditions must be a list of two values&quot;</span>
-    <span class="k">assert</span> <span class="n">stability_condition</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">kappa</span><span class="p">),</span> <span class="s2">&quot;Stability condition not met&quot;</span>
+    <span class="k">assert</span> <span class="n">dt</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">dx</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">),</span> <span class="s2">&quot;Stability condition not met&quot;</span>
 
     <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">))</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">F</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face_field</span><span class="p">()</span>
-    <span class="n">dudt</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_field</span><span class="p">()</span>
-
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
-        <span class="n">u_sum_old</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
-        <span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
-        <span class="n">u_sum_new</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span>
-        <span class="k">assert</span> <span class="n">heat_is_conserved</span><span class="p">(</span><span class="n">u_sum_old</span><span class="p">,</span> <span class="n">u_sum_new</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">F</span><span class="p">),</span> <span class="s2">&quot;Heat not conserved&quot;</span>
+        <span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">u</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Overwriting heat1d.py
+</pre></div>
 </div>
+</div>
+</div>
+<p>Now let’s import the solver and run it:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solve_heat_eqn</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_heat_eqn</span>
+
+<span class="n">solve_heat_eqn</span><span class="p">(</span>
     <span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
     <span class="n">kappa</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
     <span class="n">dt</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -948,7 +1064,7 @@ has a single purpose over well-defined data.</p>
 <ul class="simple">
 <li><p>Isolation of concerns (apply_bc, flux, divergence, step, solve) instead of one monolith</p></li>
 <li><p>Type annotations</p></li>
-<li><p>Executable contracts (pre/postconditions, invariants)</p></li>
+<li><p>Executable contracts (pre/postconditions, invariants, semantic assertions)</p></li>
 <li><p>Lightweight data types (Mesh, vec)</p></li>
 </ul>
 <p><strong>In real applications</strong>, this “ceremony” is a small fraction of total code: The heavy lifting
@@ -960,14 +1076,36 @@ off by reducing change amplification and cognitive load:</p>
 <li><p>Faster debugging (failures point to where)</p></li>
 <li><p>Reusability (shared abstractions)</p></li>
 </ul>
-<p><strong>Do assertions hurt performance?</strong> Potentially, if run every step. In practice you can disable
-them for production (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-O</span></code>) or sample them periodically during long runs.</p>
 </section>
 <section id="looking-ahead">
 <h2>Looking Ahead<a class="headerlink" href="#looking-ahead" title="Link to this heading">#</a></h2>
 <p>In <strong>Chapter 3</strong>, we’ll take the next step:<br />
 turning these specifications into unit tests that run automatically,
 giving us rapid feedback and confidence as our code evolves.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="foundations-and-influences">
+<h1>Foundations and Influences<a class="headerlink" href="#foundations-and-influences" title="Link to this heading">#</a></h1>
+<p>For readers interested in the broader theoretical background,
+Appendix A traces the roots of our approach in the wider history of software design and development.
+It highlights related methodologies and advocates, such as Bertrand Meyer’s Design by Contract,
+Barbara Liskov’s work on abstraction and behavioral subtyping, Daniel Jackson’s model-based design,
+John Ousterhout’s abstraction-driven philosophy, Edsger Dijkstra’s reasoning about programs,
+and Niklaus Wirth’s principle of stepwise refinement, all of which shaped the foundations of our approach.</p>
+<section id="connection-to-test-driven-development">
+<h2>Connection to Test-Driven Development<a class="headerlink" href="#connection-to-test-driven-development" title="Link to this heading">#</a></h2>
+<p>TDD and related test-first methods emphasize writing tests before code. This practice can be
+powerful for feature-driven projects, but in scientific computing we often don’t yet know what
+behavior to test. We’re still discovering the right abstractions.</p>
+<p>As such, we begin with abstraction-driven design: sketching clear concepts and contracts,
+then using tests and experiments as feedback tools to refine those ideas.</p>
+<p>In other words:</p>
+<ul class="simple">
+<li><p>TDD focuses on getting a feature to work.</p></li>
+<li><p>We focus on discovering the right design for the problem.</p></li>
+</ul>
+<p>As John Ousterhout argues, good design emerges from reasoning about abstractions. Tests then validate
+and illuminate those abstractions, not drive them.</p>
 <hr class="docutils" />
 <p><em>This notebook is a part of the “Rigor and Reasoning in Research Software” (R3Sw) tutorial, led by Alper Altuntas and sponsored by the Better Scientific Software (BSSw) Fellowship Program. Copyright © 2025</em></p>
 </section>
@@ -1038,23 +1176,28 @@ giving us rapid feedback and confidence as our code evolves.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Chapter 2: Reasoning About Code</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#abstraction">1. Abstraction</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-abstraction-vs-procedural-abstraction">Data Abstraction vs. Procedural Abstraction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#procedural-data-and-functional-abstractions">Procedural, Data, and Functional Abstractions</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#decomposition">2. Decomposition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specification-writing-down-intent">3. Specification: Writing Down Intent</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-simple-example">A simple example:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-1">Exercise 2.1:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-writing-code-that-meets-specifications">4. Implementation: Writing Code that Meets Specifications</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#heat-equation-solver-revisited">Heat Equation Solver, Revisited</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-abstraction">Step 1 — Abstraction</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-decomposition">Step 2 – Decomposition</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#data-structures">Data Structures:</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#procedures">Procedures:</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-specification">Step 3 – Specification</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-specification">Step 3 – Specification</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#core-api-and-type-annotations">Core API and Type Annotations</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#preconditions-and-postconditions">Preconditions and Postconditions</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#semantic-assertions">Semantic Assertions</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-2">Exercise 2.2:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-3">Exercise 2.3:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-implementation">Step 4 – Implementation</a></li>
@@ -1063,6 +1206,13 @@ giving us rapid feedback and confidence as our code evolves.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-ahead">Looking Ahead</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#foundations-and-influences">Foundations and Influences</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-test-driven-development">Connection to Test-Driven Development</a></li>
+</ul>
+</li>
+</ul>
+
   </nav></div>
 
 </div></div>
