@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -180,6 +180,7 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="ch1_code_and_fix.html">Chapter 1: Code and Fix</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch2_reasoning.html">Chapter 2: Reasoning About Code</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing</a></li>
 
 <li class="toctree-l1"><a class="reference internal" href="ch4_property_based_testing.html">Chapter 4: Property-Based Testing</a></li>
@@ -347,9 +348,11 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#back-to-the-heat-equation-solver">Back to the Heat Equation Solver</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property">Telescoping Property</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-procedures-as-constraints">Core Procedures as Constraints</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proving-the-positivity-property">Proving the Positivity Property</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation-property">Conservation Property</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-properties">More Properties</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proving-a-property">Proving a property</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation">Conservation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symmetry">Symmetry</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monotonicity">Monotonicity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#positivity">Positivity</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>
@@ -400,12 +403,12 @@
 <li><p>Ask Z3 to search for a counterexample to <code class="docutils literal notranslate"><span class="pre">P</span> <span class="pre">and</span> <span class="pre">code</span> <span class="pre">implies</span> <span class="pre">Q</span></code>.</p>
 <ul>
 <li><p>If it finds a counterexample, the property is not universally valid.</p></li>
-<li><p>If no counterexample exists, the property is proven (for the chose theory and input size).</p></li>
+<li><p>If no counterexample exists, the property is proven (for the chosen theory and input size).</p></li>
 </ul>
 </li>
 </ul>
 <p>Unlike testing, which explores a handful of examples, Z3 can reason over all inputs in one shot.</p>
-<p>We’ll use Z3’s Python API, z3py, which matches the style of previous chapters.</p>
+<p>We’ll use Z3’s Python API, z3py.</p>
 <section id="declaring-variables">
 <h3>Declaring Variables<a class="headerlink" href="#declaring-variables" title="Link to this heading">#</a></h3>
 <p>Z3 supports many symbolic types: integers, reals, booleans, bit-vectors, arrays, strings, and more. These are not ordinary variables but symbols that range over all possible values of their type, constrained only by what you add later.</p>
@@ -521,6 +524,13 @@ That means:</p>
 </div>
 <section id="sat-vs-unsat">
 <h4>sat vs. unsat<a class="headerlink" href="#sat-vs-unsat" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">sat</span><span class="p">,</span> <span class="n">unsat</span>
+</pre></div>
+</div>
+</div>
+</div>
 <ul class="simple">
 <li><p><strong>Satisfiable</strong> means there is at least one assignment of values to the variables that satisfies all the constraints.</p></li>
 <li><p><strong>Unsatisfiable</strong> means there is no assignment of values to the variables that satisfies all the constraints.</p></li>
@@ -719,7 +729,7 @@ That’s why Z3 didn’t <em>see</em> the earlier 7/25 counterexample.</p>
 <p>The Z3 solver confirms <code class="docutils literal notranslate"><span class="pre">unsat</span></code>: there are no inputs that violate the telescoping property, so it holds universally for all valid inputs where N=3. Let’s attempt to increase N and see how far we can go before Z3 struggles.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">check_telescoping</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">prove_telescoping</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
     <span class="n">dx</span> <span class="o">=</span> <span class="n">Real</span><span class="p">(</span><span class="s1">&#39;dx&#39;</span><span class="p">)</span>
     <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;f</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
     <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;c</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
@@ -728,7 +738,7 @@ That’s why Z3 didn’t <em>see</em> the earlier 7/25 counterexample.</p>
     <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>                    <span class="c1"># Preconditions: physical constraints</span>
     <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>      <span class="c1"># code: divergence</span>
     <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">)))</span><span class="c1"># Postcondition: telescoping property</span>
-    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span> <span class="o">==</span> <span class="n">unsat</span>
 </pre></div>
 </div>
 </div>
@@ -740,7 +750,7 @@ That’s why Z3 didn’t <em>see</em> the earlier 7/25 counterexample.</p>
 <span class="n">i</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">check_telescoping</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">prove_telescoping</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;i=</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">, result=</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s1">, time=</span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">elapsed_time</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># Stop if it takes too long</span>
@@ -750,20 +760,20 @@ That’s why Z3 didn’t <em>see</em> the earlier 7/25 counterexample.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=3, result=unsat, time=0.005517721176147461
-i=6, result=unsat, time=0.007465839385986328
-i=12, result=unsat, time=0.009568929672241211
-i=24, result=unsat, time=0.0182039737701416
-i=48, result=unsat, time=0.047154903411865234
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=3, result=True, time=0.0049648284912109375
+i=6, result=True, time=0.006474018096923828
+i=12, result=True, time=0.009115934371948242
+i=24, result=True, time=0.016707181930541992
+i=48, result=True, time=0.04483318328857422
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=96, result=unsat, time=0.18116402626037598
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=96, result=True, time=0.14406037330627441
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=192, result=unsat, time=0.6546878814697266
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=192, result=True, time=0.6130168437957764
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=384, result=unsat, time=3.8959779739379883
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>i=384, result=True, time=3.7779009342193604
 </pre></div>
 </div>
 </div>
@@ -790,146 +800,63 @@ the original procedures’ behavior.</p>
     <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">step_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">u1</span><span class="p">,</span> <span class="n">dudt</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">step_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">u1</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance cell field u by one time step using explicit Euler method.&quot;&quot;&quot;</span>
     <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">u1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">u0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">dudt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">u1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">u0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">divF</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>Having specified these core computations declaratively, now let’s define the symbolic variables:</p>
+<p>We’ll use these declarative versions of the core computations to model the heat equation time step and prove properties about it.</p>
+<p>Having specified these core computations declaratively, now let’s define the symbolic variables. In unit tests, we handpicked specific inputs. In property-based tests, we sampled many inputs randomly. Here, we define symbolic variables that represent <em>all possible</em> inputs within specified bounds.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mesh size</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">3</span>
-
-<span class="c1"># Define the vectors</span>
-<span class="n">u0</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;u0_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
-<span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;u_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
-<span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;d</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
-<span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;F</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
-
-<span class="c1"># Define the parameters</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the parameters</span>
 <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">=</span> <span class="n">Reals</span><span class="p">(</span><span class="s2">&quot;dx dt kappa&quot;</span><span class="p">)</span>
 
 <span class="c1"># Boundary conditions</span>
 <span class="n">bc</span> <span class="o">=</span> <span class="n">Reals</span><span class="p">(</span><span class="s2">&quot;bc0 bc1&quot;</span><span class="p">)</span>
+
+<span class="c1"># Define the vectors based on mesh size N</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">allocate_vectors</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">u_old</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;u_old_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+    <span class="n">u_new</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;u_new_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+    <span class="n">divF</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;divF_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="n">Real</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;F</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">F</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>We are now ready to state and prove properties about our heat equation solver.</p>
 </section>
-<section id="proving-the-positivity-property">
-<h3>Proving the Positivity Property<a class="headerlink" href="#proving-the-positivity-property" title="Link to this heading">#</a></h3>
-<p>We expect that, given a non-negative initial temperature distribution and non-negative boundary conditions, the temperature remains non-negative after one time step. Below is an expression of this property in Z3:</p>
+<section id="proving-a-property">
+<h3>Proving a property<a class="headerlink" href="#proving-a-property" title="Link to this heading">#</a></h3>
+<p>Below, we define a helper function to run the Solver <code class="docutils literal notranslate"><span class="pre">check</span></code> method. If the solver returns <code class="docutils literal notranslate"><span class="pre">unsat</span></code>, the property holds; otherwise, we print a counterexample.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">positive_property</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;All cell values are non-negative.&quot;&quot;&quot;</span>
-    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">And</span><span class="p">([</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">prove</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span> <span class="o">==</span> <span class="n">unsat</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Property holds.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Property does NOT hold!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Below is a counterexample:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
-
-<span class="c1"># Positive parameters</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-
-<span class="c1"># Non-negative initial condition</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">u0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span>
-
-<span class="c1"># Insulated boundaries (zero flux)</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
-
-<span class="c1"># Constraints representing the computations</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">dt</span><span class="p">))</span>
-
-<span class="c1"># Ask for a violation of positivity in the new state</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">positive_property</span><span class="p">(</span><span class="n">u</span><span class="p">)))</span>
-
-<span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><b>sat</b></div></div>
-</div>
-<p>The above check reports <code class="docutils literal notranslate"><span class="pre">sat</span></code>, meaning Z3 found a counterexample where the property does not hold. We can ask Z3 to show us the counterexample:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html">[F3 = 0,
- u_0 = 7/6,
- d0 = 1,
- u_2 = -1/6,
- u_1 = 1/2,
- u0_1 = 1/2,
- dt = 1,
- d1 = 0,
- dx = 1,
- F0 = 0,
- kappa = 3,
- u0_0 = 1/6,
- F2 = -1,
- u0_2 = 5/6,
- d2 = -1,
- F1 = -1,
- /0 = [(-1, 1) &rarr; -1, (1, 1) &rarr; 1, else &rarr; 0]]</div></div>
-</div>
-<p>Looking closely, we noticed that the timestep <code class="docutils literal notranslate"><span class="pre">dt</span></code> seems too large (1 sec) relative to the spatial discretization <code class="docutils literal notranslate"><span class="pre">dx</span></code>(1 m) and the diffusivity <code class="docutils literal notranslate"><span class="pre">kappa</span></code> (3). To print out the individual values, we can inspect the model</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
-<span class="n">m</span><span class="p">[</span><span class="n">dt</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="n">dx</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="n">kappa</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1, 1, 3)
-</pre></div>
-</div>
-</div>
-</div>
-<p>To ensure stability, we need to add a constraint on <code class="docutils literal notranslate"><span class="pre">dt</span></code> (the stability condition for the explicit scheme):</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dt</span> <span class="o">&lt;=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><b>unsat</b></div></div>
-</div>
-<p>The solver now reports <code class="docutils literal notranslate"><span class="pre">unsat</span></code>: there are no inputs that violate the positivity property under the added stability condition.</p>
+<p>We are now ready to state and prove more properties about our heat equation solver.</p>
 </section>
-<section id="conservation-property">
-<h3>Conservation Property<a class="headerlink" href="#conservation-property" title="Link to this heading">#</a></h3>
-<p>Conservation follows from the telescoping property of divergence and explicit time stepping. We expect that the total heat (sum of temperatures) remains constant after one time step, given isolated boundary conditions (zero flux at boundaries).</p>
+<section id="conservation">
+<h3>Conservation<a class="headerlink" href="#conservation" title="Link to this heading">#</a></h3>
+<p>Recall the below encoding of the <strong>conservation property</strong> from the previous chapters:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">conservation</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">F</span><span class="p">):</span>
-    
-    <span class="n">lhs</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u0</span><span class="p">))</span> <span class="o">*</span> <span class="n">dx</span>
-    <span class="n">rhs</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">bc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if heat is conserved.&quot;&quot;&quot;</span>
+    <span class="n">lhs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u_new</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">rhs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u_old</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">lhs</span> <span class="o">==</span> <span class="n">rhs</span>
 </pre></div>
 </div>
@@ -937,40 +864,273 @@ the original procedures’ behavior.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">prove_conservation</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
 
-<span class="c1"># Positive parameters</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Allocate vectors</span>
+    <span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">allocate_vectors</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
 
-<span class="c1"># Stability condition</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dt</span> <span class="o">&lt;=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">))</span>
+    <span class="c1"># Positive, arbitrary parameters</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
 
-<span class="c1"># Non-negative initial condition</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">u0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span>
+    <span class="c1"># Model the heat equation time step</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u_old</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">divF</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">dt</span><span class="p">))</span>
 
-<span class="c1"># Insulated BCs</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+    <span class="c1"># Attempt to disprove conservation</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">heat_is_conserved</span><span class="p">(</span><span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">bc</span><span class="p">)))</span>
 
-<span class="c1"># Constraints representing the computations</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u0</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">dt</span><span class="p">))</span>
-
-<span class="c1"># Ask for a violation of positivity in the new state</span>
-<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">conservation</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">F</span><span class="p">)))</span>
-
-<span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+    <span class="n">prove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prove_conservation</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><b>unsat</b></div></div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Property holds.
+</pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">unsat</span></code> result confirms that the conservation property holds.</p>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">unsat</span></code> result indicates that Z3 is unable to find any counterexample that violates the conservation property. As such, we have proven that the conservation property holds for all possible inputs (for real arithmetic and N=5).</p>
 </section>
-<section id="more-properties">
-<h3>More Properties<a class="headerlink" href="#more-properties" title="Link to this heading">#</a></h3>
-<p>[TODO: add more property checks …]</p>
+<section id="symmetry">
+<h3>Symmetry<a class="headerlink" href="#symmetry" title="Link to this heading">#</a></h3>
+<p>If the initial state is symmetric about the center and the boundary fluxes are equal and opposite (antisymmetric),
+then the updated state is also symmetric:</p>
+<ul class="simple">
+<li><p>Mesh length <span class="math notranslate nohighlight">\(N\)</span> is chosen odd so there’s a unique center.</p></li>
+<li><p>We encode symmetry as <span class="math notranslate nohighlight">\(u_{i} = u_{N-1-i}\)</span> for all <span class="math notranslate nohighlight">\(i\)</span>.</p></li>
+<li><p>Antisymmetric BCs: <span class="math notranslate nohighlight">\(F_0 = -F_{N}\)</span>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">is_symmetric</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">And</span><span class="p">([</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">u</span><span class="p">[</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">prove_symmetry_preserved</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+
+    <span class="c1"># Allocate vectors</span>
+    <span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">allocate_vectors</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+    <span class="c1"># Positive, arbitrary parameters</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># symmetric initial condition</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">is_symmetric</span><span class="p">(</span><span class="n">u_old</span><span class="p">))</span>
+
+    <span class="c1"># Apply antisymmetric, arbitrary BCs</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Model the heat equation time step</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u_old</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">divF</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">dt</span><span class="p">))</span>
+
+    <span class="c1"># Attempt to disprove symmetry preservation</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">is_symmetric</span><span class="p">(</span><span class="n">u_new</span><span class="p">)))</span>
+
+    <span class="n">prove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prove_symmetry_preserved</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Property holds.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="monotonicity">
+<h3>Monotonicity<a class="headerlink" href="#monotonicity" title="Link to this heading">#</a></h3>
+<p>Diffusion smooths. One way to express this intuition discretely is through monotonicity preservation:
+if a temperature profile is nondecreasing at the start of a step, it should remain so after the update.
+In other words, diffusion should not create new inversions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">is_nondecreasing</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">And</span><span class="p">([</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">prove_monotonicity</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+
+    <span class="c1"># Allocate vectors</span>
+    <span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">allocate_vectors</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+    <span class="c1"># Positive, arbitrary parameters</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1">#s.add(dt &lt;= dx*dx / (2*kappa))  # r &lt;= 1/2</span>
+
+    <span class="c1"># insulated boundaries</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Model the heat equation time step</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u_old</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">divF</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">dt</span><span class="p">))</span>
+
+    <span class="c1"># nondecreasing initial profile</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">is_nondecreasing</span><span class="p">(</span><span class="n">u_old</span><span class="p">))</span>
+
+    <span class="c1"># ask Z3 to find a counterexample that breaks monotonicity</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">is_nondecreasing</span><span class="p">(</span><span class="n">u_new</span><span class="p">)))</span>
+
+    <span class="n">prove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prove_monotonicity</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Property does NOT hold!
+Below is a counterexample:
+[u_new_1 = 0,
+ kappa = 2,
+ u_new_2 = -1/2,
+ u_old_2 = 1/2,
+ bc1 = 0,
+ u_old_1 = 0,
+ dt = 1,
+ dx = 1,
+ F3 = 0,
+ F0 = 0,
+ u_new_0 = 1/2,
+ divF_1 = 0,
+ F2 = -1,
+ bc0 = 0,
+ u_old_0 = -1/2,
+ divF_2 = -1,
+ divF_0 = 1,
+ F1 = -1,
+ /0 = [(-1, 1) -&gt; -1, (1, 1) -&gt; 1, else -&gt; 0]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Above output reveals that the monotonicity property does NOT hold universally. The counterexample provided by Z3 shows specific values for the parameters and initial conditions where the property fails. This insight can guide us in refining our model or understanding the limitations of the diffusion process under certain conditions:</p>
+<p>Looking closely at the counterexample, we see that <code class="docutils literal notranslate"><span class="pre">dt</span></code> is quite large relative to <code class="docutils literal notranslate"><span class="pre">dx</span></code> and <code class="docutils literal notranslate"><span class="pre">kappa</span></code>, leading to instability in the diffusion process. Let’s introduce the stability condition and see if that helps prove monotonicity.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">is_nondecreasing</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">And</span><span class="p">([</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">prove_monotonicity</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+
+    <span class="c1"># Allocate vectors</span>
+    <span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">allocate_vectors</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+    <span class="c1"># Positive, arbitrary parameters</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dt</span> <span class="o">&lt;=</span> <span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">kappa</span><span class="p">))</span>  <span class="c1"># r &lt;= 1/2</span>
+
+    <span class="c1"># insulated boundaries</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Model the heat equation time step</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u_old</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">divF</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">dt</span><span class="p">))</span>
+
+    <span class="c1"># nondecreasing initial profile</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">is_nondecreasing</span><span class="p">(</span><span class="n">u_old</span><span class="p">))</span>
+
+    <span class="c1"># ask Z3 to find a counterexample that breaks monotonicity</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">is_nondecreasing</span><span class="p">(</span><span class="n">u_new</span><span class="p">)))</span>
+
+    <span class="n">prove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prove_monotonicity</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Property holds.
+</pre></div>
+</div>
+</div>
+</div>
+<p>With the added stability condition, Z3 confirms that the monotonicity property holds universally for the heat equation time step under the specified conditions. This demonstrates how Z3 can help us identify necessary conditions for properties to hold.</p>
+</section>
+<section id="positivity">
+<h3>Positivity<a class="headerlink" href="#positivity" title="Link to this heading">#</a></h3>
+<p>We expect that, given a non-negative initial temperature distribution and non-negative boundary conditions, the temperature remains non-negative after one time step. Below is an expression of this property in Z3:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">all_positive</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;All cell values are non-negative.&quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">And</span><span class="p">([</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">prove_positivity</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+
+    <span class="c1"># Allocate vectors</span>
+    <span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">allocate_vectors</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+    <span class="c1"># Positive, arbitrary parameters</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dt</span> <span class="o">&lt;=</span> <span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">kappa</span><span class="p">))</span>  <span class="c1"># r &lt;= 1/2</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Model the heat equation time step</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u_old</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">divergence</span><span class="p">(</span><span class="n">divF</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u_old</span><span class="p">,</span> <span class="n">u_new</span><span class="p">,</span> <span class="n">divF</span><span class="p">,</span> <span class="n">dt</span><span class="p">))</span>
+
+    <span class="c1"># non-negative initial profile and BCs</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">all_positive</span><span class="p">(</span><span class="n">u_old</span><span class="p">))</span>
+
+    <span class="c1"># ask Z3 to find a counterexample that produces negative temperature</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">all_positive</span><span class="p">(</span><span class="n">u_new</span><span class="p">)))</span>
+
+    <span class="n">prove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prove_positivity</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Property holds.
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="what-we-just-did">
@@ -1075,9 +1235,11 @@ the original procedures’ behavior.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#back-to-the-heat-equation-solver">Back to the Heat Equation Solver</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property">Telescoping Property</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-procedures-as-constraints">Core Procedures as Constraints</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proving-the-positivity-property">Proving the Positivity Property</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation-property">Conservation Property</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-properties">More Properties</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proving-a-property">Proving a property</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation">Conservation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symmetry">Symmetry</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monotonicity">Monotonicity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#positivity">Positivity</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>
