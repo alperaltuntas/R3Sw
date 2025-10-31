@@ -73,6 +73,8 @@
                 gtag('config', 'G-V7VKREZ5MB');
             </script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'ch3_unit_testing';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -336,14 +338,15 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pytest-library">The <code class="docutils literal notranslate"><span class="pre">pytest</span></code> Library</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features-of-pytest">Key Features of <code class="docutils literal notranslate"><span class="pre">pytest</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assertions">Assertions</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameterization">Parameterization</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-discovery">Test Discovery</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixtures">Fixtures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#marking">Marking</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameterization">Parameterization</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-examples">More examples</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-tests">Flux tests</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#divergence-telescoping">Divergence telescoping</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property">Telescoping Property</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-1">Exercise 3.1</a></li>
 </ul>
 </li>
@@ -425,7 +428,7 @@ principles we discussed earlier, below are some key practices to follow:</p>
     <span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">isclose</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)),</span> <span class="sa">f</span><span class="s2">&quot;Expected all zeros, got </span><span class="si">{</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">isclose</span><span class="p">(</span><span class="n">F</span><span class="p">[:],</span> <span class="mi">0</span><span class="p">)),</span> <span class="sa">f</span><span class="s2">&quot;Expected all zeros, got </span><span class="si">{</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <span class="n">test_diffusive_flux</span><span class="p">()</span>
 </pre></div>
@@ -528,22 +531,26 @@ workflow to run our tests in a Jupyter notebook environment:</p>
 </section>
 <section id="key-features-of-pytest">
 <h2>Key Features of <code class="docutils literal notranslate"><span class="pre">pytest</span></code><a class="headerlink" href="#key-features-of-pytest" title="Link to this heading">#</a></h2>
+<p>Here, we highlight some of the key features of <code class="docutils literal notranslate"><span class="pre">pytest</span></code>:</p>
+<ul class="simple">
+<li><p>Assertion</p></li>
+<li><p>Test discovery</p></li>
+<li><p>Fixtures</p></li>
+<li><p>Marking</p></li>
+<li><p>Parameterization</p></li>
+</ul>
 <section id="assertions">
 <h3>Assertions<a class="headerlink" href="#assertions" title="Link to this heading">#</a></h3>
 <p>pytest uses plain Python assert statements, no special API, to decide whether a test passes.
-It also rewrites assertions to show the full expression and the actual values on failure,
-which makes errors easy to diagnose. When you expect an error, use the <code class="docutils literal notranslate"><span class="pre">pytest.raises</span></code> context manager to assert that a specific exception is raised.</p>
+When an assertion fails, pytest reports the failure along with the values of the
+expressions involved.</p>
+<p>In cases where you have property specifications (preconditions, postconditions, invariants)
+specified as part of the actual code, you can automatically leverage them in your tests.
+Otherwise, you can implement them as asserts that precede or follow the function under test.</p>
 <p>Be careful with floating-point comparisons: exact equality is brittle. In tests,
 prefer <code class="docutils literal notranslate"><span class="pre">pytest.approx</span></code> for tolerant comparisons. Using <code class="docutils literal notranslate"><span class="pre">numpy.isclose</span></code> inside your
 library code is preferable in production code. But for test assertions,
 <code class="docutils literal notranslate"><span class="pre">approx</span></code> tends to produce clearer failure messages.</p>
-<p>Because we embedded pre- and postconditions as asserts in our solver, those checks run
-automatically whenever tests execute the code. Just remember they only fire for the specific
-inputs your tests provide. On top of those contracts, you’ll typically add test-side assertions
-that express the behavior you want to verify, like the semantic assertions we discussed earlier.</p>
-<p>Pytest discovers tests by looking for functions whose names start with <code class="docutils literal notranslate"><span class="pre">test_</span></code>. Each such
-function is executed as an independent test: if an assertion fails, pytest reports the failure
-(with values); if an unexpected exception occurs, it reports that too.</p>
 <p>Let’s write a minimal test for the <code class="docutils literal notranslate"><span class="pre">div</span></code> function. In practice, source code and test are
 often located in separate files. But for brevity, we’ll keep them together and save to
 <code class="docutils literal notranslate"><span class="pre">test_div.py</span></code>:</p>
@@ -578,20 +585,20 @@ often located in separate files. But for brevity, we’ll keep them together and
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">============================= test session starts ==============================</span>
 platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>rootdir: /Users/altuntas/r3sw/notebooks
+rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
-test_div.py <span class=" -Color -Color-Red">F                                                            [100%]</span>
+test_div.py 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Red">F                                                            [100%]</span>
 
 =================================== FAILURES ===================================
 <span class=" -Color -Color-Bold -Color-Bold-Red">________________________________ test_division _________________________________</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    def test_division():
+
+    def test_division():
 &gt;       div(7, 25)
 
 <span class=" -Color -Color-Bold -Color-Bold-Red">test_div.py</span>:9: 
@@ -611,7 +618,7 @@ x = 7, y = 25
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Cyan">=========================== short test summary info ============================</span>
 <span class=" -Color -Color-Red">FAILED</span> test_div.py::<span class=" -Color -Color-Bold">test_division</span> - assert (0.28 * 25) == 7
-<span class=" -Color -Color-Red">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span><span class=" -Color -Color-Red"> in 0.30s ===============================</span>
+<span class=" -Color -Color-Red">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span><span class=" -Color -Color-Red"> in 0.24s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -704,12 +711,15 @@ platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
 test_div.py <span class=" -Color -Color-Green">.                                                            [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.24s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.21s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -758,27 +768,30 @@ test_div.py
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                            [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.41s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.30s ===============================</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>Back to the heat-equation solver: execute the following cell to save this minimal test
-definition as <code class="docutils literal notranslate"><span class="pre">test_simple.py</span></code></p>
+<p><em><strong>Back to the heat-equation solver:</strong></em></p>
+<p>Let’s save the <code class="docutils literal notranslate"><span class="pre">test_flux_simple</span></code> unit test in a file named <code class="docutils literal notranslate"><span class="pre">test_flux.py</span></code>. This time,
+instead of the <code class="docutils literal notranslate"><span class="pre">numpy.isclose</span></code> function, we will use <code class="docutils literal notranslate"><span class="pre">pytest.approx</span></code>, which serves
+the same purpose but provides better failure messages in unit testing contexts.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> test_simple.py
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">diffusive_flux</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_flux_simple</span><span class="p">():</span>
-    <span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
-    <span class="n">kappa</span> <span class="o">=</span> <span class="mf">0.1</span>
-    <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constant field leads to zero flux&quot;&quot;&quot;</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">]</span>
     <span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+
+    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">f</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">F</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Expected all zeros, got </span><span class="si">{</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -809,16 +822,219 @@ test_simple.py
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                         [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.30s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.33s ===============================</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p>The output confirms that the test has passed successfully, i.e., no (unexpected) assertion errors were raised during the test execution.</p>
 </section>
+<section id="test-discovery">
+<h3>Test Discovery<a class="headerlink" href="#test-discovery" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> automatically discovers tests by looking for files that start with <code class="docutils literal notranslate"><span class="pre">test_</span></code> or end with <code class="docutils literal notranslate"><span class="pre">_test.py</span></code>. Within each of these files, it looks for functions that start with <code class="docutils literal notranslate"><span class="pre">test_</span></code> and classes starting with <code class="docutils literal notranslate"><span class="pre">Test</span></code>. All discovered tests are then executed when you run <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p>
+<p>Say, you run <code class="docutils literal notranslate"><span class="pre">pytest</span></code> in a directory with the following structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>heat_solver/
+    └── heat1d.py
+    └── unit_tests/
+        ├── test_simple.py
+        └── test_flux_via_params.py
+</pre></div>
+</div>
+<p>When you execute <code class="docutils literal notranslate"><span class="pre">pytest</span></code> from the root directory, it will recursively discover and run the tests in all the modules starting with <code class="docutils literal notranslate"><span class="pre">test_</span></code>. Since we have saved two test files so far,
+this means that both <code class="docutils literal notranslate"><span class="pre">test_simple.py</span></code> and <code class="docutils literal notranslate"><span class="pre">test_flux_via_params.py</span></code> will be executed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pytest
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">============================= test session starts ==============================</span>
+platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
+rootdir: /Users/altuntas/r3sw/notebooks
+plugins: hypothesis-6.136.9, anyio-4.10.0
+<span class=" -Color -Color-Bold">collecting ... </span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+<span class=" -Color -Color-Bold">collected 17 items                                                             </span>
+
+test_div.py 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                            [  5%]</span>
+test_divergence.py <span class=" -Color -Color-Green">.                                                     [ 11%]</span>
+test_fast_slow.py <span class=" -Color -Color-Green">.</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">F                                                    [ 29%]</span>
+test_flux.py <span class=" -Color -Color-Green">..</span><span class=" -Color -Color-Red">                                                          [ 41%]</span>
+test_flux_via_params.py <span class=" -Color -Color-Green">..</span><span class=" -Color -Color-Red">                                               [ 52%]</span>
+test_simple.py <span class=" -Color -Color-Green">.</span><span class=" -Color -Color-Red">                                                         [ 58%]</span>
+test_step_solve.py <span class=" -Color -Color-Green">.......</span><span class=" -Color -Color-Red">                                               [100%]</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=================================== FAILURES ===================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________________ test_fail ___________________________________</span>
+
+    def test_fail():
+&gt;       assert False
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert False</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_fast_slow.py</span>:13: AssertionError
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Cyan">=========================== short test summary info ============================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_fast_slow.py::<span class=" -Color -Color-Bold">test_fail</span> - assert False
+<span class=" -Color -Color-Red">========================= </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">16 passed</span><span class=" -Color -Color-Red"> in 3.47s =========================</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="fixtures">
+<h3>Fixtures<a class="headerlink" href="#fixtures" title="Link to this heading">#</a></h3>
+<p>[TODO: motivate the usage of fixtures with an example]. Write a simple test on-the-fly, using a Mesh object. Write another test, again using a Mesh object with or without different parameters. Show how to avoid code duplication using fixtures.</p>
+<p>— live coding —</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: live coding to motivate fixtures</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>— end of live coding —</p>
+<p>pytest fixtures give you small, named pieces of test state, e.g., parameters, meshes, boundary conditions, that pytest builds and injects into tests by name. They remove duplicated setup,
+keep tests independent, and make intent explicit. Pytest discovers fixtures in any test file
+and in a shared <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code>, so you can reuse them across modules.</p>
+<p>In this chapter we’ll use a few simple fixtures throughout:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dx</span></code>, <code class="docutils literal notranslate"><span class="pre">kappa</span></code>: canonical numerical parameters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mesh3</span></code>, <code class="docutils literal notranslate"><span class="pre">mesh5</span></code>: tiny meshes for hand-checkable and slightly larger cases.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">insulated</span></code>, <code class="docutils literal notranslate"><span class="pre">linear_bc</span></code>: boundary-condition objects.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">F3</span></code> : Flux array sized to mesh3.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">u_spike</span></code>, <code class="docutils literal notranslate"><span class="pre">u_uniform</span></code>: representative initial conditions.</p></li>
+</ul>
+<p>You’ll see these fixtures appear as function arguments in the tests that follow. pytest creates them automatically and passes them in. This keeps each test concise and focused.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> conftest.py
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Shared pytest fixtures for the heat-1D solver. These create small, well-labeled</span>
+<span class="sd">objects we can reuse across tests without repeating setup code.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dx</span><span class="p">():</span> <span class="k">return</span> <span class="mf">1.0</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">kappa</span><span class="p">():</span> <span class="k">return</span> <span class="mf">0.1</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mesh3</span><span class="p">(</span><span class="n">dx</span><span class="p">):</span> <span class="k">return</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mesh5</span><span class="p">(</span><span class="n">dx</span><span class="p">):</span> <span class="k">return</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">insulated</span><span class="p">():</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">linear_bc</span><span class="p">():</span> <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">F3</span><span class="p">(</span><span class="n">mesh3</span><span class="p">):</span> <span class="k">return</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">face_field</span><span class="p">()</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">u_spike</span><span class="p">():</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">u_uniform</span><span class="p">(</span><span class="n">mesh5</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="mf">7.5</span><span class="p">]</span> <span class="o">*</span> <span class="n">mesh5</span><span class="o">.</span><span class="n">N</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Overwriting conftest.py
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="marking">
+<h3>Marking<a class="headerlink" href="#marking" title="Link to this heading">#</a></h3>
+<p>[TODO: motivate and live-demo pytest.mark.skip and pytest.mark.xfail]</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> test_fast_slow.py
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_fast</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_slow</span><span class="p">():</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="kc">True</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_fail</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Overwriting test_fast_slow.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pytest<span class="w"> </span>test_fast_slow.py
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">============================= test session starts ==============================</span>
+platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
+rootdir: /Users/altuntas/r3sw/notebooks
+plugins: hypothesis-6.136.9, anyio-4.10.0
+<span class=" -Color -Color-Bold">collecting ... </span>
+<span class=" -Color -Color-Bold">collected 3 items                                                              </span>
+
+test_fast_slow.py <span class=" -Color -Color-Green">.</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Red">F                                                    [100%]</span>
+
+=================================== FAILURES ===================================
+<span class=" -Color -Color-Bold -Color-Bold-Red">__________________________________ test_fail ___________________________________</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    def test_fail():
+&gt;       assert False
+<span class=" -Color -Color-Bold -Color-Bold-Red">E       assert False</span>
+
+<span class=" -Color -Color-Bold -Color-Bold-Red">test_fast_slow.py</span>:13: AssertionError
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Cyan">=========================== short test summary info ============================</span>
+<span class=" -Color -Color-Red">FAILED</span> test_fast_slow.py::<span class=" -Color -Color-Bold">test_fail</span> - assert False
+<span class=" -Color -Color-Red">========================= </span><span class=" -Color -Color-Bold -Color-Bold-Red">1 failed</span>, <span class=" -Color -Color-Green">2 passed</span><span class=" -Color -Color-Red"> in 3.23s ==========================</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 <section id="parameterization">
 <h3>Parameterization<a class="headerlink" href="#parameterization" title="Link to this heading">#</a></h3>
 <p>You may have realized that running a test with different inputs can be tedious if we have to write separate test functions for each case. To ease this process, you can use the <code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.parametrize</span></code> decorator to run a test function with different sets of input data.</p>
+<p>[TODO: again motivate and live-demo parameterization with a tedious example first, and then with parametrization]</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> test_flux_via_params.py
@@ -833,7 +1049,6 @@ test_simple.py
         <span class="p">([</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
         <span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">],</span>     <span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="mi">10</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="mi">10</span><span class="o">/</span><span class="mi">2</span><span class="p">)]),</span>
     <span class="p">],</span>
-    <span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;constant→zero&quot;</span><span class="p">,</span> <span class="s2">&quot;linear→const-flux&quot;</span><span class="p">]</span>
 <span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_flux_param</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Testing u=</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">, kappa=</span><span class="si">{</span><span class="n">kappa</span><span class="si">}</span><span class="s2">, dx=</span><span class="si">{</span><span class="n">dx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -872,7 +1087,7 @@ Testing u=[0, 10, 20], kappa=0.5, dx=2.0
 <span class=" -Color -Color-Green">.</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.29s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.25s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -881,119 +1096,10 @@ Testing u=[0, 10, 20], kappa=0.5, dx=2.0
 and so to confirm that all specified inputs via the parameterization mechanism are being tested.
 In the absence of this flag, the print statements are suppressed.</p>
 </section>
-<section id="test-discovery">
-<h3>Test Discovery<a class="headerlink" href="#test-discovery" title="Link to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> automatically discovers tests by looking for files that start with <code class="docutils literal notranslate"><span class="pre">test_</span></code> or end with <code class="docutils literal notranslate"><span class="pre">_test.py</span></code>. Within each of these files, it looks for functions that start with <code class="docutils literal notranslate"><span class="pre">test_</span></code> and classes starting with <code class="docutils literal notranslate"><span class="pre">Test</span></code>. All discovered tests are then executed when you run <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p>
-<p>Say, you run <code class="docutils literal notranslate"><span class="pre">pytest</span></code> in a directory with the following structure:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>heat_solver/
-    └── heat1d.py
-    └── unit_tests/
-        ├── test_simple.py
-        └── test_flux_via_params.py
-</pre></div>
-</div>
-<p>When you execute <code class="docutils literal notranslate"><span class="pre">pytest</span></code> from the root directory, it will recursively discover and run the tests in all the modules starting with <code class="docutils literal notranslate"><span class="pre">test_</span></code>. Since we have saved two test files so far,
-this means that both <code class="docutils literal notranslate"><span class="pre">test_simple.py</span></code> and <code class="docutils literal notranslate"><span class="pre">test_flux_via_params.py</span></code> will be executed.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pytest
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">============================= test session starts ==============================</span>
-platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
-rootdir: /Users/altuntas/r3sw/notebooks
-plugins: hypothesis-6.136.9, anyio-4.10.0
-<span class=" -Color -Color-Bold">collecting ... </span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-<span class=" -Color -Color-Bold">collected 14 items                                                             </span>
-
-test_div.py 
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                            [  7%]</span>
-test_divergence.py <span class=" -Color -Color-Green">.                                                     [ 14%]</span>
-test_flux.py <span class=" -Color -Color-Green">..                                                          [ 28%]</span>
-test_flux_via_params.py <span class=" -Color -Color-Green">..                                               [ 42%]</span>
-test_simple.py <span class=" -Color -Color-Green">.                                                         [ 50%]</span>
-test_step_solve.py <span class=" -Color -Color-Green">.......                                               [100%]</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">14 passed</span><span class=" -Color -Color-Green"> in 0.44s ==============================</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="fixtures">
-<h3>Fixtures<a class="headerlink" href="#fixtures" title="Link to this heading">#</a></h3>
-<p>pytest fixtures give you small, named pieces of test state, e.g., parameters, meshes, boundary conditions, that pytest builds and injects into tests by name. They remove duplicated setup,
-keep tests independent, and make intent explicit. Pytest discovers fixtures in any test file
-and in a shared <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code>, so you can reuse them across modules.</p>
-<p>In this chapter we’ll use a few simple fixtures throughout:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">dx</span></code>, <code class="docutils literal notranslate"><span class="pre">kappa</span></code>: canonical numerical parameters.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mesh3</span></code>, <code class="docutils literal notranslate"><span class="pre">mesh5</span></code>: tiny meshes for hand-checkable and slightly larger cases.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">insulated</span></code>, <code class="docutils literal notranslate"><span class="pre">linear_bc</span></code>: boundary-condition objects.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">F3</span></code>, <code class="docutils literal notranslate"><span class="pre">dudt3</span></code>: Flux and tendency arrays sized to mesh3.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">u_spike</span></code>, <code class="docutils literal notranslate"><span class="pre">u_uniform</span></code>: representative initial conditions.</p></li>
-</ul>
-<p>You’ll see these fixtures appear as function arguments in the tests that follow. pytest creates them automatically and passes them in. This keeps each test concise and focused.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%writefile</span> conftest.py
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Shared pytest fixtures for the heat-1D solver. These create small, well-labeled</span>
-<span class="sd">objects we can reuse across tests without repeating setup code.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">dx</span><span class="p">():</span> <span class="k">return</span> <span class="mf">1.0</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">kappa</span><span class="p">():</span> <span class="k">return</span> <span class="mf">0.1</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">mesh3</span><span class="p">(</span><span class="n">dx</span><span class="p">):</span> <span class="k">return</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">mesh5</span><span class="p">(</span><span class="n">dx</span><span class="p">):</span> <span class="k">return</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">insulated</span><span class="p">():</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">linear_bc</span><span class="p">():</span> <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">F3</span><span class="p">(</span><span class="n">mesh3</span><span class="p">):</span> <span class="k">return</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">face_field</span><span class="p">()</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">dudt3</span><span class="p">(</span><span class="n">mesh3</span><span class="p">):</span> <span class="k">return</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">cell_field</span><span class="p">()</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">u_spike</span><span class="p">():</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">u_uniform</span><span class="p">(</span><span class="n">mesh5</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="mf">7.5</span><span class="p">]</span> <span class="o">*</span> <span class="n">mesh5</span><span class="o">.</span><span class="n">N</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Overwriting conftest.py
-</pre></div>
-</div>
-</div>
-</div>
-</section>
 </section>
 <section id="more-examples">
 <h2>More examples<a class="headerlink" href="#more-examples" title="Link to this heading">#</a></h2>
+<p>[TODO: improve organization of this section]</p>
 <section id="flux-tests">
 <h3>Flux tests<a class="headerlink" href="#flux-tests" title="Link to this heading">#</a></h3>
 <p>Below are a couple of tests for the flux function.</p>
@@ -1041,7 +1147,9 @@ Using the <code class="docutils literal notranslate"><span class="pre">F3</span>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">============================= test session starts ==============================</span>
-platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
@@ -1053,16 +1161,24 @@ test_flux.py
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">..                                                          [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.40s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">2 passed</span><span class=" -Color -Color-Green"> in 0.41s ===============================</span>
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="divergence-telescoping">
-<h3>Divergence telescoping<a class="headerlink" href="#divergence-telescoping" title="Link to this heading">#</a></h3>
-<p>The finite volume telescoping property states that summing the tendencies (<code class="docutils literal notranslate"><span class="pre">dudt[i]</span></code>) over all cells and multiplying by <code class="docutils literal notranslate"><span class="pre">dx</span></code> must equal the net boundary flux (<code class="docutils literal notranslate"><span class="pre">F[0]</span> <span class="pre">-</span> <span class="pre">F[-1]</span></code>).</p>
-<p>Recall that we have the below function as a postcondition after each time <code class="docutils literal notranslate"><span class="pre">divergence</span></code> is computed:</p>
+<section id="telescoping-property">
+<h3>Telescoping Property<a class="headerlink" href="#telescoping-property" title="Link to this heading">#</a></h3>
+<p>In finite-volume discretizations, fluxes between neighboring cells telescope:
+the flux leaving one cell enters the next (except in the presence of sources,
+variable cell volumes or densities, or numerical errors.)</p>
+<p>Consequently, when we sum the discrete divergence over all cells, the interior
+fluxes cancel pairwise, leaving only the boundary contributions.
+in other words, the total divergence equals the net flux through the boundaries:</p>
+<p><span class="math notranslate nohighlight">\(\qquad
+\sum_{i=0}^{N-1} (\nabla \cdot F)_i = F_0 - F_N
+\qquad\)</span></p>
+<p>Recall the encoding of this property:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -1077,7 +1193,6 @@ test_flux.py
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<p>Therefore, running the <code class="docutils literal notranslate"><span class="pre">divergence</span></code> functions for arbitrary inputs automatically verifies the telescoping property.</p>
 <section id="exercise-3-1">
 <h4>Exercise 3.1<a class="headerlink" href="#exercise-3-1" title="Link to this heading">#</a></h4>
 <p>Write a test named <code class="docutils literal notranslate"><span class="pre">test_divergence_telescopes</span></code> that verifies the telescoping property of the divergence function.</p>
@@ -1117,7 +1232,7 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 test_divergence.py <span class=" -Color -Color-Green">.                                                     [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.21s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.15s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -1131,11 +1246,18 @@ test_divergence.py <span class=" -Color -Color-Green">.                         
 <span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">divergence</span>
 
+<span class="k">def</span><span class="w"> </span><span class="nf">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the finite volume telescoping property.&quot;&quot;&quot;</span>
+    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">total_divergence</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">boundary_flux</span><span class="p">)</span>
+
 <span class="k">def</span><span class="w"> </span><span class="nf">test_divergence_telescopes</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sum of dudt * dx must equal net boundary flux F[0] - F[-1].&quot;&quot;&quot;</span>
-    <span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">]</span>  <span class="c1"># N=3 → dudt length=3</span>
-    <span class="n">dudt</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
-    <span class="n">divergence</span><span class="p">(</span><span class="n">dudt</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sum of divF * dx must equal net boundary flux F[0] - F[-1].&quot;&quot;&quot;</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">]</span>
+    <span class="n">divF</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+    <span class="n">divergence</span><span class="p">(</span><span class="n">divF</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">telescoping</span><span class="p">(</span><span class="n">divF</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1159,10 +1281,13 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
 <span class=" -Color -Color-Bold">collected 1 item                                                               </span>
 
-test_divergence.py <span class=" -Color -Color-Green">.                                                     [100%]</span>
+test_divergence.py 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.18s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">.                                                     [100%]</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">1 passed</span><span class=" -Color -Color-Green"> in 0.29s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -1185,7 +1310,6 @@ test_divergence.py <span class=" -Color -Color-Green">.                         
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Given insulated BCs and a stable dt, a single step should diffuse the spike:</span>
 <span class="sd">        - middle cell decreases, neighbors increase.&quot;&quot;&quot;</span>
     <span class="n">F</span> <span class="o">=</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">face_field</span><span class="p">()</span>
-    <span class="n">dudt</span> <span class="o">=</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">cell_field</span><span class="p">()</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">u_spike</span><span class="p">[:]</span>
     <span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh3</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">insulated</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">100.0</span> <span class="ow">and</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span>
@@ -1223,7 +1347,6 @@ test_divergence.py <span class=" -Color -Color-Green">.                         
     <span class="n">u</span> <span class="o">=</span> <span class="n">solve_heat_eqn</span><span class="p">(</span><span class="n">u_uniform</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">mesh5</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">insulated</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">u</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">u_uniform</span><span class="p">)</span>
 
-
 <span class="k">def</span><span class="w"> </span><span class="nf">test_equal_flux_bc_trends_toward_linear_profile</span><span class="p">(</span><span class="n">mesh5</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">linear_bc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; If qL==qR==c (nonzero), steady state has constant interior flux == c and thus a linear</span>
 <span class="sd">    gradient. This test checks that after many steps the cell differences approach a constant.&quot;&quot;&quot;</span>
@@ -1255,6 +1378,9 @@ platform darwin -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0
 rootdir: /Users/altuntas/r3sw/notebooks
 plugins: hypothesis-6.136.9, anyio-4.10.0
 <span class=" -Color -Color-Bold">collecting ... </span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 <span class=" -Color -Color-Bold">collected 7 items                                                              </span>
 
 test_step_solve.py <span class=" -Color -Color-Green">.</span>
@@ -1263,7 +1389,7 @@ test_step_solve.py <span class=" -Color -Color-Green">.</span>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">......                                               [100%]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">7 passed</span><span class=" -Color -Color-Green"> in 0.37s ===============================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">============================== </span><span class=" -Color -Color-Bold -Color-Bold-Green">7 passed</span><span class=" -Color -Color-Green"> in 0.31s ===============================</span>
 </pre></div>
 </div>
 </div>
@@ -1289,19 +1415,23 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-<span class=" -Color -Color-Bold">collected 14 items                                                             </span>
+<span class=" -Color -Color-Bold">collected 17 items                                                             </span>
 
 &lt;Dir notebooks&gt;
   &lt;Module test_div.py&gt;
     &lt;Function test_division&gt;
   &lt;Module test_divergence.py&gt;
     &lt;Function test_divergence_telescopes&gt;
+  &lt;Module test_fast_slow.py&gt;
+    &lt;Function test_fast&gt;
+    &lt;Function test_slow&gt;
+    &lt;Function test_fail&gt;
   &lt;Module test_flux.py&gt;
     &lt;Function test_flux_constant_field_yields_zero_interior&gt;
     &lt;Function test_flux_spike_has_opposite_signed_fluxes&gt;
   &lt;Module test_flux_via_params.py&gt;
-    &lt;Function test_flux_param[constant\u2192zero]&gt;
-    &lt;Function test_flux_param[linear\u2192const-flux]&gt;
+    &lt;Function test_flux_param[u0-0.1-1.0-expected0]&gt;
+    &lt;Function test_flux_param[u1-0.5-2.0-expected1]&gt;
   &lt;Module test_simple.py&gt;
     &lt;Function test_flux_simple&gt;
   &lt;Module test_step_solve.py&gt;
@@ -1314,7 +1444,7 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
     &lt;Function test_equal_flux_bc_trends_toward_linear_profile&gt;
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">========================= 14 tests collected in 0.24s ==========================</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">========================= 17 tests collected in 0.25s ==========================</span>
 </pre></div>
 </div>
 </div>
@@ -1410,14 +1540,15 @@ plugins: hypothesis-6.136.9, anyio-4.10.0
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pytest-library">The <code class="docutils literal notranslate"><span class="pre">pytest</span></code> Library</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features-of-pytest">Key Features of <code class="docutils literal notranslate"><span class="pre">pytest</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assertions">Assertions</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameterization">Parameterization</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-discovery">Test Discovery</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixtures">Fixtures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#marking">Marking</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameterization">Parameterization</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-examples">More examples</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-tests">Flux tests</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#divergence-telescoping">Divergence telescoping</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property">Telescoping Property</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-1">Exercise 3.1</a></li>
 </ul>
 </li>
