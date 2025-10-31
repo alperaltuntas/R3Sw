@@ -1,0 +1,22 @@
+name: r3sw
+
+channels:
+  - conda-forge
+  - anaconda
+
+dependencies:
+  - python >=3.12,<3.13
+  - numpy >=2.3,<3.4
+  - scipy >1.15,<1.16
+  - matplotlib >=3.10,<3.11
+  - xarray >=2025.7,<2025.8
+  - pooch >=1.8.2,<1.9
+  - jupyterlab >=4.4,<4.5
+  - jupyter-book >=1.0,<1.1
+  - pytest >=8.4,<8.5
+  - hypothesis >=6.136,<6.137
+
+  - pip
+  - pip:
+      - crosshair-tool
+      #- -e ./ # self
