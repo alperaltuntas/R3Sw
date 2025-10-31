@@ -9,6 +9,14 @@ html:
   analytics:
     google_analytics_id: G-V7VKREZ5MB
 
+repository:
+  url                       : https://github.com/alperaltuntas/R3Sw  # Online location of your book
+  branch                    : main  # Which branch of the repository should be used when creating links (optional)
+  path_to_book              : notebooks
+
+launch_buttons:
+  colab_url: https://colab.research.google.com
+
 # Add a bibtex file so that we can create citations
 #bibtex_bibfiles:
 #  - references.bib
