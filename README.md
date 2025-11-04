@@ -12,7 +12,27 @@ Over the course of this tutorial, we’ll explore how to make our scientific sof
 
 ## Local installation
 
-[TODO]
+Download or clone this repository to your local machine:
+
+```bash
+git clone https://github.com/alperaltuntas/r3sw.git
+cd r3sw
+```
+
+Then, create and activate the conda environment:
+
+```bash
+conda env create -f environment.yml
+conda activate r3sw
+```
+
+You can then launch Jupyter Notebook:
+
+```bash
+cd notebooks
+jupyter-lab
+```
+
 
 ## Why This Matters
 
