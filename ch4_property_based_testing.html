@@ -78,7 +78,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'ch4_property_based_testing';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Chapter 5: Theorem Proving" href="ch5_theorem_proving.html" />
+    <link rel="next" title="Chapter 5: Bounded Formal Verification" href="ch5_theorem_proving.html" />
     <link rel="prev" title="Chapter 3: Unit Testing" href="ch3_unit_testing.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -184,7 +184,7 @@
 <li class="toctree-l1"><a class="reference internal" href="ch3_unit_testing.html">Chapter 3: Unit Testing</a></li>
 
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Chapter 4: Property-Based Testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ch5_theorem_proving.html">Chapter 5: Theorem Proving</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch5_theorem_proving.html">Chapter 5: Bounded Formal Verification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="closing_remarks.html">Closing Remarks: Climbing the Ladder of Rigor</a></li>
 </ul>
 
@@ -368,21 +368,41 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-hypothesis-library">The <code class="docutils literal notranslate"><span class="pre">Hypothesis</span></code> library</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-to-the-rescue">Hypothesis to the rescue</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shrinking">Shrinking</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-strategies">Combining strategies</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#controlling-how-many-examples-are-generated">Controlling how many examples are generated</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-your-own-strategies">Making your own strategies</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-strategies">Combining strategies</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#other-approaches">Other approaches</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#controlling-hypothesis">Controlling Hypothesis</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-many-examples-are-generated">How many examples are generated</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#observability">Observability</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#back-to-the-heat-equation-solver">Back to the Heat Equation Solver</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scaffolding">Scaffolding</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property">Telescoping Property</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise:</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation">Conservation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Exercise:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property-what-goes-out-one-cell-must-go-in-the-next-cell">Telescoping Property : “what goes out one cell must go in the next cell”</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise:</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation">Conservation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Exercise:</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symmetry">Symmetry</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monotonicity">Monotonicity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beware-of-assume">Beware of <code class="docutils literal notranslate"><span class="pre">assume</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-test-case-generation-with-st-composite">Advanced test-case generation with <code class="docutils literal notranslate"><span class="pre">st.composite</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#st-data"><code class="docutils literal notranslate"><span class="pre">st.data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#st-composite"><code class="docutils literal notranslate"><span class="pre">st.composite()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-lessons-to-take-away">Some lessons to take away</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-ahead">Looking Ahead</a></li>
 </ul>
             </nav>
@@ -402,7 +422,8 @@ Unit tests gave us confidence, but only for cases that we handpicked.</p>
 <p>Now, we’ll take the next step by introducing property-based testing via the Hypothesis
 library:</p>
 <ul class="simple">
-<li><p>Instead of manually writing individual test cases, we’ll state general properties such as conservation, symmetry, maximum principle intuition, or linearity.</p></li>
+<li><p>Instead of manually writing individual test cases, we’ll state general properties that must be satisfied by the solution such as conservation, symmetry, maximum principle intuition, or linearity.</p></li>
+<li><p>We will also specify a function that generates valid test inputs. For each input, we assert that these properties hold.</p></li>
 <li><p>Hypothesis will generate many random inputs automatically, exploring cases we might never think to test.</p></li>
 <li><p>When a property fails, Hypothesis will shrink the failing case to the simplest possible counterexample, the testing equivalent of a controlled scientific experiment.</p></li>
 </ul>
@@ -455,11 +476,13 @@ It’s a general rule, not just a single example.</p>
 <h2>The <code class="docutils literal notranslate"><span class="pre">Hypothesis</span></code> library<a class="headerlink" href="#the-hypothesis-library" title="Link to this heading">#</a></h2>
 <p>Hypothesis is a Python library for property-based testing.
 Instead of handpicking test cases, you describe the space of valid inputs, and it generates random examples within that space.</p>
-<p>If a failure is found, Hypothesis automatically shrinks the input to the simplest version that still causes the failure. This helps you debug by giving a clear, minimal failing example.</p>
+<p>If a failure is found, Hypothesis automatically <em>shrinks</em> the input to the simplest version that still causes the failure. This helps you debug by giving a clear, minimal failing example.</p>
 <p>Let’s revisit our <code class="docutils literal notranslate"><span class="pre">div</span></code> function from the previous chapters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %xmode Minimal  </span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># P    (precondition)</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code (implementation)</span>
     <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># Q    (postcondition)</span>
@@ -469,7 +492,7 @@ Instead of handpicking test cases, you describe the space of valid inputs, and i
 </div>
 </div>
 <p>In Chapter 3, we tested this manually:</p>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_division</span><span class="p">():</span>
     <span class="n">div</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
@@ -490,11 +513,11 @@ Instead of handpicking test cases, you describe the space of valid inputs, and i
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_division</span><span class="p">():</span>
 <span class="ne">----&gt; </span><span class="mi">2</span>     <span class="n">div</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
 
-<span class="nn">Cell In[1], line 4,</span> in <span class="ni">div</span><span class="nt">(x, y)</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># P    (precondition)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code (implementation)</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># Q    (postcondition)</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="k">return</span> <span class="n">res</span>
+<span class="nn">Cell In[1], line 6,</span> in <span class="ni">div</span><span class="nt">(x, y)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># P    (precondition)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code (implementation)</span>
+<span class="ne">----&gt; </span><span class="mi">6</span> <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># Q    (postcondition)</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="k">return</span> <span class="n">res</span>
 
 <span class="ne">AssertionError</span>: 
 </pre></div>
@@ -535,13 +558,25 @@ might have passed, which would leave us unaware of the issue.</p>
 <section id="hypothesis-to-the-rescue">
 <h3>Hypothesis to the rescue<a class="headerlink" href="#hypothesis-to-the-rescue" title="Link to this heading">#</a></h3>
 <p>Let’s use Hypothesis to generate a wide range of test cases for our division function.</p>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">assume</span><span class="p">,</span> <span class="n">given</span><span class="p">,</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">assume</span><span class="p">,</span> <span class="n">given</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
 
-<span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span> <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">())</span>
+
+<span class="c1"># Read this as:</span>
+<span class="c1"># given</span>
+<span class="nd">@given</span><span class="p">(</span>
+    <span class="c1"># (a) one randomly drawn integer</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span>
+    <span class="c1"># (b) another randomly drawn integer</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span>
+<span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="c1"># test this property</span>
+    <span class="c1"># (c) reject y == 0</span>
     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># test that division succeeds</span>
     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -557,15 +592,17 @@ might have passed, which would leave us unaware of the issue.</p>
 </li>
 <li><p>Strategies</p>
 <ul class="simple">
-<li><p>Strategies define the space of possible inputs.</p></li>
+<li><p>Use strategies to define the space of possible inputs.</p></li>
 <li><p>In our example, we used <code class="docutils literal notranslate"><span class="pre">st.integers()</span></code> to generate random integers for both x and y.</p></li>
+<li><p>Hypothesis comes with a number of built-in <a class="reference external" href="https://hypothesis.readthedocs.io/en/latest/reference/strategies.html#">strategies</a>. These strategies effectively define how the input space is explored, and how a failing example is shrunk to a “simpler” case. Usually you’ll compose a number of built-in strategies to generate input data that is appropriate for your problem.</p></li>
+<li><p>Here is an <a class="reference external" href="https://github.com/zarr-developers/zarr-python/blob/eb1b6e869115925f7b653e60bd542abd410a9a4e/src/zarr/testing/strategies.py#L88-L100">example</a> from Zarr of generating input data that matches a written specification.</p></li>
 </ul>
 </li>
 </ol>
 <p>We also used the <code class="docutils literal notranslate"><span class="pre">assume</span></code> function to enforce our precondition {P}.
 Here, the precondition is that <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">!=</span> <span class="pre">0</span></code> to avoid division by zero. Adding <code class="docutils literal notranslate"><span class="pre">assume(y</span> <span class="pre">!=</span> <span class="pre">0)</span></code> ensures that we only test valid inputs.</p>
 <p>With these pieces in place, we can now run the property-based test and let Hypothesis explore a wide range of inputs automatically:</p>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_div_property</span><span class="p">()</span>
 </pre></div>
@@ -577,31 +614,39 @@ Here, the precondition is that <code class="docutils literal notranslate"><span 
 <span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
 <span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">test_div_property</span><span class="p">()</span>
 
-<span class="nn">Cell In[4], line 4,</span> in <span class="ni">test_div_property</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">assume</span><span class="p">,</span> <span class="n">given</span><span class="p">,</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span> <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">())</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nn">Cell In[4], line 8,</span> in <span class="ni">test_div_property</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="c1"># Read this as:</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="c1"># given</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="nd">@given</span><span class="p">(</span>
+<span class="ne">----&gt; </span><span class="mi">8</span>     <span class="c1"># (a) one randomly drawn integer</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span>     <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span>     <span class="c1"># (b) another randomly drawn integer</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span>     <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">14</span>     <span class="c1"># test this property</span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span>     <span class="c1"># (c) reject y == 0</span>
+<span class="g g-Whitespace">     </span><span class="mi">16</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">17</span>     <span class="c1"># test that division succeeds</span>
 
     <span class="p">[</span><span class="o">...</span> <span class="n">skipping</span> <span class="n">hidden</span> <span class="mi">1</span> <span class="n">frame</span><span class="p">]</span>
 
-<span class="nn">Cell In[4], line 6,</span> in <span class="ni">test_div_property</span><span class="nt">(x, y)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span> <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">())</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">6</span>     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nn">Cell In[4], line 18,</span> in <span class="ni">test_div_property</span><span class="nt">(x, y)</span>
+<span class="g g-Whitespace">     </span><span class="mi">16</span> <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">17</span> <span class="c1"># test that division succeeds</span>
+<span class="ne">---&gt; </span><span class="mi">18</span> <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="nn">Cell In[1], line 4,</span> in <span class="ni">div</span><span class="nt">(x, y)</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># P    (precondition)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code (implementation)</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># Q    (postcondition)</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="k">return</span> <span class="n">res</span>
+<span class="nn">Cell In[1], line 6,</span> in <span class="ni">div</span><span class="nt">(x, y)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># P    (precondition)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code (implementation)</span>
+<span class="ne">----&gt; </span><span class="mi">6</span> <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># Q    (postcondition)</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="k">return</span> <span class="n">res</span>
 
 <span class="ne">AssertionError</span>: 
 <span class="n">Falsifying</span> <span class="n">example</span><span class="p">:</span> <span class="n">test_div_property</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="mi">127_663_485_018_447_893</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="mi">55</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -613,18 +658,45 @@ Here, the precondition is that <code class="docutils literal notranslate"><span 
 <h3>Shrinking<a class="headerlink" href="#shrinking" title="Link to this heading">#</a></h3>
 <p>Hypothesis automatically <em>shrinks</em> the input, step by step, until it finds the simplest failing
 example. This makes debugging much easier, since you don’t need to wade through massive random inputs.</p>
+<p>Shrinking &amp; test case generation is why you should use a property testing library. While you might be able
+to generate random inputs, shrinking and input space exploration is a hard problem!</p>
 </section>
+<section id="making-your-own-strategies">
+<h3>Making your own strategies<a class="headerlink" href="#making-your-own-strategies" title="Link to this heading">#</a></h3>
 <section id="combining-strategies">
-<h3>Combining strategies<a class="headerlink" href="#combining-strategies" title="Link to this heading">#</a></h3>
+<h4>Combining strategies<a class="headerlink" href="#combining-strategies" title="Link to this heading">#</a></h4>
 <p>In the above example, we only tested integer division. However, we can also test floating-point division by using the <code class="docutils literal notranslate"><span class="pre">st.floats()</span></code> strategy from Hypothesis. Better yet, we can combine both strategies to test the <code class="docutils literal notranslate"><span class="pre">div</span></code> function with a wider range of inputs:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">assume</span><span class="p">,</span> <span class="n">given</span><span class="p">,</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">assume</span><span class="p">,</span> <span class="n">given</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
 
 <span class="c1"># Combine integers and floats into a single strategy:</span>
-<span class="n">numbers</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">one_of</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-
-<span class="nd">@given</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span>
+<span class="c1"># `st.one_of` shrinks such that the earlier strategy is considered &quot;simpler&quot;</span>
+<span class="n">numbers</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">one_of</span><span class="p">(</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Tip</strong> An important feature of strategies is that you can call <code class="docutils literal notranslate"><span class="pre">.example</span></code> to get an example generated value! This function really helps one create strategies.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">numbers</span><span class="o">.</span><span class="n">example</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5961997760912302.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@given</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -632,7 +704,7 @@ example. This makes debugging much easier, since you don’t need to wade throug
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_raises-exception docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_div_property</span><span class="p">()</span>
 </pre></div>
@@ -641,55 +713,72 @@ example. This makes debugging much easier, since you don’t need to wade throug
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">AssertionError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
 <span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">test_div_property</span><span class="p">()</span>
 
-<span class="nn">Cell In[6], line 7,</span> in <span class="ni">test_div_property</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="c1"># Combine integers and floats into a single strategy:</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">numbers</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">one_of</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(),</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="nd">@given</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">7</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span>     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nn">Cell In[8], line 2,</span> in <span class="ni">test_div_property</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="nd">@given</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
     <span class="p">[</span><span class="o">...</span> <span class="n">skipping</span> <span class="n">hidden</span> <span class="mi">1</span> <span class="n">frame</span><span class="p">]</span>
 
-<span class="nn">Cell In[6], line 9,</span> in <span class="ni">test_div_property</span><span class="nt">(x, y)</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="nd">@given</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">9</span>     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nn">Cell In[8], line 4,</span> in <span class="ni">test_div_property</span><span class="nt">(x, y)</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="nd">@given</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">4</span>     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="nn">Cell In[1], line 4,</span> in <span class="ni">div</span><span class="nt">(x, y)</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># P    (precondition)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code (implementation)</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># Q    (postcondition)</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="k">return</span> <span class="n">res</span>
+<span class="nn">Cell In[1], line 6,</span> in <span class="ni">div</span><span class="nt">(x, y)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># P    (precondition)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code (implementation)</span>
+<span class="ne">----&gt; </span><span class="mi">6</span> <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># Q    (postcondition)</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="k">return</span> <span class="n">res</span>
 
 <span class="ne">AssertionError</span>: 
 <span class="n">Falsifying</span> <span class="n">example</span><span class="p">:</span> <span class="n">test_div_property</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="mi">9_007_199_254_740_993</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="mf">8.988465674311578e+307</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="controlling-how-many-examples-are-generated">
-<h3>Controlling how many examples are generated<a class="headerlink" href="#controlling-how-many-examples-are-generated" title="Link to this heading">#</a></h3>
-<p>By default, <code class="docutils literal notranslate"><span class="pre">hypothesis</span></code> generates 100 random input values. You can control this with the &#64;settings decorator:</p>
+<section id="other-approaches">
+<h4>Other approaches<a class="headerlink" href="#other-approaches" title="Link to this heading">#</a></h4>
+<p>Hypotheisis provides a lot more!</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">st.builds</span></code> to construct custom objects with arguments generated from strategies;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">st.sampled_from</span></code> to sample from a list of choices</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">st.just</span></code> for always yielding one value (very useful when limiting search space)</p></li>
+<li><p>modify a strategy’s outputs using <code class="docutils literal notranslate"><span class="pre">.filter</span></code> and <code class="docutils literal notranslate"><span class="pre">.map</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">st.composite</span></code> for more advanced generation (see example later)</p></li>
+</ol>
+<p>See <a class="reference external" href="https://hypothesis.readthedocs.io/en/latest/tutorial/builtin-strategies.html">this page</a> for more.</p>
+</section>
+</section>
+<section id="controlling-hypothesis">
+<h3>Controlling Hypothesis<a class="headerlink" href="#controlling-hypothesis" title="Link to this heading">#</a></h3>
+<section id="how-many-examples-are-generated">
+<h4>How many examples are generated<a class="headerlink" href="#how-many-examples-are-generated" title="Link to this heading">#</a></h4>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">hypothesis</span></code> generates 100 random input values. You can control this with the <code class="docutils literal notranslate"><span class="pre">&#64;settings</span></code> decorator:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">given</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">given</span><span class="p">,</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">strategies</span> <span class="k">as</span> <span class="n">st</span>
 
 <span class="n">ctr</span> <span class="o">=</span> <span class="mi">0</span>
+
 
 <span class="nd">@settings</span><span class="p">(</span><span class="n">max_examples</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="nd">@given</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">())</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_random</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">global</span> <span class="n">ctr</span><span class="p">;</span> <span class="n">ctr</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">global</span> <span class="n">ctr</span>
+    <span class="n">ctr</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test no. </span><span class="si">{</span><span class="n">ctr</span><span class="si">}</span><span class="s2"> with random input </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
 
 <span class="n">test_random</span><span class="p">()</span>
 </pre></div>
@@ -697,15 +786,15 @@ example. This makes debugging much easier, since you don’t need to wade throug
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test no. 1 with random input 0
-Test no. 2 with random input -5980
-Test no. 3 with random input 101
-Test no. 4 with random input 28979
-Test no. 5 with random input 15464
-Test no. 6 with random input 23
-Test no. 7 with random input 31039
-Test no. 8 with random input -304902678
-Test no. 9 with random input 4378
-Test no. 10 with random input 46
+Test no. 2 with random input -818
+Test no. 3 with random input -3022168159676768025
+Test no. 4 with random input -16816
+Test no. 5 with random input -77
+Test no. 6 with random input 11985
+Test no. 7 with random input -24
+Test no. 8 with random input -96
+Test no. 9 with random input 2298008641686346705
+Test no. 10 with random input 31947
 </pre></div>
 </div>
 </div>
@@ -713,93 +802,590 @@ Test no. 10 with random input 46
 <p>In the above cell, we reduced <code class="docutils literal notranslate"><span class="pre">max_examples</span></code> from the default 100 to 10. In practice, one
 should consider increasing the <code class="docutils literal notranslate"><span class="pre">max_examples</span></code> parameter based on the complexity of the property being tested, particularly in the absence of failing cases when no counterexamples are found.</p>
 </section>
-</section>
-<section id="back-to-the-heat-equation-solver">
-<h2>Back to the Heat Equation Solver<a class="headerlink" href="#back-to-the-heat-equation-solver" title="Link to this heading">#</a></h2>
-<p>Now let’s use Hypothesis to test our heat equation solver. Execute the below cell that contains the entire source code of our solver, so it becomes available for property-based testing.</p>
+<section id="observability">
+<h4>Observability<a class="headerlink" href="#observability" title="Link to this heading">#</a></h4>
+<p>Hypothesis caches failing examples for future checks. Let’s clear that</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %load heat1d.py</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span>
-
-<span class="n">vec</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Mesh</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Uniform 1-D mesh.&quot;&quot;&quot;</span>
-
-    <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># cell size</span>
-    <span class="n">N</span><span class="p">:</span> <span class="nb">int</span>     <span class="c1"># number of cells</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">cell_field</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">face_field</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">apply_bc</span><span class="p">(</span><span class="n">f_out</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply BCs by overriding first and last face quantities (f_out).&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_out</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;face field size too small&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;bc must be of size 2&quot;</span>
-    <span class="n">f_out</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">f_out</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">diffusive_flux</span><span class="p">(</span><span class="n">f_out</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a cell field (c), compute the diffusive flux (f_out).&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_out</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
-    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">kappa</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx or kappa&quot;</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_out</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">f_out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">divergence</span><span class="p">(</span><span class="n">c_out</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the divergence of face quantities (f) and store in (c_out).&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c_out</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Size mismatch&quot;</span>
-    <span class="k">assert</span> <span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dx&quot;</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c_out</span><span class="p">)):</span>
-        <span class="n">c_out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">step_heat_eqn</span><span class="p">(</span><span class="n">u_inout</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance cell field u by one time step using explicit Euler method.&quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="n">dt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non-positive dt&quot;</span>
-    <span class="k">assert</span> <span class="n">mesh</span><span class="o">.</span><span class="n">N</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">u_inout</span><span class="p">),</span> <span class="s2">&quot;Size mismatch&quot;</span>
-
-    <span class="n">F</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face_field</span><span class="p">()</span>
-    <span class="n">divF</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_field</span><span class="p">()</span>
-
-    <span class="n">apply_bc</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
-    <span class="n">diffusive_flux</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">u_inout</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
-    <span class="n">divergence</span><span class="p">(</span><span class="n">divF</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">N</span><span class="p">):</span>
-        <span class="n">u_inout</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">divF</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">solve_heat_eqn</span><span class="p">(</span><span class="n">u0</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">nt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Orchestrate nt steps over cell field u.&quot;&quot;&quot;</span>
-
-    <span class="k">assert</span> <span class="n">nt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Number of time steps must be positive&quot;</span>
-    <span class="k">assert</span> <span class="n">dt</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">dx</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">),</span> <span class="s2">&quot;Stability condition not met&quot;</span>
-
-    <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">))</span>
-    <span class="n">u</span> <span class="o">=</span> <span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
-        <span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">u</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>rm<span class="w"> </span>-r<span class="w"> </span>.hypothesis
 </pre></div>
 </div>
 </div>
 </div>
+<p>Now we’ll enable verbose output and run the test. Hypothesis will print out all the examples it is trying. This is usually good to do when developing tests to  get a sense of the space being explored.</p>
+<div class="cell tag_raises-exception docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Verbosity</span>
+
+<span class="nd">@settings</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+<span class="nd">@given</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="c1"># comment &amp; uncomment this line to invalidate the hypothesis cache.</span>
+    <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+
+<span class="n">test_div_property</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trying example: test_div_property(
+    x=0,
+    y=0,
+)
+Trying example: test_div_property(
+    x=0.0,
+    y=0,
+)
+Trying example: test_div_property(
+    x=2.220446049250313e-16,
+    y=0,
+)
+Trying example: test_div_property(
+    x=-7658,
+    y=0,
+)
+Trying example: test_div_property(
+    x=-8.068738610735183e+63,
+    y=0,
+)
+Trying example: test_div_property(
+    x=-6.753279163496331e+16,
+    y=0,
+)
+Trying example: test_div_property(
+    x=38,
+    y=2.086046650819329e-132,
+)
+Trying example: test_div_property(
+    x=29754,
+    y=4,
+)
+Trying example: test_div_property(
+    x=24783,
+    y=-420264230,
+)
+Trying example: test_div_property(
+    x=-1.2124046867423162e-101,
+    y=14076,
+)
+Trying example: test_div_property(
+    x=-26,
+    y=16195,
+)
+Trying example: test_div_property(
+    x=-7.382336043201933e-272,
+    y=2_692_603_946_087_437_967,
+)
+Trying example: test_div_property(
+    x=-1.842098636085868e+16,
+    y=-32314,
+)
+Trying example: test_div_property(
+    x=29045,
+    y=-2_001_233_375,
+)
+Trying example: test_div_property(
+    x=18,
+    y=-5885066336975300.0,
+)
+Trying example: test_div_property(
+    x=7277920628992536.0,
+    y=-8571323423208478.0,
+)
+Trying example: test_div_property(
+    x=7277920628992536.0,
+    y=7277920628992536.0,
+)
+Trying example: test_div_property(
+    x=-75,
+    y=-2.5329626842103436e+16,
+)
+Trying example: test_div_property(
+    x=0.0,
+    y=-2.5329626842103436e+16,
+)
+Trying example: test_div_property(
+    x=-2.5329626842103436e+16,
+    y=-2.5329626842103436e+16,
+)
+Trying example: test_div_property(
+    x=79,
+    y=-85,
+)
+Trying example: test_div_property(
+    x=-85,
+    y=-85,
+)
+Trying example: test_div_property(
+    x=520501743,
+    y=4.634958721768219e+16,
+)
+Trying example: test_div_property(
+    x=4.634958721768219e+16,
+    y=4.634958721768219e+16,
+)
+Trying example: test_div_property(
+    x=6.506895718169253e+16,
+    y=2.1606565086673316e+16,
+)
+Trying example: test_div_property(
+    x=6.506895718169253e+16,
+    y=6.506895718169253e+16,
+)
+Trying example: test_div_property(
+    x=1.6122976437473211e-12,
+    y=-5e-324,
+)
+Traceback (most recent call last):
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/4209601294.py&quot;, line 8, in test_div_property
+    div(x, y)
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/249070609.py&quot;, line 6, in div
+    assert res * y == x     # Q    (postcondition)
+           ^^^^^^^^^^^^
+AssertionError
+
+Trying example: test_div_property(
+    x=-5e-324,
+    y=-5e-324,
+)
+Trying example: test_div_property(
+    x=1.6122976437473211e-12,
+    y=1.6122976437473211e-12,
+)
+Trying example: test_div_property(
+    x=-1.7976931348623157e+308,
+    y=7436674208527465.0,
+)
+Trying example: test_div_property(
+    x=-1.7976931348623157e+308,
+    y=-1.7976931348623157e+308,
+)
+Trying example: test_div_property(
+    x=-3.9641516231600954e-80,
+    y=126,
+)
+Trying example: test_div_property(
+    x=-3.9641516231600954e-80,
+    y=-3.9641516231600954e-80,
+)
+Trying example: test_div_property(
+    x=779,
+    y=16567,
+)
+Trying example: test_div_property(
+    x=16567,
+    y=16567,
+)
+Trying example: test_div_property(
+    x=1.612062017331883e-127,
+    y=-2515,
+)
+Trying example: test_div_property(
+    x=1.612062017331883e-127,
+    y=0.0,
+)
+Trying example: test_div_property(
+    x=1.612062017331883e-127,
+    y=1.612062017331883e-127,
+)
+Trying example: test_div_property(
+    x=1589112762884609.0,
+    y=1e-05,
+)
+Trying example: test_div_property(
+    x=1e-05,
+    y=1e-05,
+)
+Trying example: test_div_property(
+    x=21881,
+    y=0.99999,
+)
+Trying example: test_div_property(
+    x=0.0,
+    y=0.99999,
+)
+Trying example: test_div_property(
+    x=0.0,
+    y=0.0,
+)
+Trying example: test_div_property(
+    x=0.99999,
+    y=0.99999,
+)
+Trying example: test_div_property(
+    x=121,
+    y=54,
+)
+Traceback (most recent call last):
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/4209601294.py&quot;, line 8, in test_div_property
+    div(x, y)
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/249070609.py&quot;, line 6, in div
+    assert res * y == x     # Q    (postcondition)
+           ^^^^^^^^^^^^
+AssertionError
+
+Trying example: test_div_property(
+    x=121,
+    y=121,
+)
+Trying example: test_div_property(
+    x=54,
+    y=54,
+)
+Trying example: test_div_property(
+    x=23224,
+    y=1.4270812701223544e+16,
+)
+Trying example: test_div_property(
+    x=0.0,
+    y=1.4270812701223544e+16,
+)
+Trying example: test_div_property(
+    x=1.4270812701223544e+16,
+    y=1.4270812701223544e+16,
+)
+Trying example: test_div_property(
+    x=-22464,
+    y=-1.192092896e-07,
+)
+Trying example: test_div_property(
+    x=-22464,
+    y=0,
+)
+Trying example: test_div_property(
+    x=0.0,
+    y=-1.192092896e-07,
+)
+Trying example: test_div_property(
+    x=-1.192092896e-07,
+    y=-1.192092896e-07,
+)
+Trying example: test_div_property(
+    x=121,
+    y=54,
+)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/4209601294.py&quot;, line 8, in test_div_property
+    div(x, y)
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/249070609.py&quot;, line 6, in div
+    assert res * y == x     # Q    (postcondition)
+           ^^^^^^^^^^^^
+AssertionError
+
+Trying example: test_div_property(
+    x=121,
+    y=0,
+)
+Trying example: test_div_property(
+    x=0,
+    y=54,
+)
+Trying example: test_div_property(
+    x=54,
+    y=121,
+)
+Trying example: test_div_property(
+    x=121,
+    y=1,
+)
+Trying example: test_div_property(
+    x=121,
+    y=22,
+)
+Trying example: test_div_property(
+    x=121,
+    y=27,
+)
+Traceback (most recent call last):
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/4209601294.py&quot;, line 8, in test_div_property
+    div(x, y)
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/249070609.py&quot;, line 6, in div
+    assert res * y == x     # Q    (postcondition)
+           ^^^^^^^^^^^^
+AssertionError
+
+Trying example: test_div_property(
+    x=121,
+    y=13,
+)
+Traceback (most recent call last):
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/4209601294.py&quot;, line 8, in test_div_property
+    div(x, y)
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/249070609.py&quot;, line 6, in div
+    assert res * y == x     # Q    (postcondition)
+           ^^^^^^^^^^^^
+AssertionError
+
+Trying example: test_div_property(
+    x=121,
+    y=6,
+)
+Trying example: test_div_property(
+    x=121,
+    y=11,
+)
+Trying example: test_div_property(
+    x=121,
+    y=12,
+)
+Trying example: test_div_property(
+    x=121,
+    y=-1,
+)
+Trying example: test_div_property(
+    x=121,
+    y=5,
+)
+Trying example: test_div_property(
+    x=121,
+    y=-5,
+)
+Trying example: test_div_property(
+    x=121,
+    y=-6,
+)
+Trying example: test_div_property(
+    x=121,
+    y=-11,
+)
+Trying example: test_div_property(
+    x=121,
+    y=-12,
+)
+Trying example: test_div_property(
+    x=0,
+    y=13,
+)
+Trying example: test_div_property(
+    x=1,
+    y=13,
+)
+Trying example: test_div_property(
+    x=57,
+    y=13,
+)
+Traceback (most recent call last):
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/4209601294.py&quot;, line 8, in test_div_property
+    div(x, y)
+  File &quot;/var/folders/f1/1h2dc57x5yg621dmd5y0gx1w0000gp/T/ipykernel_60913/249070609.py&quot;, line 6, in div
+    assert res * y == x     # Q    (postcondition)
+           ^^^^^^^^^^^^
+AssertionError
+
+Trying example: test_div_property(
+    x=44,
+    y=0,
+)
+Trying example: test_div_property(
+    x=45,
+    y=1,
+)
+Trying example: test_div_property(
+    x=49,
+    y=5,
+)
+Trying example: test_div_property(
+    x=50,
+    y=6,
+)
+Trying example: test_div_property(
+    x=55,
+    y=11,
+)
+Trying example: test_div_property(
+    x=56,
+    y=12,
+)
+Trying example: test_div_property(
+    x=-44,
+    y=0,
+)
+Trying example: test_div_property(
+    x=-45,
+    y=-1,
+)
+Trying example: test_div_property(
+    x=-49,
+    y=-5,
+)
+Trying example: test_div_property(
+    x=-50,
+    y=-6,
+)
+Trying example: test_div_property(
+    x=-55,
+    y=-11,
+)
+Trying example: test_div_property(
+    x=-56,
+    y=-12,
+)
+Trying example: test_div_property(
+    x=25,
+    y=13,
+)
+Trying example: test_div_property(
+    x=28,
+    y=13,
+)
+Trying example: test_div_property(
+    x=55,
+    y=13,
+)
+Trying example: test_div_property(
+    x=56,
+    y=13,
+)
+Trying example: test_div_property(
+    x=-1,
+    y=13,
+)
+Trying example: test_div_property(
+    x=-25,
+    y=13,
+)
+Trying example: test_div_property(
+    x=-28,
+    y=13,
+)
+Trying example: test_div_property(
+    x=-55,
+    y=13,
+)
+Trying example: test_div_property(
+    x=-56,
+    y=13,
+)
+Trying example: test_div_property(
+    x=57,
+    y=0,
+)
+Trying example: test_div_property(
+    x=57,
+    y=1,
+)
+Trying example: test_div_property(
+    x=57,
+    y=5,
+)
+Trying example: test_div_property(
+    x=57,
+    y=6,
+)
+Trying example: test_div_property(
+    x=57,
+    y=11,
+)
+Trying example: test_div_property(
+    x=57,
+    y=12,
+)
+Trying example: test_div_property(
+    x=57,
+    y=-1,
+)
+Trying example: test_div_property(
+    x=57,
+    y=-5,
+)
+Trying example: test_div_property(
+    x=57,
+    y=-6,
+)
+Trying example: test_div_property(
+    x=57,
+    y=-11,
+)
+Trying example: test_div_property(
+    x=57,
+    y=-12,
+)
+Trying example: test_div_property(
+    x=56,
+    y=14,
+)
+Trying example: test_div_property(
+    x=56,
+    y=0.0,
+)
+Trying example: test_div_property(
+    x=13,
+    y=57,
+)
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AssertionError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">line</span> <span class="mi">11</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">11</span> <span class="n">test_div_property</span><span class="p">()</span>
+
+<span class="nn">Cell In[12], line 4,</span> in <span class="ni">test_div_property</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span><span class="w"> </span><span class="nn">hypothesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Verbosity</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="nd">@settings</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">4</span> <span class="nd">@given</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="c1"># comment &amp; uncomment this line to invalidate the hypothesis cache.</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="p">[</span><span class="o">...</span> <span class="n">skipping</span> <span class="n">hidden</span> <span class="mi">1</span> <span class="n">frame</span><span class="p">]</span>
+
+<span class="nn">Cell In[12], line 8,</span> in <span class="ni">test_div_property</span><span class="nt">(x, y)</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="nd">@settings</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="nd">@given</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">numbers</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_div_property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="c1"># comment &amp; uncomment this line to invalidate the hypothesis cache.</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">assume</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">8</span>     <span class="n">div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="nn">Cell In[1], line 6,</span> in <span class="ni">div</span><span class="nt">(x, y)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="k">assert</span> <span class="n">y</span> <span class="o">!=</span> <span class="mi">0</span>           <span class="c1"># P    (precondition)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">res</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>             <span class="c1"># code (implementation)</span>
+<span class="ne">----&gt; </span><span class="mi">6</span> <span class="k">assert</span> <span class="n">res</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span>     <span class="c1"># Q    (postcondition)</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="k">return</span> <span class="n">res</span>
+
+<span class="ne">AssertionError</span>: 
+<span class="n">Falsifying</span> <span class="n">example</span><span class="p">:</span> <span class="n">test_div_property</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="mi">57</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="back-to-the-heat-equation-solver">
+<h2>Back to the Heat Equation Solver<a class="headerlink" href="#back-to-the-heat-equation-solver" title="Link to this heading">#</a></h2>
+<p>Now let’s use Hypothesis to test our heat equation solver.</p>
+<p>We’ll focus on <em>invariants</em>. These invariants are mathematical properties satisfied by the solution to the equation.</p>
+<ul class="simple">
+<li><p><strong>Conservation:</strong> total heat stays constant.</p></li>
+<li><p><strong>Telescoping property:</strong> The sum of the divergence over all cells equals the net flux through the boundaries.</p></li>
+<li><p><strong>Symmetry preservation:</strong> symmetric initial states stay symmetric under symmetric BCs.</p></li>
+<li><p><strong>Monotonicity:</strong> non-decreasing initial states remain non-decreasing.</p></li>
+</ul>
 <section id="scaffolding">
 <h3>Scaffolding<a class="headerlink" href="#scaffolding" title="Link to this heading">#</a></h3>
 <p>Before encoding our properties, we need to set up some scaffolding to facilitate testing.</p>
 <p>First, let’s define some strategies for generating <em>sane</em> floating-point numbers for our tests:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">floats_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=-</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">kappa_st</span>  <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">dx_st</span>     <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">dt_st</span>     <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">floats_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span>
+    <span class="n">min_value</span><span class="o">=-</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">kappa_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span>
+    <span class="n">min_value</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">dx_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">dt_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -811,18 +1397,31 @@ as well as a strategy for generating a tuple of boundary conditions.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mesh sizes</span>
 <span class="n">n_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
 
+<span class="n">fluxes_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
 <span class="c1"># Boundary faces (qL, qR)</span>
-<span class="n">bc_st</span><span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tuples</span><span class="p">(</span>
-    <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-    <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-<span class="p">)</span>
+<span class="c1"># generate 2 element tuples where each element is drawn from the strategy of floats</span>
+<span class="n">bc_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tuples</span><span class="p">(</span><span class="n">fluxes_st</span><span class="p">,</span> <span class="n">fluxes_st</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Remember you can use <code class="docutils literal notranslate"><span class="pre">.example</span></code> to check what’s generated.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bc_st</span><span class="o">.</span><span class="n">example</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.401298464324817e-45, 94.4568636837738)
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="telescoping-property">
-<h3>Telescoping Property<a class="headerlink" href="#telescoping-property" title="Link to this heading">#</a></h3>
+<section id="telescoping-property-what-goes-out-one-cell-must-go-in-the-next-cell">
+<h3>Telescoping Property : “what goes out one cell must go in the next cell”<a class="headerlink" href="#telescoping-property-what-goes-out-one-cell-must-go-in-the-next-cell" title="Link to this heading">#</a></h3>
 <p>Before testing overall conservation, let’s start one level deeper with the local flux balance
 that makes conservation possible.</p>
 <p>In finite-volume discretizations, fluxes between neighboring cells telescope:
@@ -837,31 +1436,38 @@ in other words, the total divergence equals the net flux through the boundaries:
 <p>Recall the encoding of this property:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">telescoping</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">heat1d</span><span class="w"> </span><span class="kn">import</span> <span class="n">vec</span><span class="p">,</span> <span class="n">Mesh</span><span class="p">,</span> <span class="n">step_heat_eqn</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">telescoping</span><span class="p">(</span><span class="n">divF</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the finite volume telescoping property.&quot;&quot;&quot;</span>
-    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
-    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">total_divergence</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">divF</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">boundary_flux</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">F</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">total_divergence</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">boundary_flux</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p>We are now ready to implement the symmetry property test using Hypothesis:</p>
-</section>
 <section id="exercise">
-<h3>Exercise:<a class="headerlink" href="#exercise" title="Link to this heading">#</a></h3>
+<h4>Exercise:<a class="headerlink" href="#exercise" title="Link to this heading">#</a></h4>
 <p>Below is the Hypothesis test for the telescoping property.
 Insert the missing assumption(s) in the below test to ensure valid inputs for telescoping property using the <code class="docutils literal notranslate"><span class="pre">assume</span></code> function:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@given</span><span class="p">(</span>
-    <span class="n">divF</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">lists</span><span class="p">(</span><span class="n">floats_st</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span>
-    <span class="n">F</span>     <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">lists</span><span class="p">(</span><span class="n">floats_st</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">21</span><span class="p">),</span>
-    <span class="n">dx</span>    <span class="o">=</span> <span class="n">dx_st</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">heat1d</span>
+
+<span class="nd">@settings</span><span class="p">(</span><span class="n">deadline</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="nd">@given</span><span class="p">(</span>
+    <span class="n">F</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">lists</span><span class="p">(</span><span class="n">floats_st</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">21</span><span class="p">),</span>
+    <span class="n">dx</span><span class="o">=</span><span class="n">dx_st</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">test_telescoping_property</span><span class="p">(</span><span class="n">divF</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-    <span class="c1"># todo: assume(...)</span>
-    <span class="n">divergence</span><span class="p">(</span><span class="n">divF</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_telescoping_property</span><span class="p">(</span><span class="n">F</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Property: for randomly generated vector `F` &amp; spacing `dx`,</span>
+<span class="sd">    the divergence divF using the function `divergence`,</span>
+<span class="sd">    must satisfy the telescoping property.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># todo: compute divF using `heat1d.divergence`</span>
     <span class="k">assert</span> <span class="n">telescoping</span><span class="p">(</span><span class="n">divF</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">dx</span><span class="p">),</span> <span class="s2">&quot;Telescoping property violated&quot;</span>
 </pre></div>
 </div>
@@ -869,18 +1475,21 @@ Insert the missing assumption(s) in the below test to ensure valid inputs for te
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#test_telescoping_property()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># test_telescoping_property()</span>
 </pre></div>
 </div>
 </div>
 </div>
+</section>
 </section>
 <section id="conservation">
 <h3>Conservation<a class="headerlink" href="#conservation" title="Link to this heading">#</a></h3>
 <p>Recall the conservation property specification:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_old</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">u_new</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">approx</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">heat_is_conserved</span><span class="p">(</span><span class="n">u_old</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">u_new</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="n">vec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if heat is conserved.&quot;&quot;&quot;</span>
     <span class="n">lhs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u_new</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
     <span class="n">rhs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u_old</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -889,45 +1498,29 @@ Insert the missing assumption(s) in the below test to ensure valid inputs for te
 </div>
 </div>
 </div>
-</section>
 <section id="id1">
-<h3>Exercise:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<h4>Exercise:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
 <p>Similar to how we wrote a test function for the telescoping property, we can now implement
 a property-based test for conservation using Hypothesis. Write a property-based test function
 named <code class="docutils literal notranslate"><span class="pre">test_conservation_property</span></code> that checks if heat is conserved under arbitrary boundary conditions
 at one time step.
 Follow up: If this test passes, can we be certain that our solver conserves heat over multiple time steps? Why or why not?</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: Implement test_conservation_property using Hypothesis</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Answer:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@given</span><span class="p">(</span>
-    <span class="n">u_old</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">lists</span><span class="p">(</span><span class="n">floats_st</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span>
-    <span class="n">kappa</span> <span class="o">=</span> <span class="n">kappa_st</span><span class="p">,</span>
-    <span class="n">dt</span>    <span class="o">=</span> <span class="n">dt_st</span><span class="p">,</span>
-    <span class="n">dx</span>    <span class="o">=</span> <span class="n">dx_st</span><span class="p">,</span>
-    <span class="n">bc</span>    <span class="o">=</span> <span class="n">bc_st</span>
-<span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">test_conservation_property</span><span class="p">(</span><span class="n">u_old</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]):</span>
-
+<p>Start with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_conservation_property</span><span class="p">(</span>
+    <span class="n">u_old</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bc</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+<span class="p">):</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">u_old</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">))</span>
 
-    <span class="n">step_heat_eqn</span><span class="p">(</span>
-        <span class="n">u_inout</span><span class="o">=</span><span class="n">u</span><span class="p">,</span>
-        <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span>
-        <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span>
-        <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span>
-        <span class="n">bc</span><span class="o">=</span><span class="n">bc</span>
-    <span class="p">)</span>
+    <span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u_inout</span><span class="o">=</span><span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="n">bc</span><span class="p">)</span>
 
     <span class="k">assert</span> <span class="n">heat_is_conserved</span><span class="p">(</span><span class="n">u_old</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">bc</span><span class="p">),</span> <span class="s2">&quot;Conservation property violated&quot;</span>
+</pre></div>
+</div>
+<p>and write out a <code class="docutils literal notranslate"><span class="pre">given</span></code> decorator that tests the conservation property. You’ll need to write a strategy that generates the initial state <code class="docutils literal notranslate"><span class="pre">u_old:</span> <span class="pre">vec</span></code>  as a list of floats.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: Implement test_conservation_property using Hypothesis</span>
 </pre></div>
 </div>
 </div>
@@ -945,6 +1538,7 @@ spatial and temporal discretizations can accumulate over time, breaking perfect 
 So, while the property shows the solver is formally conservative per step, true long-term
 conservation depends on floating-point precision and numerical stability.</p>
 </section>
+</section>
 <section id="symmetry">
 <h3>Symmetry<a class="headerlink" href="#symmetry" title="Link to this heading">#</a></h3>
 <p>We can test the symmetry property of the heat equation solver by checking if the solution remains
@@ -952,14 +1546,24 @@ symmetric when the initial conditions are mirrored and boundary conditions are a
 To check this property, let’s first define a helper function to generate symmetric initial conditions.</p>
 <p><strong>Feature Spotlight:</strong> The <code class="docutils literal notranslate"><span class="pre">st.builds()</span></code> method can be used to build complex data structures by
 combining simpler strategies. Below, we use it to create symmetric arrays.</p>
+<p>Notice how the strategy always generates symmetric lists.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">symmetric_field</span><span class="p">(</span><span class="n">min_n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_n</span><span class="o">=</span><span class="mi">31</span><span class="p">):</span>
-    <span class="c1"># Produce palindromic arrays (odd length preferred for strict central symmetry)</span>
+    <span class="c1"># Produce palindromic arrays</span>
+    <span class="c1"># (odd length preferred for strict central symmetry)</span>
     <span class="c1"># Build half then mirror</span>
-    <span class="n">half</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">lists</span><span class="p">(</span><span class="n">floats_st</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="p">(</span><span class="n">min_n</span><span class="o">//</span><span class="mi">2</span><span class="p">),</span> <span class="n">max_size</span><span class="o">=</span><span class="p">(</span><span class="n">max_n</span><span class="o">//</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">lists</span><span class="p">(</span><span class="n">floats_st</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="p">(</span><span class="n">min_n</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span> <span class="n">max_size</span><span class="o">=</span><span class="p">(</span><span class="n">max_n</span> <span class="o">//</span> <span class="mi">2</span><span class="p">))</span>
     <span class="n">center</span> <span class="o">=</span> <span class="n">floats_st</span>
     <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">builds</span><span class="p">(</span><span class="k">lambda</span> <span class="n">h</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">h</span> <span class="o">+</span> <span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">h</span><span class="p">)),</span> <span class="n">half</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>
+
+
+<span class="n">symmetric_field</span><span class="p">()</span><span class="o">.</span><span class="n">example</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.0, 275.01402811786534, 0.0]
 </pre></div>
 </div>
 </div>
@@ -969,7 +1573,8 @@ combining simpler strategies. Below, we use it to create symmetric arrays.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@given</span><span class="p">(</span><span class="n">symmetric_field</span><span class="p">(),</span> <span class="n">dx_st</span><span class="p">,</span> <span class="n">kappa_st</span><span class="p">,</span> <span class="n">dt_st</span><span class="p">,</span> <span class="n">floats_st</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_symmetry_preservation</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span>
-    <span class="n">assume</span><span class="p">(</span><span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># keep a clear center</span>
+    <span class="c1"># This invariant is satisfied by the generator</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span>  <span class="c1"># keep a clear center</span>
 
     <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
 
@@ -977,8 +1582,7 @@ combining simpler strategies. Below, we use it to create symmetric arrays.</p>
     <span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="o">=</span><span class="p">[</span><span class="n">q</span><span class="p">,</span> <span class="o">-</span><span class="n">q</span><span class="p">])</span>
 
     <span class="c1"># palindromic within FP tolerance</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">l</span> <span class="o">==</span> <span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">u</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
@@ -999,7 +1603,8 @@ combining simpler strategies. Below, we use it to create symmetric arrays.</p>
 </section>
 <section id="monotonicity">
 <h3>Monotonicity<a class="headerlink" href="#monotonicity" title="Link to this heading">#</a></h3>
-<p>Diffusion smooths. One way to express this intuition discretely is through monotonicity preservation:
+<p>Diffusion smooths.</p>
+<p>One way to express this intuition discretely is through monotonicity preservation:
 if a temperature profile is nondecreasing at the start of a step, it should remain so after the update.
 In other words, diffusion should not create new inversions.</p>
 <p>This property is a discrete analogue of the maximum principle:
@@ -1010,27 +1615,35 @@ We generate random nondecreasing initial profiles, advance one step, and check t
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">is_monotone_nondecreasing</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">vec</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the list u is non-decreasing within a tolerance.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">atol</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">atol</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">nondecreasing_lists</span><span class="p">(</span><span class="n">min_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate non-decreasing lists of floats strategy.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Uses `.map` to sort the list&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">lists</span><span class="p">(</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">10.0</span><span class="p">),</span> <span class="n">min_size</span><span class="o">=</span><span class="n">min_size</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="n">max_size</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">nondecreasing_lists_alternate</span><span class="p">(</span><span class="n">min_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate non-decreasing lists of floats strategy.</span>
+
+<span class="sd">    Uses st.builds and a cumulative sum to build a non-decreasing list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">deltas</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">lists</span><span class="p">(</span>
-        <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">10.0</span><span class="p">),</span>
-        <span class="n">min_size</span><span class="o">=</span><span class="n">min_size</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="n">max_size</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">10.0</span><span class="p">),</span> <span class="n">min_size</span><span class="o">=</span><span class="n">min_size</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="n">max_size</span>
     <span class="p">)</span>
     <span class="n">base</span> <span class="o">=</span> <span class="n">floats_st</span>
-    <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">builds</span><span class="p">(</span><span class="k">lambda</span> <span class="n">b</span><span class="p">,</span> <span class="n">ds</span><span class="p">:</span> <span class="p">[</span><span class="n">b</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ds</span><span class="p">[:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ds</span><span class="p">))],</span> <span class="n">base</span><span class="p">,</span> <span class="n">deltas</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">builds</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">b</span><span class="p">,</span> <span class="n">ds</span><span class="p">:</span> <span class="p">[</span><span class="n">b</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ds</span><span class="p">[:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ds</span><span class="p">))],</span> <span class="n">base</span><span class="p">,</span> <span class="n">deltas</span>
+    <span class="p">)</span>
 
-<span class="nd">@given</span><span class="p">(</span>
-    <span class="n">u0</span>  <span class="o">=</span> <span class="n">nondecreasing_lists</span><span class="p">(),</span>
-    <span class="n">dt</span>  <span class="o">=</span> <span class="n">dt_st</span><span class="p">,</span>
-    <span class="n">dx</span>  <span class="o">=</span> <span class="n">dx_st</span><span class="p">,</span>
-    <span class="n">kappa</span> <span class="o">=</span> <span class="n">kappa_st</span>
-<span class="p">)</span>
+
+<span class="nd">@given</span><span class="p">(</span><span class="n">u0</span><span class="o">=</span><span class="n">nondecreasing_lists</span><span class="p">(),</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt_st</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx_st</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa_st</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_monotonicity_preserved_one_step</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">kappa</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span>
     <span class="n">assume</span><span class="p">(</span><span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">assume</span><span class="p">(</span><span class="n">kappa</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="p">(</span><span class="n">dx</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># stability condition</span>
+    <span class="n">assume</span><span class="p">(</span><span class="n">kappa</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># stability condition</span>
     <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
     <span class="n">bc</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># insulated</span>
 
@@ -1056,6 +1669,121 @@ We generate random nondecreasing initial profiles, advance one step, and check t
 </div>
 </div>
 </section>
+<section id="beware-of-assume">
+<h3>Beware of <code class="docutils literal notranslate"><span class="pre">assume</span></code><a class="headerlink" href="#beware-of-assume" title="Link to this heading">#</a></h3>
+<p>Avoid <a class="reference external" href="https://hypothesis.readthedocs.io/en/latest/tutorial/adapting-strategies.html#assume-vs-filter">assume</a> if you can. It can be an inefficient way to explore the state space.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">assume</span><span class="p">(</span><span class="n">kappa</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>since <code class="docutils literal notranslate"><span class="pre">kappa</span></code>, <code class="docutils literal notranslate"><span class="pre">dt</span></code> and <code class="docutils literal notranslate"><span class="pre">dx</span></code> are independently sampled, a large fraction of the search space may be invalid.</p>
+<p>Instead adapt your generators to satisfy any necessary preconditions. Next we will discuss some more advanced strategy creation methods.</p>
+</section>
+</section>
+<section id="advanced-test-case-generation-with-st-composite">
+<h2>Advanced test-case generation with <code class="docutils literal notranslate"><span class="pre">st.composite</span></code><a class="headerlink" href="#advanced-test-case-generation-with-st-composite" title="Link to this heading">#</a></h2>
+<p>Very frequently, we will want to combine multiple strategies to generate complex inputs that satisfy certain conditions.</p>
+<p>for example: <code class="docutils literal notranslate"><span class="pre">assume(kappa</span> <span class="pre">*</span> <span class="pre">dt</span> <span class="pre">/</span> <span class="pre">(dx**2)</span> <span class="pre">&lt;</span> <span class="pre">0.5)</span>&#160; <span class="pre">#</span> <span class="pre">stability</span> <span class="pre">condition</span></code></p>
+<p>There are two solutions here, both of which involve you drawing explicit values and making decisions or controlling further draws based on those values.</p>
+<ol class="arabic simple">
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">&#64;given(data=st.data,</span> <span class="pre">...)</span></code> and then <code class="docutils literal notranslate"><span class="pre">data.draw</span></code> in the test</p></li>
+<li><p>Using the <code class="docutils literal notranslate"><span class="pre">st.composite</span></code> decorator to define a composite strategy.</p></li>
+</ol>
+<section id="st-data">
+<h3><code class="docutils literal notranslate"><span class="pre">st.data()</span></code><a class="headerlink" href="#st-data" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">dts</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span>
+        <span class="n">min_value</span><span class="o">=</span><span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="n">max_value</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+
+<span class="nd">@given</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">N</span><span class="o">=</span><span class="n">n_st</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx_st</span><span class="p">,</span> <span class="n">kappa</span><span class="o">=</span><span class="n">kappa_st</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_monotonicity_preserved_one_step_v2</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">kappa</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+    
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+
+    <span class="c1"># Now we ensure that we create initial conditions of the right size!</span>
+    <span class="n">u0</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">nondecreasing_lists</span><span class="p">(</span><span class="n">min_size</span><span class="o">=</span><span class="n">N</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="n">N</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">u0</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span> <span class="o">==</span> <span class="n">N</span>
+
+    <span class="c1"># Now we ensure that we pick a `dt` that always satisfies the stability condition</span>
+    <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">dts</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">0.49</span> <span class="o">*</span> <span class="n">dx</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">kappa</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># stability condition is always satisfied by the `max_value` passed to `dts` strategy</span>
+    <span class="k">assert</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">0.5</span>  
+    <span class="n">bc</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># insulated</span>
+
+    <span class="n">u</span> <span class="o">=</span> <span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">step_heat_eqn</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">is_monotone_nondecreasing</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="s2">&quot;Monotonicity violated&quot;</span>
+
+
+<span class="n">test_monotonicity_preserved_one_step_v2</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test completed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test completed
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="st-composite">
+<h3><code class="docutils literal notranslate"><span class="pre">st.composite()</span></code><a class="headerlink" href="#st-composite" title="Link to this heading">#</a></h3>
+<p>This is a little more convoluted and not a great fit for our current problem but <code class="docutils literal notranslate"><span class="pre">composite</span></code> is extremely useful in real-world use-cases. The approach is very similar; the most important difference is that <code class="docutils literal notranslate"><span class="pre">composite</span></code> let’s you build strategies that take strategies as inputs (“higher-order strategies”)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dxs</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">st</span><span class="o">.</span><span class="n">floats</span><span class="p">(</span>
+        <span class="n">min_value</span><span class="o">=</span><span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="n">max_value</span><span class="p">,</span> <span class="n">allow_nan</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_infinity</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+
+<span class="nd">@st</span><span class="o">.</span><span class="n">composite</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">meshes</span><span class="p">(</span><span class="n">draw</span><span class="p">:</span> <span class="n">st</span><span class="o">.</span><span class="n">DrawFn</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">kappas</span><span class="o">=</span><span class="n">kappa_st</span><span class="p">,</span> <span class="n">dts</span><span class="o">=</span><span class="n">dts</span><span class="p">,</span> <span class="n">dxs</span><span class="o">=</span><span class="n">dxs</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="n">n_st</span><span class="p">):</span>
+    <span class="c1"># `draw` is a function that lets you draw a concrete value</span>
+    <span class="c1"># from a strategy like so:</span>
+    <span class="n">kappa</span> <span class="o">=</span> <span class="n">draw</span><span class="p">(</span><span class="n">kappas</span><span class="p">)</span>
+
+    <span class="n">MIN_DT</span> <span class="o">=</span> <span class="mf">1e-6</span>
+
+    <span class="c1"># now we pick a dx, dt such that the stability condition is *always* satisfied</span>
+    <span class="c1"># 10% fudge factor to account for floating point resolution near MIN_DT</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">draw</span><span class="p">(</span><span class="n">dxs</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mi">1</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.1</span> <span class="o">*</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">MIN_DT</span><span class="p">)))</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">draw</span><span class="p">(</span><span class="n">dts</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="n">MIN_DT</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">0.49</span> <span class="o">*</span> <span class="n">dx</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">kappa</span><span class="p">))</span>
+
+    <span class="c1"># assert the postcondition</span>
+    <span class="c1"># (always test your strategies!)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">kappa</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># the need to return multiple values here suggests </span>
+    <span class="c1"># this approach isn&#39;t a good for for this particular problem.</span>
+    <span class="k">return</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">Mesh</span><span class="p">(</span><span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">draw</span><span class="p">(</span><span class="n">ns</span><span class="p">))</span>
+
+
+<span class="n">meshes</span><span class="p">()</span><span class="o">.</span><span class="n">example</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2.0896231194763653, 1.7334953900394796, Mesh(dx=3.0714195825772723, N=12))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here is <a class="reference external" href="https://github.com/zarr-developers/zarr-python/blob/eb1b6e869115925f7b653e60bd542abd410a9a4e/src/zarr/testing/strategies.py#L237-L249">an example of a complex strategy</a> to generate Zarr arrays. This strategy is <em>public API</em> — <code class="docutils literal notranslate"><span class="pre">composite</span></code> is nice for building backward-compatible public strategies.</p>
+</section>
 </section>
 <section id="what-we-just-did">
 <h2>What we just did<a class="headerlink" href="#what-we-just-did" title="Link to this heading">#</a></h2>
@@ -1067,12 +1795,32 @@ We generate random nondecreasing initial profiles, advance one step, and check t
 <li><p>This directly operationalizes the scientific method for software: state a hypothesis (property), attempt refutation (generation + shrinking), refine code or specs.</p></li>
 </ul>
 </section>
+<section id="some-lessons-to-take-away">
+<h2>Some lessons to take away<a class="headerlink" href="#some-lessons-to-take-away" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Property tests don’t replace other testing strategies.</p></li>
+<li><p>Property tests pseudo-randomly sample the input search space. This means it is upon you to narrow the search space to “interesting” regions.</p></li>
+<li><p>Simple properties are <strong>really</strong> effective.</p></li>
+<li><p>Property testing suites are effectively an <strong>empirical specification</strong> of your program’s behaviour.</p></li>
+<li><p>Your unit test is most likely a property test in disguise. Generalize them!</p></li>
+<li><p>When you find a bug, construct a property test to catch it!</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>John Hughes. How to specify it! <a class="reference external" href="https://research.chalmers.se/publication/517894/file/517894_Fulltext.pdf">[Paper]</a>, <a class="reference external" href="https://www.youtube.com/watch?v=G0NUOst-53U">[Talk]</a> ← highly recommended!</p></li>
+<li><p><a class="reference external" href="https://www.hillelwayne.com/post/contract-examples/">Hillel Wayne. Finding property tests</a></p></li>
+<li><p><a class="reference external" href="https://www.hillelwayne.com/post/cleverness/">https://www.hillelwayne.com/post/cleverness/</a></p></li>
+<li><p><a class="reference external" href="https://fsharpforfunandprofit.com/posts/property-based-testing-2/#categories-for-properties">https://fsharpforfunandprofit.com/posts/property-based-testing-2/#categories-for-properties</a></p></li>
+</ol>
+</section>
 <section id="looking-ahead">
 <h2>Looking Ahead<a class="headerlink" href="#looking-ahead" title="Link to this heading">#</a></h2>
 <p>In Chapter 5, we’ll step across the next rung of the rigor ladder: theorem proving—automating reasoning over all inputs within a finite domain and turning some of these properties into machine-checked contracts.</p>
 <hr class="docutils" />
 <p>R3Sw tutorial by Alper Altuntas (NSF NCAR). Guest lecture by <strong>Deepak Cherian</strong> (Earthmover). Sponsored by the BSSw Fellowship Program. © 2025.</p>
-<p>Cite as: Alper Altuntas, Philip Zucker, Deepak Cherian, Adrianna Foster, Manish Venumuddula, and Helen Kershaw. (2025). <em>“Rigor and Reasoning in Research Software (R3Sw) Tutorial.”</em> <a class="reference external" href="https://www.alperaltuntas.com/R3Sw">https://www.alperaltuntas.com/R3Sw</a></p>
+<p>Cite as: Alper Altuntas, Deepak Cherian, Adrianna Foster, Manish Venumuddula, and Helen Kershaw. (2025). <em>“Rigor and Reasoning in Research Software (R3Sw) Tutorial.”</em> Retrieved from <a class="reference external" href="https://www.alperaltuntas.com/R3Sw">https://www.alperaltuntas.com/R3Sw</a></p>
 </section>
 </section>
 
@@ -1120,7 +1868,7 @@ We generate random nondecreasing initial profiles, advance one step, and check t
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Chapter 5: Theorem Proving</p>
+        <p class="prev-next-title">Chapter 5: Bounded Formal Verification</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1147,21 +1895,41 @@ We generate random nondecreasing initial profiles, advance one step, and check t
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-hypothesis-library">The <code class="docutils literal notranslate"><span class="pre">Hypothesis</span></code> library</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-to-the-rescue">Hypothesis to the rescue</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shrinking">Shrinking</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-strategies">Combining strategies</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#controlling-how-many-examples-are-generated">Controlling how many examples are generated</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-your-own-strategies">Making your own strategies</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-strategies">Combining strategies</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#other-approaches">Other approaches</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#controlling-hypothesis">Controlling Hypothesis</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-many-examples-are-generated">How many examples are generated</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#observability">Observability</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#back-to-the-heat-equation-solver">Back to the Heat Equation Solver</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scaffolding">Scaffolding</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property">Telescoping Property</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise:</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation">Conservation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Exercise:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#telescoping-property-what-goes-out-one-cell-must-go-in-the-next-cell">Telescoping Property : “what goes out one cell must go in the next cell”</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise:</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conservation">Conservation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Exercise:</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symmetry">Symmetry</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monotonicity">Monotonicity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beware-of-assume">Beware of <code class="docutils literal notranslate"><span class="pre">assume</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-test-case-generation-with-st-composite">Advanced test-case generation with <code class="docutils literal notranslate"><span class="pre">st.composite</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#st-data"><code class="docutils literal notranslate"><span class="pre">st.data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#st-composite"><code class="docutils literal notranslate"><span class="pre">st.composite()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-just-did">What we just did</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-lessons-to-take-away">Some lessons to take away</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-ahead">Looking Ahead</a></li>
 </ul>
   </nav></div>
