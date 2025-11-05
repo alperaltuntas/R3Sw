@@ -58,9 +58,12 @@ def solve_heat_eqn(u0: vec, kappa: float, dt: float, nt: int, dx: float, bc: vec
     assert dt <= (dx ** 2) / (2 * kappa), "Stability condition not met"
 
     mesh = Mesh(dx, N=len(u0))
+
+    # Setup face field and apply boundary conditions
     F = mesh.face_field()
     apply_bc(F, bc)
 
+    # Solver loop
     u = u0.copy()
     for _ in range(nt):
         step_heat_eqn(F, u, kappa, dt, mesh, bc)
