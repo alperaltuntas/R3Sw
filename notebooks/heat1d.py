@@ -37,15 +37,14 @@ def divergence(c_out: vec, f: vec, dx: float) -> None:
     for i in range(len(c_out)):
         c_out[i] = (f[i] - f[i+1]) / dx
 
-def step_heat_eqn(u_inout: vec, kappa: float, dt: float, mesh: Mesh, bc: vec):
+def step_heat_eqn(F: vec, u_inout: vec, kappa: float, dt: float, mesh: Mesh, bc: vec):
     """Advance cell field u by one time step using explicit Euler method."""
     assert dt > 0, "Non-positive dt"
     assert mesh.N == len(u_inout), "Size mismatch"
+    assert mesh.N == len(F), "Size mismatch in main field"
 
-    F = mesh.face_field()
     divF = mesh.cell_field()
 
-    apply_bc(F, bc)
     diffusive_flux(F, u_inout, kappa, mesh.dx)
     divergence(divF, F, mesh.dx)
 
@@ -59,8 +58,14 @@ def solve_heat_eqn(u0: vec, kappa: float, dt: float, nt: int, dx: float, bc: vec
     assert dt <= (dx ** 2) / (2 * kappa), "Stability condition not met"
 
     mesh = Mesh(dx, N=len(u0))
+
+    # Setup face field and apply boundary conditions
+    F = mesh.face_field()
+    apply_bc(F, bc)
+
+    # Solver loop
     u = u0.copy()
     for _ in range(nt):
-        step_heat_eqn(u, kappa, dt, mesh, bc)
+        step_heat_eqn(F, u, kappa, dt, mesh, bc)
 
     return u
